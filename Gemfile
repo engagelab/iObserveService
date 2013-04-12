@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+gem 'sinatra'
+gem 'mongoid', '~>3.1'
+gem 'bson_ext'
+gem 'aws-s3'
