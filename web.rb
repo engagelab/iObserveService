@@ -15,16 +15,126 @@ $log = Logger.new('./logs/output.log')
 set :environment, :development
 #set :environment, :production
 
-set :sessions, true
+#set :sessions, true
+#set :session_secret, 'super secret'
+#use Rack::Session::Pool, :expire_after => 2592000
 
 configure do
   Mongoid.load! "#{File.dirname(__FILE__)}/config/mongoid.yml"
   $log.level = Logger::DEBUG
 end
 
+######################## User ##################################
+get '/users' do
+  content_type :json
+  @user = User.without(:password).all()
+  return @user.to_json
+end
+
+
+get '/user/:id' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  user = User.without(:password).find(params[:id])
+
+  if user.nil? then
+    status 404
+  else
+    status 200
+    return user.to_json
+  end
+end
+
+post '/user' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+  data = JSON.parse request.body.read
+
+  if data.nil? or (data['lastName'] and data['firstName'] and data['email']) then
+    status 200
+    loginId = data['email']
+
+    unless data['loginId'].nil?
+      loginId = data['loginId']
+    end
+
+    user = User.create(
+      :lastName => data['lastName'],
+      :firstName => data['firstName'],
+      :email => data['email'],
+      :loginId => loginId,
+      :password => SecureRandom.uuid,
+      :createdOn => Time.now)
+
+    return user.to_json
+  else
+    status 404
+    return {"errorMessage" => "Provide lastName, firstName and email"}.to_json
+  end
+end
+
+
+put '/user' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  if data.nil? or data['_id'] then
+    status 200
+
+    user = User.find(data['_id'])
+
+    unless data['lastName'].nil?
+      user.update_attributes(:lastName => data['lastName'])
+    end
+
+    unless data['firstName'].nil?
+      user.update_attributes(:firstName => data['firstName'])
+    end
+
+    unless data['loginId'].nil?
+      user.update_attributes(:loginId => data['loginId'])
+    end
+
+    unless data['email'].nil?
+      user.update_attributes(:email => data['email'])
+    end
+
+    unless data['password'].nil?
+      user.update_attributes(:password => data['password'])
+    end
+
+    return user.to_json
+  else
+    status 404
+    return {"errorMessage" => "Provide _id, lastName, firstName, email and password"}.to_json
+  end
+end
+
+delete '/user/:id' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  user = User.find(params[:id])
+
+  if user.nil? then
+    status 404
+  else
+    if user.destroy then
+      status 200
+    else
+      status 500
+    end
+  end
+end
+
+
+
+=begin
 get '/' do
   $log.debug "Session: #{session['iObserveSession']}"
-  #session['iObserveSession'] = nil
+  session['iObserveSession'] = nil
   if session['iObserveSession'].nil?
     send_file File.join('public', 'login.html')
   else
@@ -41,6 +151,7 @@ post '/login' do
     "WRONG LOGIN"
   end
 end
+=end
 
 # post a note
 =begin

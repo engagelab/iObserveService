@@ -8,6 +8,6 @@ class User
   field :email, :type => String
   field :loginId, :type => String
   field :password, :type => String
-  field :createdOn, :type => Date
+  field :createdOn, :type => Time
   field :spaces, :type => Array
 end
