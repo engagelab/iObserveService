@@ -6,18 +6,44 @@ require 'json'
 require 'fileutils'
 require 'aws/s3'
 require 'securerandom'
+require 'logger'
 
-Dir['./models/*.rb'].each {|file| require file }
+Dir['./models/*.rb'].each { |file| require file }
+$log = Logger.new('./logs/output.log')
+
+
+set :environment, :development
+#set :environment, :production
+
+set :sessions, true
 
 configure do
   Mongoid.load! "#{File.dirname(__FILE__)}/config/mongoid.yml"
+  $log.level = Logger::DEBUG
 end
 
 get '/' do
-  send_file File.join('public', 'index.html')
+  $log.debug "Session: #{session['iObserveSession']}"
+  #session['iObserveSession'] = nil
+  if session['iObserveSession'].nil?
+    send_file File.join('public', 'login.html')
+  else
+    send_file File.join('public', 'index.html')
+  end
+end
+
+
+post '/login' do
+  if @params['login'].include?("jeremy") && @params['password'].include?("system")
+    session['iObserveSession'] =  SecureRandom.uuid
+    redirect '/'
+  else
+    "WRONG LOGIN"
+  end
 end
 
 # post a note
+=begin
 post '/notes' do
   request.body.rewind
   content_type :json
@@ -31,9 +57,11 @@ get '/notes' do
   @notes = Note.all()
   return @notes.to_json
 end
+=end
 
 
 # post an image
+=begin
 post '/image' do
 	awskey     = ENV['AWS_ACCESS_KEY_ID']
 	awssecret  = ENV['AWS_SECRET_ACCESS_KEY']
@@ -62,9 +90,10 @@ post '/image' do
 		error 404
 	end
 end
+=end
 
 
-get '/image' do
-  @ui = UploadedImage.all()
-  return @ui.to_json
-end
+#get '/image' do
+#  @ui = UploadedImage.all()
+#  return @ui.to_json
+#end
