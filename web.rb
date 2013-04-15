@@ -25,13 +25,14 @@ configure do
 end
 
 ######################## User ##################################
+### get all users
 get '/users' do
   content_type :json
   @user = User.without(:password).all()
   return @user.to_json
 end
 
-
+### get user by id
 get '/user/:id' do
   request.body.rewind  # in case someone already read it
   content_type :json
@@ -46,6 +47,7 @@ get '/user/:id' do
   end
 end
 
+### create a user
 post '/user' do
   request.body.rewind  # in case someone already read it
   content_type :json
@@ -65,7 +67,7 @@ post '/user' do
       :email => data['email'],
       :loginId => loginId,
       :password => SecureRandom.uuid,
-      :createdOn => Time.now)
+      :createdOn => Time.now.iso8601)
 
     return user.to_json
   else
@@ -74,7 +76,7 @@ post '/user' do
   end
 end
 
-
+### update user's properties
 put '/user' do
   request.body.rewind  # in case someone already read it
   content_type :json;
@@ -112,6 +114,7 @@ put '/user' do
   end
 end
 
+### delete a user by id
 delete '/user/:id' do
   request.body.rewind  # in case someone already read it
   content_type :json
@@ -123,6 +126,7 @@ delete '/user/:id' do
   else
     if user.destroy then
       status 200
+      return {"message" => "User deleted"}.to_json
     else
       status 500
     end
@@ -130,6 +134,60 @@ delete '/user/:id' do
 end
 
 
+
+######################## Space ##################################
+### list all spaces
+get '/spaces' do
+  content_type :json
+  @space = Space.all()
+  return @space.to_json
+end
+
+### list all spaces by user id
+get '/user/:userId/spaces' do
+  content_type :json
+  user = User.find(params[:userId])
+  return user.spaces.to_json
+end
+
+###  get a space by id
+get '/space/:spaceId' do
+  content_type :json
+  space = Space.find(params[:spaceId])
+  return space.to_json
+end
+
+### create a space by user id
+post '/user/:userId/space' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+  data = JSON.parse request.body.read
+
+  if data.nil? or data['label'] then
+    user = User.find(params[:userId])
+    user.spaces.create(:label => data['label'], :createdOn => Time.now.iso8601)
+    return user.to_json
+  end
+end
+
+### delete a space by id
+delete '/space/:spaceId' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  space = Space.find(params[:spaceId])
+
+  if space.nil? then
+    status 404
+  else
+    if space.destroy then
+      status 200
+      return {"message" => "Space deleted"}.to_json
+    else
+      status 500
+    end
+  end
+end
 
 =begin
 get '/' do
