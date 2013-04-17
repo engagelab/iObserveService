@@ -79,11 +79,39 @@
   <li>label &lt;string&gt; (optional)</li>
   <li>position &lt;string&gt; (optional)</li>
   <li>representation &lt;string&gt; (optional)</li>
-  <li>start_points &lt;array[ x&lt;int&gt;, y&lt;int&gt; ]&gt; (optional)</li>
-  <li>end_points &lt;array[ x&lt;int&gt;, y&lt;int&gt; ]&gt; (optional)</li>
 </ul>
 <p>Response</p>
     <pre>{<br>  &quot;_id&quot; : &quot;516d24639c95053ce8000005&quot;,<br>  &quot;position&quot; : null,<br>  &quot;space_ids&quot; : [<br>    &quot;516d21569c95051e0d000003&quot;,<br>    &quot;516d243e9c95053ce8000004&quot;<br>  ],<br>  &quot;start_points&quot; : [],<br>  &quot;representation&quot; : null,<br>  &quot;label&quot; : &quot;updated label&quot;,<br>  &quot;created_on&quot; : &quot;2013-04-16T12:13:55+02:00&quot;,<br>  &quot;end_points&quot; : []<br>}</pre>
+    <p class="command">&nbsp;</p>
+    <p class="command">&nbsp;</p>
+    <p class="command">Remove startpoint coordinates to a room id</p>
+    <p class="command">PUT /room/startcoords/delete</p>
+<p>Request</p>
+
+<pre>{<br>	&quot;_id&quot;:&quot;516e5f810ac19c45ba000001&quot;,<br>	&quot;xpos&quot;: 100,<br>	&quot;ypos&quot;: 50	<br>}</pre>
+<p>Parameters</p>
+<ul>
+  <li>_id</li>
+  <li>xpos &lt;integer&gt;</li>
+  <li>ypos &lt;integer&gt;</li>
+</ul>
+<p>Response</p>
+    <pre>{<br>  &quot;_id&quot; : &quot;516e5f810ac19c45ba000001&quot;,<br>  &quot;position&quot; : null,<br>  &quot;space_ids&quot; : [<br>    &quot;516d21569c95051e0d000003&quot;<br>  ],<br>  &quot;start_points&quot; : [],<br>  &quot;representation&quot; : null,<br>  &quot;label&quot; : &quot;new room&quot;,<br>  &quot;created_on&quot; : &quot;2013-04-17T10:38:25+02:00&quot;,<br>  &quot;end_points&quot; : []<br>}</pre>
+    <p class="command">&nbsp;</p>
+    <p class="command">&nbsp;</p>
+    <p class="command">Remove endpoint coordinates to a room id</p>
+    <p class="command">PUT /room/endcoords/delete</p>
+<p>Request</p>
+
+<pre>{<br>	&quot;_id&quot;:&quot;516e5f810ac19c45ba000001&quot;,<br>	&quot;xpos&quot;: 100,<br>	&quot;ypos&quot;: 50	<br>}</pre>
+<p>Parameters</p>
+<ul>
+  <li>_id</li>
+  <li>xpos &lt;integer&gt;</li>
+  <li>ypos &lt;integer&gt;</li>
+</ul>
+<p>Response</p>
+    <pre>{<br>  &quot;_id&quot; : &quot;516e5f810ac19c45ba000001&quot;,<br>  &quot;position&quot; : null,<br>  &quot;space_ids&quot; : [<br>    &quot;516d21569c95051e0d000003&quot;<br>  ],<br>  &quot;start_points&quot; : [<br>    {<br>      &quot;ypos&quot; : 13,<br>      &quot;xpos&quot; : 0<br>    },<br>    {<br>      &quot;ypos&quot; : 50,<br>      &quot;xpos&quot; : 100<br>    }<br>  ],<br>  &quot;representation&quot; : null,<br>  &quot;label&quot; : &quot;new room&quot;,<br>  &quot;created_on&quot; : &quot;2013-04-17T10:38:25+02:00&quot;,<br>  &quot;end_points&quot; : []<br>}</pre>
     <p class="command">&nbsp;</p>
     <p class="command">&nbsp;</p>
     <p class="command">Delete a room</p>

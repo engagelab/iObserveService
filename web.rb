@@ -321,18 +321,110 @@ put '/room' do
       room.update_attributes(:label => data['label'])
     end
 
-    unless data['end_points'].nil?
-      room.update_attributes(:end_points => data['end_points'])
-    end
+    return room.to_json
+  else
+    status 404
+    return {"message" => "Provide _id and position, representation, or label"}.to_json
+  end
+end
 
-    unless data['start_points'].nil?
-      room.update_attributes(:start_points => data['start_points'])
+
+### add room's end coordinates
+put '/room/endcoords' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+    room = Room.find(data['_id'])
+
+    unless room.nil? then
+      unless room.end_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
+        room.end_points.push(:xpos => data['xpos'], :ypos => data['ypos'])
+        room.save
+      end
     end
 
     return room.to_json
   else
     status 404
-    return {"message" => "Provide _id, position, representation, label, end_points and start_points"}.to_json
+    return {"message" => "Provide _id, xpos, and ypos"}.to_json
+  end
+end
+
+### add room's start coordinates
+put '/room/startcoords' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+    room = Room.find(data['_id'])
+
+    unless room.nil? then
+      unless room.start_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
+        room.start_points.push(:xpos => data['xpos'], :ypos => data['ypos'])
+        room.save
+      end
+    end
+
+    return room.to_json
+  else
+    status 404
+    return {"message" => "Provide _id, xpos, and ypos"}.to_json
+  end
+end
+
+### delete room's end coordinates
+put '/room/endcoords/delete' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+    room = Room.find(data['_id'])
+
+    unless room.nil? then
+      room.end_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
+      room.save
+    end
+
+    return room.to_json
+  else
+    status 404
+    return {"message" => "Provide _id, xpos, and ypos"}.to_json
+  end
+end
+
+### delete room's start coordinates
+put '/room/startcoords/delete' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+    room = Room.find(data['_id'])
+
+    unless room.nil? then
+      room.start_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
+      room.save
+    end
+
+    return room.to_json
+  else
+    status 404
+    return {"message" => "Provide _id, xpos, and ypos"}.to_json
+  end
+end
+
+### update room's start coordinates
+put '/room/startcoords' do
+  unless data['end_points'].nil?
+    room.update_attributes(:end_points => data['end_points'])
+  end
+
+  unless data['start_points'].nil?
+    room.update_attributes(:start_points => data['start_points'])
   end
 end
 
