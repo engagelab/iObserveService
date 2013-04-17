@@ -3,10 +3,14 @@ require 'mongoid'
 class Space
   include Mongoid::Document
 
-  belongs_to :user
+  has_and_belongs_to_many :user
+
+  has_and_belongs_to_many :rooms
+  field :rooms, :type => Array, :default => []
+
+  has_and_belongs_to_many :sessionobs
+  field :sessionobs, :type => Array, :default => []
 
   field :label, :type => String
-  field :createdOn, :type => Time
-  #field :rooms, :type => Array
-  #field :sessions, :type => Array
+  field :created_on, :type => Time
 end

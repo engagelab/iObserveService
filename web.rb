@@ -53,26 +53,26 @@ post '/user' do
   content_type :json
   data = JSON.parse request.body.read
 
-  if data.nil? or (data['lastName'] and data['firstName'] and data['email']) then
+  unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
     status 200
-    loginId = data['email']
+    login_id = data['email']
 
-    unless data['loginId'].nil?
-      loginId = data['loginId']
+    unless data['login_id'].nil?
+      login_id = data['login_id']
     end
 
     user = User.create(
-      :lastName => data['lastName'],
-      :firstName => data['firstName'],
+      :lastname => data['lastname'],
+      :firstname => data['firstname'],
       :email => data['email'],
-      :loginId => loginId,
+      :login_id => login_id,
       :password => SecureRandom.uuid,
-      :createdOn => Time.now.iso8601)
+      :created_on => Time.now.iso8601)
 
     return user.to_json
   else
     status 404
-    return {"errorMessage" => "Provide lastName, firstName and email"}.to_json
+    return {"errorMessage" => "Provide lastname, firstname and email"}.to_json
   end
 end
 
@@ -82,21 +82,21 @@ put '/user' do
   content_type :json;
   data = JSON.parse request.body.read
 
-  if data.nil? or data['_id'] then
+  unless data.nil? or data['_id'].nil? then
     status 200
 
     user = User.find(data['_id'])
 
-    unless data['lastName'].nil?
-      user.update_attributes(:lastName => data['lastName'])
+    unless data['lastname'].nil?
+      user.update_attributes(:lastname => data['lastname'])
     end
 
-    unless data['firstName'].nil?
-      user.update_attributes(:firstName => data['firstName'])
+    unless data['firstname'].nil?
+      user.update_attributes(:firstname => data['firstname'])
     end
 
-    unless data['loginId'].nil?
-      user.update_attributes(:loginId => data['loginId'])
+    unless data['login_id'].nil?
+      user.update_attributes(:login_id => data['login_id'])
     end
 
     unless data['email'].nil?
@@ -110,7 +110,7 @@ put '/user' do
     return user.to_json
   else
     status 404
-    return {"errorMessage" => "Provide _id, lastName, firstName, email and password"}.to_json
+    return {"message" => "Provide _id, lastname, firstname, email and password"}.to_json
   end
 end
 
@@ -144,38 +144,84 @@ get '/spaces' do
 end
 
 ### list all spaces by user id
-get '/user/:userId/spaces' do
+get '/user/:user_id/spaces' do
   content_type :json
-  user = User.find(params[:userId])
+  user = User.find(params[:user_id])
   return user.spaces.to_json
 end
 
 ###  get a space by id
-get '/space/:spaceId' do
+get '/space/:space_id' do
   content_type :json
-  space = Space.find(params[:spaceId])
+  space = Space.find(params[:space_id])
   return space.to_json
 end
 
 ### create a space by user id
-post '/user/:userId/space' do
+post '/user/:user_id/space' do
   request.body.rewind  # in case someone already read it
   content_type :json
   data = JSON.parse request.body.read
 
-  if data.nil? or data['label'] then
-    user = User.find(params[:userId])
-    user.spaces.create(:label => data['label'], :createdOn => Time.now.iso8601)
+  unless data.nil? or data['label'].nil? then
+    user = User.find(params[:user_id])
+    space = Space.create(:label => data['label'], :created_on => Time.now.iso8601)
+    user.spaces << space
+    user.save
     return user.to_json
   end
 end
 
+### add exisiting space to user by id
+post '/user/:user_id/space/:space_id' do
+  content_type :json
+
+  user = User.find(params[:user_id])
+  space = Space.find(params[:space_id])
+
+  unless user.nil? or space.nil? then
+    status 200
+    unless space.user_ids.include?(params[:user_id]) then
+      space.user_ids << params[:user_id]
+      space.save
+    end
+
+    return user.to_json
+  else
+    status 404
+    return {"message" => "Error: provide a valid space_id and user_id"}.to_json
+  end
+end
+
+
+### update space's properties
+put '/space' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or data['_id'].nil? then
+    status 200
+
+    space = Space.find(data['_id'])
+
+    unless data['label'].nil?
+      space.update_attributes(:label => data['label'])
+    end
+
+    return space.to_json
+  else
+    status 404
+    return {"message" => "Provide a new label"}.to_json
+  end
+end
+
 ### delete a space by id
-delete '/space/:spaceId' do
+delete '/space/:space_id' do
   request.body.rewind  # in case someone already read it
   content_type :json
 
-  space = Space.find(params[:spaceId])
+  space = Space.find(params[:space_id])
 
   if space.nil? then
     status 404
@@ -183,6 +229,228 @@ delete '/space/:spaceId' do
     if space.destroy then
       status 200
       return {"message" => "Space deleted"}.to_json
+    else
+      status 500
+    end
+  end
+end
+
+
+######################## Room ##################################
+### create a room by space id
+post '/space/:space_id/room' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+  data = JSON.parse request.body.read
+
+  unless data.nil? or data['label'].nil? then
+    status 200
+    space = Space.find(params[:space_id])
+    room = Room.create(:label => data['label'], :created_on => Time.now.iso8601)
+    space.rooms << room
+    space.save
+    return space.to_json
+  else
+    status 404
+    return {"message" => "Error: provide a valid label"}.to_json
+  end
+end
+
+### add exisiting room to space by id
+post '/space/:space_id/room/:room_id' do
+  content_type :json
+
+  room = Room.find(params[:room_id])
+  space = Space.find(params[:space_id])
+
+  unless room.nil? or space.nil? then
+    status 200
+    unless space.room_ids.include?(params[:room_id]) then
+      space.room_ids << params[:room_id]
+      space.save
+    end
+
+    return space.to_json
+  else
+    status 404
+    return {"message" => "Error: provide a valid space_id and room_id"}.to_json
+  end
+end
+
+### list all rooms by space id
+get '/space/:space_id/rooms' do
+  content_type :json
+  space = Space.find(params[:space_id])
+  return space.rooms.to_json
+end
+
+### list all rooms
+get '/rooms' do
+  content_type :json
+  @room = Room.all()
+  return @room.to_json
+end
+
+###  get a room by id
+get '/room/:room_id' do
+  content_type :json
+  room = Room.find(params[:room_id])
+  return room.to_json
+end
+
+### update room's properties
+put '/room' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or data['_id'].nil? then
+    status 200
+
+    room = Room.find(data['_id'])
+
+    unless data['position'].nil?
+      room.update_attributes(:position => data['position'])
+    end
+
+    unless data['representation'].nil?
+      room.update_attributes(:representation => data['representation'])
+    end
+
+    unless data['label'].nil?
+      room.update_attributes(:label => data['label'])
+    end
+
+    unless data['end_points'].nil?
+      room.update_attributes(:end_points => data['end_points'])
+    end
+
+    unless data['start_points'].nil?
+      room.update_attributes(:start_points => data['start_points'])
+    end
+
+    return room.to_json
+  else
+    status 404
+    return {"message" => "Provide _id, position, representation, label, end_points and start_points"}.to_json
+  end
+end
+
+### delete a room by id
+delete '/room/:room_id' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  room = Room.find(params[:room_id])
+
+  if room.nil? then
+    status 404
+  else
+    if room.destroy then
+      status 200
+      return {"message" => "Room deleted"}.to_json
+    else
+      status 500
+    end
+  end
+end
+
+
+######################## Session ##################################
+### create a session by space id
+post '/space/:space_id/session' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+  data = JSON.parse request.body.read
+
+  unless data.nil? or data['label'].nil? then
+    status 200
+    space = Space.find(params[:space_id])
+    sessionob = Sessionob.create(:label => data['label'], :created_on => Time.now.iso8601)
+    space.sessionobs << sessionob
+    space.save
+    return space.to_json
+  else
+    status 404
+    return {"message" => "Error: provide a valid label"}.to_json
+  end
+end
+
+
+### list all sessions
+get '/sessions' do
+  content_type :json
+  @sessionob = Sessionob.all()
+  return @sessionob.to_json
+end
+
+
+### list all sessions by space id
+get '/space/:space_id/sessions' do
+  content_type :json
+  space = Space.find(params[:space_id])
+  return space.sessionobs.to_json
+end
+
+###  get a session by id
+get '/session/:session_id' do
+  content_type :json
+  sessionob = Sessionob.find(params[:session_id])
+  return sessionob.to_json
+end
+
+### update session's properties
+put '/session' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+  data = JSON.parse request.body.read
+
+  unless data.nil? or data['_id'].nil? then
+    status 200
+
+    sessionob = Sessionob.find(data['_id'])
+
+    unless data['label'].nil?
+      sessionob.update_attributes(:label => data['label'])
+    end
+
+    return sessionob.to_json
+  else
+    status 404
+    return {"message" => "Provide label"}.to_json
+  end
+end
+
+
+### update session's properties
+put '/session/:session_id/close' do
+  content_type :json
+  sessionob = Sessionob.find(params[:session_id])
+
+  unless sessionob.nil? then
+    status 200
+    sessionob.update_attributes(:finished_on => Time.now.iso8601)
+
+    return sessionob.to_json
+  else
+    status 404
+    return {"message" => "Provide label"}.to_json
+  end
+end
+
+### delete a session by id
+delete '/session/:session_id' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  sessionob = Sessionob.find(params[:session_id])
+
+  if sessionob.nil? then
+    status 404
+  else
+    if sessionob.destroy then
+      status 200
+      return {"message" => "Session deleted"}.to_json
     else
       status 500
     end

@@ -3,14 +3,14 @@ require 'mongoid'
 class User
   include Mongoid::Document
 
-  has_many :spaces
+  has_and_belongs_to_many :spaces
   field :spaces, :type => Array, :default => []
 
-  field :lastName, :type => String
-  field :firstName, :type => String
+  field :lastname, :type => String
+  field :firstname, :type => String
   field :email, :type => String
-  field :loginId, :type => String
+  field :login_id, :type => String
   field :password, :type => String
-  field :createdOn, :type => Time
+  field :created_on, :type => Time
 
 end
