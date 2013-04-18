@@ -1,0 +1,7 @@
+require_relative 'media'
+require_relative 'room'
+require_relative 'session'
+require_relative 'space'
+require_relative 'user'
+require_relative 'visitorgroup'
+require_relative 'visitor'
