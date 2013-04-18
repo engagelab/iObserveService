@@ -5,6 +5,8 @@ class Sessionob
 
   has_and_belongs_to_many :spaces
 
+  has_one :visitorgroup
+
   has_many :medias
   field :media_ids, :type => Array, :default => []
 
@@ -13,6 +15,5 @@ class Sessionob
   field :finished_on, :type => Time
   field :surveys, :type => Array, :default => []
   field :stats, :type => Array, :default => []
-  field :usergroups, :type => Array, :default => []
   field :events, :type => Array, :default => []
 end
