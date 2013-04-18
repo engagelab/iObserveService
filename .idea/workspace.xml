@@ -5,7 +5,7 @@
     <ignored path="iObserveService.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/mongoid.yml" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365689723665" ignored="false" />
-    <file path="/web.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366262436103" ignored="false" />
+    <file path="/web.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366264803493" ignored="false" />
     <file path="/note.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365751550657" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/lib/rubymine.jar!/resources/relaxng.rng" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365770263888" ignored="false" />
     <file path="/Gemfile" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365771294416" ignored="false" />
@@ -41,7 +41,7 @@
       <file leaf-file-name="web.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="668" column="53" selection-start="15605" selection-end="15605" vertical-scroll-proportion="-0.49171272">
+            <state line="756" column="25" selection-start="17650" selection-end="17650" vertical-scroll-proportion="-1.0718232">
               <folding />
             </state>
           </provider>
@@ -68,7 +68,7 @@
       <file leaf-file-name="visitorgroup.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="51" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0">
+            <state line="7" column="20" selection-start="104" selection-end="112" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -597,23 +597,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="16" selection-start="274" selection-end="274" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/media.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="32" selection-start="109" selection-end="136" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="51" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -625,9 +611,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="16" selection-start="274" selection-end="274" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="20" selection-start="104" selection-end="112" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/web.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="668" column="53" selection-start="15605" selection-end="15605" vertical-scroll-proportion="-0.49171272">
+        <state line="756" column="25" selection-start="17650" selection-end="17650" vertical-scroll-proportion="-1.0718232">
           <folding />
         </state>
       </provider>

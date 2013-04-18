@@ -651,7 +651,7 @@ delete '/media/:media_id' do
 end
 
 
-######################## Media ##################################
+######################## Visitorgroup ##################################
 ### create a visitor group by session id
 post '/session/:session_id/visitorgroup' do
   content_type :json
@@ -687,14 +687,14 @@ get '/session/:session_id/visitorgroup' do
   end
 end
 
-### list all visitor groups
+### list all visitorgroups
 get '/visitorgroups' do
   content_type :json
   @visitorgroup = Visitorgroup.all()
   return @visitorgroup.to_json
 end
 
-###  get a media by id
+###  get a visitorgroup by id
 get '/visitorgroup/:visitorgroup_id' do
   content_type :json
   visitorgroup = Visitorgroup.find(params[:visitorgroup_id])
@@ -702,7 +702,7 @@ get '/visitorgroup/:visitorgroup_id' do
 end
 
 
-### update media's properties
+### update visitorgroup's properties
 put '/visitorgroup' do
   request.body.rewind  # in case someone already read it
   content_type :json;
@@ -724,7 +724,7 @@ put '/visitorgroup' do
   end
 end
 
-### delete a media by id
+### delete a visitorgroup by id
 delete '/visitorgroup/:visitorgroup_id' do
   request.body.rewind  # in case someone already read it
   content_type :json
@@ -737,6 +737,140 @@ delete '/visitorgroup/:visitorgroup_id' do
     if visitorgroup.destroy then
       status 200
       return {"message" => "Visitorgroup deleted"}.to_json
+    else
+      status 500
+    end
+  end
+end
+
+
+######################## Visitor ##################################
+### create a visitor group by visitorgroup id
+post '/visitorgroup/:visitorgroup_id/visitor' do
+  content_type :json
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  bdy = request.body.read
+
+  if bdy.length > 2 then
+    data = JSON.parse bdy
+  end
+
+  visitorgroup = Visitorgroup.find(params[:visitorgroup_id])
+  unless visitorgroup.nil? then
+    status 200
+
+    if visitorgroup.visitors.size < 4 then
+      visitor = Visitor.create(:created_on => Time.now.iso8601)
+      visitorgroup.visitors << visitor
+      visitorgroup.save
+    end
+
+    unless data.nil? then
+      unless data['age'].nil? then
+        visitor.update_attributes(:age => data['age'])
+      end
+
+      unless data['sex'].nil? then
+        visitor.update_attributes(:sex => data['sex'])
+      end
+
+      unless data['nationality'].nil? then
+        visitor.update_attributes(:nationality => data['nationality'])
+      end
+
+      unless data['comment'].nil? then
+        visitor.update_attributes(:comment => data['comment'])
+      end
+    end
+
+    return visitorgroup.visitors.to_json
+  else
+    status 404
+    return {"message" => "Error: visitorgroup not found"}.to_json
+  end
+end
+
+### list all visitorgroups by session id
+get '/visitorgroup/:visitorgroup_id/visitor' do
+  content_type :json
+
+  visitorgroup = Visitorgroup.find(params[:visitorgroup_id])
+  unless visitorgroup.nil? then
+    status 200
+    return visitorgroup.visitors.to_json
+  else
+    status 404
+    return {"message" => "Error: visitorgroup not found"}.to_json
+  end
+end
+
+### list all visitors
+get '/visitors' do
+  content_type :json
+  @visitor = Visitor.all()
+  return @visitor.to_json
+end
+
+###  get a visitor by id
+get '/visitor/:visitor_id' do
+  content_type :json
+  visitor = Visitor.find(params[:visitor_id])
+  return visitor.to_json
+end
+
+
+### update visitor's properties
+put '/visitor' do
+  request.body.rewind  # in case someone already read it
+  content_type :json;
+
+  begin
+    data = JSON.parse request.body.read
+  end
+
+  unless data.nil? or data['_id'].nil? then
+    status 200
+
+    visitor = Visitor.find(data['_id'])
+
+    unless data['age'].nil? then
+      visitor.update_attributes(:age => data['age'])
+    end
+
+    unless data['sex'].nil? then
+      visitor.update_attributes(:sex => data['sex'])
+    end
+
+    unless data['nationality'].nil? then
+      visitor.update_attributes(:nationality => data['nationality'])
+    end
+
+    unless data['comment'].nil? then
+      visitor.update_attributes(:comment => data['comment'])
+    end
+
+    return visitor.to_json
+  else
+    status 404
+    return {"message" => "Provide age, sex, nationality or comment"}.to_json
+  end
+end
+
+### delete a visitor by id
+delete '/visitor/:visitor_id' do
+  request.body.rewind  # in case someone already read it
+  content_type :json
+
+  visitor = Visitor.find(params[:visitor_id])
+
+  if visitor.nil? then
+    status 404
+  else
+    if visitor.destroy then
+      status 200
+      return {"message" => "Visitor deleted"}.to_json
     else
       status 500
     end
