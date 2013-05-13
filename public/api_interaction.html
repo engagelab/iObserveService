@@ -29,29 +29,28 @@
     </ul>
   </div>
   <div class="content">
-<h3>ACTION</h3>
+<h3>INTERACTION</h3>
 <hr color="#000000">
 <p class="command">&nbsp;</p>
 <p class="command">Add a new interaction</p>
 <p class="command">POST /interaction</p>
 <p>Request</p>
 
-<pre>{<br>	&quot;visitors&quot;: [&quot;&quot;],
-	&quot;behavior&quot;: &quot;&quot;<br>}</pre>
+<pre>{<br>	&quot;visitors&quot;: [&quot;5187d0540ac19ca4b4000001&quot;],<br>	&quot;action&quot;: &quot;518a32b09c9505c209000001&quot;,<br>	&quot;resource&quot;: &quot;518a32249c9505f500000001&quot;<br>}</pre>
 <p>Parameters</p>
 <ul>
   <li>type &lt;string&gt;</li>
 </ul>
 <p>Response</p>
-    <pre>[<br>  {<br>    &quot;_id&quot; : &quot;516fd9b50ac19ccd83000002&quot;,<br>    &quot;type&quot; : &quot;sit&quot;<br>  }<br>]</pre>
+    <pre>{<br>    &quot;_id&quot; : &quot;5190cd400ac19c4d55000001&quot;,<br>    &quot;action&quot; : {<br>      &quot;_id&quot; : &quot;518a32b09c9505c209000001&quot;,<br>      &quot;type&quot; : &quot;sit&quot;,<br>      &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;<br>    },<br>    &quot;resource&quot; : {<br>      &quot;_id&quot; : &quot;518a32249c9505f500000001&quot;,<br>      &quot;type&quot; : &quot;ipad&quot;,<br>      &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;<br>    },<br>    &quot;visitors&quot; : [<br>      {<br>        &quot;_id&quot; : &quot;5187d0540ac19ca4b4000001&quot;,<br>        &quot;consent&quot; : null,<br>        &quot;visitorgroup_id&quot; : &quot;5187cf289c95057f0f000002&quot;,<br>        &quot;age&quot; : 35,<br>        &quot;nationality&quot; : null,<br>        &quot;created_on&quot; : &quot;2013-05-06T17:46:28+02:00&quot;,<br>        &quot;comment&quot; : null,<br>        &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;,<br>        &quot;sex&quot; : null<br>      }<br>    ],<br>    &quot;event_id&quot; : null,<br>    &quot;created_on&quot; : &quot;2013-05-13T13:23:44+02:00&quot;<br>  }</pre>
     
     <p class="command">&nbsp;</p>
     <p class="command">&nbsp;</p>
     <p class="command">List all actions</p>
-<p class="command">GET /action</p>
+<p class="command">GET /interaction</p>
 <p>Response</p>
 
-<pre>[<br>  {<br>    &quot;_id&quot; : &quot;516fd9b50ac19ccd83000002&quot;,<br>    &quot;type&quot; : &quot;sit&quot;<br>  }<br>]</pre>
+<pre>[<br>  {<br>    &quot;_id&quot; : &quot;5190cd400ac19c4d55000001&quot;,<br>    &quot;action&quot; : {<br>      &quot;_id&quot; : &quot;518a32b09c9505c209000001&quot;,<br>      &quot;type&quot; : &quot;sit&quot;,<br>      &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;<br>    },<br>    &quot;resource&quot; : {<br>      &quot;_id&quot; : &quot;518a32249c9505f500000001&quot;,<br>      &quot;type&quot; : &quot;ipad&quot;,<br>      &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;<br>    },<br>    &quot;visitors&quot; : [<br>      {<br>        &quot;_id&quot; : &quot;5187d0540ac19ca4b4000001&quot;,<br>        &quot;consent&quot; : null,<br>        &quot;visitorgroup_id&quot; : &quot;5187cf289c95057f0f000002&quot;,<br>        &quot;age&quot; : 35,<br>        &quot;nationality&quot; : null,<br>        &quot;created_on&quot; : &quot;2013-05-06T17:46:28+02:00&quot;,<br>        &quot;comment&quot; : null,<br>        &quot;interaction_id&quot; : &quot;5190cd400ac19c4d55000001&quot;,<br>        &quot;sex&quot; : null<br>      }<br>    ],<br>    &quot;event_id&quot; : null,<br>    &quot;created_on&quot; : &quot;2013-05-13T13:23:44+02:00&quot;<br>  }<br>]</pre>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p class="command">Get a action by action id</p>

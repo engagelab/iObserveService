@@ -3,7 +3,7 @@ require 'mongoid'
 class Resource
   include Mongoid::Document
 
-  belongs_to :interaction
+  has_and_belongs_to_many :interaction
 
   field :type, :type => String
 end

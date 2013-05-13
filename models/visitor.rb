@@ -4,7 +4,7 @@ class Visitor
   include Mongoid::Document
 
   belongs_to :visitorgroup
-  belongs_to :interaction
+  has_and_belongs_to_many :interaction
 
   field :created_on, :type => Time
   field :age, :type => Integer

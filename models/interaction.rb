@@ -5,14 +5,10 @@ class Interaction
 
   belongs_to :event
 
-  has_many :visitors
+  has_and_belongs_to_many :visitors
   field :visitors, :type => Array, :default => []
-
-  has_one :action, class_name: "Action"
-  field :action
-
-  has_one :resource, class_name: "Resource"
-  field :resource
+  has_and_belongs_to_many :actions, class_name: "Action"
+  has_and_belongs_to_many :resources, class_name: "Resource"
 
   field :created_on, :type => Time
 end
