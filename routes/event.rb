@@ -93,27 +93,6 @@ class Iobserve < Sinatra::Application
     end
   end
 
-
-  ### update event's interactions
-  put '/event/:event_id/interaction/:interaction_id' do
-    content_type :json;
-
-    eventob = Eventob.find(params[:event_id])
-    interaction = Interaction.find(params[:interaction_id]);
-
-    unless interaction.nil? and eventob.nil? then
-      status 200
-
-      eventob.interactions << interaction
-      eventob.save
-
-      return eventob.to_json
-    else
-      status 404
-      return {"message" => "Provide correct eventId and interactionId"}.to_json
-    end
-  end
-
   ### delete an event by id
   delete '/event/:event_id' do
     request.body.rewind  # in case someone already read it

@@ -116,19 +116,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="event.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="event.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/event.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="31" selection-start="2227" selection-end="2227" vertical-scroll-proportion="0.0">
+            <state line="94" column="0" selection-start="2422" selection-end="2422" vertical-scroll-proportion="0.6096096">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="event.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="event.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/event.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="21" selection-start="201" selection-end="201" vertical-scroll-proportion="0.16516517">
+            <state line="11" column="21" selection-start="201" selection-end="201" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -156,10 +156,10 @@
         <option value="$PROJECT_DIR$/models/action.rb" />
         <option value="$PROJECT_DIR$/models/resource.rb" />
         <option value="$PROJECT_DIR$/routes/interaction.rb" />
-        <option value="$PROJECT_DIR$/routes/event.rb" />
         <option value="$PROJECT_DIR$/models/interaction.rb" />
         <option value="$PROJECT_DIR$/models/visitor.rb" />
         <option value="$PROJECT_DIR$/models/event.rb" />
+        <option value="$PROJECT_DIR$/routes/event.rb" />
       </list>
     </option>
   </component>
@@ -667,16 +667,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/event.rb">
+    <entry file="file://$PROJECT_DIR$/models/event.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="31" selection-start="2227" selection-end="2227" vertical-scroll-proportion="0.0">
+        <state line="11" column="21" selection-start="201" selection-end="201" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/event.rb">
+    <entry file="file://$PROJECT_DIR$/routes/event.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="21" selection-start="201" selection-end="201" vertical-scroll-proportion="0.16516517">
+        <state line="94" column="0" selection-start="2422" selection-end="2422" vertical-scroll-proportion="0.6096096">
           <folding />
         </state>
       </provider>
