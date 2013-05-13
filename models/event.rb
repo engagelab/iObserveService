@@ -9,7 +9,7 @@ class Eventob
   field :medias, :type => Array, :default => []
 
   has_many :interactions
-  field :interactions_ids, :type => Array, :default => []
+  field :interactions, :type => Array, :default => []
 
   field :created_on, :type => Time
   field :comment, :type => String

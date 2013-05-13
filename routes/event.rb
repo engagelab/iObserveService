@@ -63,6 +63,29 @@ class Iobserve < Sinatra::Application
         eventob.update_attributes(:ypos => data['ypos'])
       end
 
+      unless data['interactions'].nil? then
+        interactionsArray = data['interactions']
+        newinteractionsArray = []
+        if interactionsArray.kind_of?(Array)
+          interactionsArray.each do |interaction_id|
+            begin
+              interaction = Interaction.find(interaction_id)
+            end
+
+            if interaction
+              newinteractionsArray.push(interaction)
+            end
+          end
+
+          if newinteractionsArray.length > 0 then
+            eventob.interactions.clear
+            newinteractionsArray.each do |interaction|
+              eventob.interactions << interaction
+            end
+          end
+        end
+      end
+
       return eventob.to_json
     else
       status 404
