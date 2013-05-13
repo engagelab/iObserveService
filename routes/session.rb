@@ -10,6 +10,8 @@ class Iobserve < Sinatra::Application
       status 200
       space = Space.find(params[:space_id])
       sessionob = Sessionob.create(:label => data['label'], :created_on => Time.now.iso8601)
+      visitorgroup = Visitorgroup.create(:created_on => Time.now.iso8601)
+      sessionob.visitorgroup = visitorgroup
       space.sessionobs << sessionob
       space.save
       return space.to_json
@@ -21,7 +23,7 @@ class Iobserve < Sinatra::Application
 
 
   ### list all sessions
-  get '/sessions' do
+  get '/session' do
     content_type :json
     @sessionob = Sessionob.all()
     return @sessionob.to_json

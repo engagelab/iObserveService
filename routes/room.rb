@@ -48,7 +48,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### list all rooms
-  get '/rooms' do
+  get '/room' do
     content_type :json
     @room = Room.all()
     return @room.to_json

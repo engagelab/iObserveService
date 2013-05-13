@@ -1,26 +1,5 @@
 class Iobserve < Sinatra::Application
   ######################## Visitorgroup ##################################
-  ### create a visitor group by session id
-  post '/session/:session_id/visitorgroup' do
-    content_type :json
-
-    sessionob = Sessionob.find(params[:session_id])
-    unless sessionob.nil? then
-      status 200
-
-      if sessionob.visitorgroup.nil? then
-        visitorgroup = Visitorgroup.create(:created_on => Time.now.iso8601)
-        sessionob.visitorgroup = visitorgroup
-        sessionob.save
-      end
-
-      return sessionob.visitorgroup.to_json
-    else
-      status 404
-      return {"message" => "Error: session not found"}.to_json
-    end
-  end
-
   ### list all visitorgroups by session id
   get '/session/:session_id/visitorgroup' do
     content_type :json
@@ -36,7 +15,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### list all visitorgroups
-  get '/visitorgroups' do
+  get '/visitorgroup' do
     content_type :json
     @visitorgroup = Visitorgroup.all()
     return @visitorgroup.to_json

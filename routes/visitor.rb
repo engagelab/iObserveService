@@ -1,5 +1,6 @@
+######################## Visitor ##################################
 class Iobserve < Sinatra::Application
-  ######################## Visitor ##################################
+
   ### create a visitor group by visitorgroup id
   post '/visitorgroup/:visitorgroup_id/visitor' do
     content_type :json
@@ -20,25 +21,29 @@ class Iobserve < Sinatra::Application
         visitor = Visitor.create(:created_on => Time.now.iso8601)
         visitorgroup.visitors << visitor
         visitorgroup.save
+
+        unless data.nil? then
+          unless data['age'].nil? then
+            visitor.update_attributes(:age => data['age'])
+          end
+
+          unless data['sex'].nil? then
+            visitor.update_attributes(:sex => data['sex'])
+          end
+
+          unless data['nationality'].nil? then
+            visitor.update_attributes(:nationality => data['nationality'])
+          end
+
+          unless data['comment'].nil? then
+            visitor.update_attributes(:comment => data['comment'])
+          end
+        end
+
+      else
+        return {"message" => "Already 4 visitors in this visitorgroup"}.to_json
       end
 
-      unless data.nil? then
-        unless data['age'].nil? then
-          visitor.update_attributes(:age => data['age'])
-        end
-
-        unless data['sex'].nil? then
-          visitor.update_attributes(:sex => data['sex'])
-        end
-
-        unless data['nationality'].nil? then
-          visitor.update_attributes(:nationality => data['nationality'])
-        end
-
-        unless data['comment'].nil? then
-          visitor.update_attributes(:comment => data['comment'])
-        end
-      end
 
       return visitorgroup.visitors.to_json
     else
@@ -62,7 +67,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### list all visitors
-  get '/visitors' do
+  get '/visitor' do
     content_type :json
     @visitor = Visitor.all()
     return @visitor.to_json

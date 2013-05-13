@@ -22,22 +22,18 @@
       <li><a href="api_visitorgroup.html">Visitor Group</a></li>
       <li><a href="api_visitor.html">Visitor</a></li>
       <li><a href="api_event.html">Event</a></li>
+      <li><a href="api_interaction.html">Interaction</a></li>
       <li><a href="api_media.html">Media</a></li>
+      <li><a href="api_resource.html">Resource</a></li>
+      <li><a href="api_action.html">Action</a></li>
     </ul>
   </div>
   <div class="content">
 <h3>VISITOR GROUP</h3>
 <hr color="#000000">
 <p class="command">&nbsp;</p>
-<p class="command">Add a new visitor group for a session id</p>
-<p class="command">POST /session/516e57a50ac19c5ae0000001/visitorgroup</p>
-<p>Response</p>
-    <pre>{<br>  &quot;_id&quot; : &quot;516eb6bb0ac19cbcb5000001&quot;,<br>  &quot;sessionob_id&quot; : &quot;516e57a50ac19c5ae0000001&quot;,<br>  &quot;visitors&quot; : [],<br>  &quot;created_on&quot; : &quot;2013-04-17T16:50:35+02:00&quot;,<br>  &quot;comment&quot; : &quot;&quot;<br>}</pre>
-    
-    <p class="command">&nbsp;</p>
-    <p class="command">&nbsp;</p>
-    <p class="command">List all visitor groups</p>
-<p class="command">GET /visitorgroups</p>
+<p class="command">List all visitor groups</p>
+<p class="command">GET /visitorgroup</p>
 <p>Response</p>
 
 <pre>[<br>  {<br>    &quot;_id&quot; : &quot;516eb6bb0ac19cbcb5000001&quot;,<br>    &quot;sessionob_id&quot; : &quot;516e57a50ac19c5ae0000001&quot;,<br>    &quot;visitors&quot; : [],<br>    &quot;created_on&quot; : &quot;2013-04-17T16:50:35+02:00&quot;,<br>    &quot;comment&quot; : &quot;&quot;<br>  }<br>]</pre>

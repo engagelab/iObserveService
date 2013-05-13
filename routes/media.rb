@@ -41,7 +41,7 @@ class Iobserve < Sinatra::Application
 
 
   ### list all medias
-  get '/medias' do
+  get '/media' do
     content_type :json
     @media = Media.all()
     return @media.to_json

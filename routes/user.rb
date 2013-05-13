@@ -1,7 +1,7 @@
 class Iobserve < Sinatra::Application
   ######################## User ##################################
   ### get all users
-  get '/users' do
+  get '/user' do
     content_type :json
     @user = User.without(:password).all()
     return @user.to_json
@@ -36,15 +36,24 @@ class Iobserve < Sinatra::Application
         login_id = data['login_id']
       end
 
-      user = User.create(
-          :lastname => data['lastname'],
-          :firstname => data['firstname'],
-          :email => data['email'],
-          :login_id => login_id,
-          :password => SecureRandom.uuid,
-          :created_on => Time.now.iso8601)
+      existingEmail = User.where(:email => data['email']).first()
+      existingLoginId = User.where(:login_id => login_id).first()
 
-      return user.to_json
+      if existingEmail.nil? and existingLoginId.nil? then
+        user = User.create(
+            :lastname => data['lastname'],
+            :firstname => data['firstname'],
+            :email => data['email'],
+            :login_id => login_id,
+            :password => SecureRandom.uuid,
+            :created_on => Time.now.iso8601)
+
+        return user.to_json
+      else
+        status 404
+        return {"errorMessage" => "User(email) and/or login id already exist"}.to_json
+      end
+
     else
       status 404
       return {"errorMessage" => "Provide lastname, firstname and email"}.to_json
@@ -71,11 +80,23 @@ class Iobserve < Sinatra::Application
       end
 
       unless data['login_id'].nil?
-        user.update_attributes(:login_id => data['login_id'])
+        existingUser = User.where(:login_id => data['login_id']).first()
+        if existingUser.nil? then
+          user.update_attributes(:login_id => data['login_id'])
+        else
+          status 404
+          return {"message" => "Login id already exists"}.to_json
+        end
       end
 
       unless data['email'].nil?
-        user.update_attributes(:email => data['email'])
+        existingUser = User.where(:email => data['email']).first()
+        if existingUser.nil? then
+          user.update_attributes(:email => data['email'])
+        else
+          status 404
+          return {"message" => "Email id already exists"}.to_json
+        end
       end
 
       unless data['password'].nil?

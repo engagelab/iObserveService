@@ -1,7 +1,7 @@
 class Iobserve < Sinatra::Application
   ######################## Space ##################################
   ### list all spaces
-  get '/spaces' do
+  get '/space' do
     content_type :json
     @space = Space.all()
     return @space.to_json
