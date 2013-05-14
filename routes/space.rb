@@ -10,7 +10,7 @@ class Iobserve < Sinatra::Application
   ### list all spaces by user id
   get '/user/:user_id/space' do
     content_type :json
-    user = User.find(params[:user_id])
+    user = User.without(:password).find(params[:user_id])
     return user.spaces.to_json
   end
 
@@ -28,7 +28,7 @@ class Iobserve < Sinatra::Application
     data = JSON.parse request.body.read
 
     unless data.nil? or data['label'].nil? then
-      user = User.find(params[:user_id])
+      user = User.without(:password).find(params[:user_id])
       space = Space.create(:label => data['label'], :created_on => Time.now.iso8601)
       user.spaces << space
       user.save
@@ -40,7 +40,7 @@ class Iobserve < Sinatra::Application
   post '/user/:user_id/space/:space_id' do
     content_type :json
 
-    user = User.find(params[:user_id])
+    user = User.without(:password).find(params[:user_id])
     space = Space.find(params[:space_id])
 
     unless user.nil? or space.nil? then
