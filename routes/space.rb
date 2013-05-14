@@ -8,7 +8,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### list all spaces by user id
-  get '/user/:user_id/spaces' do
+  get '/user/:user_id/space' do
     content_type :json
     user = User.find(params[:user_id])
     return user.spaces.to_json

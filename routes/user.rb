@@ -128,4 +128,36 @@ class Iobserve < Sinatra::Application
       end
     end
   end
+
+  post '/login' do
+    request.body.rewind  # in case someone already read it
+    content_type :json
+
+    bdy = request.body.read
+
+    if bdy.length > 2 then
+      data = JSON.parse bdy
+    else
+      halt 404
+      return {"message" => "Error: provide a valid JSON"}.to_json
+    end
+
+    unless data.nil? and data['login_id'].nil? and data['password'].nil? then
+      user = User.where(:login_id => data['login_id']).first()
+
+      if user then
+        if data['password'] == user.password then
+          status 200
+          return {"token" => SecureRandom.uuid, "userId" => user._id}.to_json
+        else
+          status 400
+          return {"message" => "Error: wrong password"}.to_json
+        end
+      else
+        status 404
+        return {"message" => "Error: user not found"}.to_json
+      end
+    end
+  end
+
 end

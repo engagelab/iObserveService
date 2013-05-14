@@ -64,16 +64,17 @@
 <p class="command">PUT /event</p>
 <p>Request</p>
 
-<pre>{<br>  &quot;_id&quot; : &quot;51837c949c9505ee5e000001&quot;,<br>  &quot;comment&quot; : &quot;yo&quot;<br>}</pre>
+<pre>{<br>	&quot;_id&quot; : &quot;51837c949c9505ee5e000001&quot;,<br>	&quot;interactions&quot;:[&quot;5190f9500ac19c319e000002&quot;]<br>}</pre>
 <p>Parameters</p>
 <ul>
   <li>_id</li>
   <li>comment &lt;string&gt; (optional)</li>
   <li>xpos &lt;number&gt; (optional)</li>
   <li>ypos &lt;number&gt; (optional)</li>
+  <li>interactions &lt;array&gt; (optional)</li>
 </ul>
 <p>Response</p>
-    <pre>{<br>  &quot;_id&quot; : &quot;51837c949c9505ee5e000001&quot;,<br>  &quot;medias&quot; : [],<br>  &quot;interactions&quot; : [],<br>  &quot;sessionob_id&quot; : &quot;51837c599c9505772a000001&quot;,<br>  &quot;ypos&quot; : 50,<br>  &quot;created_on&quot; : &quot;2013-05-03T11:00:04+02:00&quot;,<br>  &quot;comment&quot; : &quot;yo&quot;,<br>  &quot;xpos&quot; : 50<br>}</pre>
+    <pre>{<br>  &quot;_id&quot; : &quot;51837c949c9505ee5e000001&quot;,<br>  &quot;medias&quot; : [],<br>  &quot;interactions&quot; : [<br>    {<br>      &quot;_id&quot; : &quot;5190f9500ac19c319e000002&quot;,<br>      &quot;eventob_id&quot; : &quot;51837c949c9505ee5e000001&quot;,<br>      &quot;action_ids&quot; : [<br>        &quot;5190e14c0ac19c5d83000003&quot;<br>      ],<br>      &quot;visitors&quot; : [<br>        {<br>          &quot;_id&quot; : &quot;5190f3330ac19ce127000001&quot;,<br>          &quot;consent&quot; : null,<br>          &quot;age&quot; : 55,<br>          &quot;nationality&quot; : null,<br>          &quot;interaction_ids&quot; : [<br>            &quot;5190f9500ac19c319e000002&quot;<br>          ],<br>          &quot;created_on&quot; : &quot;2013-05-13T16:05:39+02:00&quot;,<br>          &quot;comment&quot; : null,<br>          &quot;sex&quot; : null,<br>          &quot;visitorgroup_id&quot; : &quot;5187cf289c95057f0f000002&quot;<br>        }<br>      ],<br>      &quot;resource_ids&quot; : [<br>        &quot;5190e14f0ac19c5d83000004&quot;<br>      ],<br>      &quot;created_on&quot; : &quot;2013-05-13T16:31:44+02:00&quot;,<br>      &quot;visitor_ids&quot; : [<br>        &quot;5190f3330ac19ce127000001&quot;<br>      ]<br>    }<br>  ],<br>  &quot;interactions_ids&quot; : [],<br>  &quot;sessionob_id&quot; : &quot;51837c599c9505772a000001&quot;,<br>  &quot;ypos&quot; : 50,<br>  &quot;created_on&quot; : &quot;2013-05-03T11:00:04+02:00&quot;,<br>  &quot;comment&quot; : &quot;yo&quot;,<br>  &quot;xpos&quot; : 50<br>}</pre>
     <p class="command">&nbsp;</p>
     <p class="command">&nbsp;</p>
     <p class="command">Delete an event</p>
