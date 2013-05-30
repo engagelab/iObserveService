@@ -130,7 +130,7 @@
       <file leaf-file-name="visitor.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/visitor.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="106" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
+            <state line="13" column="8" selection-start="316" selection-end="403" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -139,7 +139,7 @@
       <file leaf-file-name="user.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/user.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="33" selection-start="1448" selection-end="1448" vertical-scroll-proportion="0.54545456">
+            <state line="77" column="4" selection-start="1963" selection-end="1963" vertical-scroll-proportion="0.6136364">
               <folding />
             </state>
           </provider>
@@ -623,23 +623,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="23" selection-start="372" selection-end="386" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/visitorgroup.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="49" selection-start="368" selection-end="368" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/interaction.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="28" selection-start="266" selection-end="266" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -658,13 +651,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="28" selection-start="266" selection-end="266" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/event.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="105" column="106" selection-start="2807" selection-end="2807" vertical-scroll-proportion="0.0">
@@ -672,16 +658,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/routes/visitorgroup.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="49" selection-start="368" selection-end="368" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="23" selection-start="372" selection-end="386" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/visitor.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="106" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
+        <state line="13" column="8" selection-start="316" selection-end="403" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/user.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="33" selection-start="1448" selection-end="1448" vertical-scroll-proportion="0.54545456">
+        <state line="77" column="4" selection-start="1963" selection-end="1963" vertical-scroll-proportion="0.6136364">
           <folding />
         </state>
       </provider>

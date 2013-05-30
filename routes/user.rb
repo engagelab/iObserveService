@@ -26,7 +26,12 @@ class Iobserve < Sinatra::Application
   post '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json
-    data = JSON.parse request.body.read
+
+    bdy = request.body.read
+
+    if bdy.length > 2 then
+      data = JSON.parse bdy
+    end
 
     unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
       status 200
@@ -69,7 +74,12 @@ class Iobserve < Sinatra::Application
   put '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json;
-    data = JSON.parse request.body.read
+
+    bdy = request.body.read
+
+    if bdy.length > 2 then
+      data = JSON.parse bdy
+    end
 
     unless data.nil? or data['_id'].nil? then
       status 200
