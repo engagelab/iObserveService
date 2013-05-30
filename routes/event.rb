@@ -33,7 +33,7 @@ class Iobserve < Sinatra::Application
       end
 
       sessionob.eventobs << eventob
-      return sessionob.eventobs.to_json
+      return eventob.to_json
     else
       status 404
       return {"message" => "Error: provide a valid session id"}.to_json

@@ -31,9 +31,14 @@ class Iobserve < Sinatra::Application
     unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
       status 200
       login_id = data['email']
+      password = SecureRandom.uuid
 
       unless data['login_id'].nil?
         login_id = data['login_id']
+      end
+
+      unless data['password'].nil?
+        password = data['password']
       end
 
       existingEmail = User.where(:email => data['email']).first()
@@ -45,7 +50,7 @@ class Iobserve < Sinatra::Application
             :firstname => data['firstname'],
             :email => data['email'],
             :login_id => login_id,
-            :password => SecureRandom.uuid,
+            :password => password,
             :created_on => Time.now.iso8601)
 
         return user.to_json
