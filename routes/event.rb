@@ -9,8 +9,31 @@ class Iobserve < Sinatra::Application
     unless sessionob.nil? then
       status 200
       eventob = Eventob.create(:created_on => Time.now.iso8601)
+
+      bdy = request.body.read
+
+      if bdy.length > 2 then
+        data = JSON.parse bdy
+        unless data['interaction_id'].nil? then
+          begin
+            interaction = Interaction.find(data['interaction_id'])
+            if interaction
+              eventob.interactions << interaction
+            end
+          end
+        end
+
+        unless data['xpos'].nil?
+          eventob.update_attributes(:xpos => data['xpos'])
+        end
+
+        unless data['ypos'].nil?
+          eventob.update_attributes(:ypos => data['ypos'])
+        end
+      end
+
       sessionob.eventobs << eventob
-      return eventob.to_json
+      return sessionob.eventobs.to_json
     else
       status 404
       return {"message" => "Error: provide a valid session id"}.to_json

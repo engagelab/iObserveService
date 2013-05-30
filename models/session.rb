@@ -6,6 +6,7 @@ class Sessionob
   has_and_belongs_to_many :spaces
 
   has_one :visitorgroup
+  field :visitorgroup, :type => Object, :default => nil
 
   has_many :medias
   field :media_ids, :type => Array, :default => []

@@ -4,20 +4,21 @@ class Iobserve < Sinatra::Application
   post '/space/:space_id/session' do
     request.body.rewind  # in case someone already read it
     content_type :json
-    data = JSON.parse request.body.read
 
-    unless data.nil? or data['label'].nil? then
-      status 200
+    begin
       space = Space.find(params[:space_id])
-      sessionob = Sessionob.create(:label => data['label'], :created_on => Time.now.iso8601)
+    end
+
+    unless space.nil? then
+      sessionob = Sessionob.create(:created_on => Time.now.iso8601)
       visitorgroup = Visitorgroup.create(:created_on => Time.now.iso8601)
       sessionob.visitorgroup = visitorgroup
       space.sessionobs << sessionob
       space.save
-      return space.to_json
+      return sessionob.to_json
     else
       status 404
-      return {"message" => "Error: provide a valid label"}.to_json
+      return {"message" => "Space not found"}.to_json
     end
   end
 

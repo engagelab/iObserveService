@@ -32,27 +32,31 @@ class Iobserve < Sinatra::Application
             end
           end
 
-          begin
-            action = Action.find(data['action'])
-          rescue
-            return {"message" => "Error: the action id provided does not exist"}.to_json
-            halt 404
+          unless data['action'].nil? then
+            begin
+              action = Action.find(data['action'])
+            rescue
+              return {"message" => "Error: the action id provided does not exist"}.to_json
+              halt 404
+            end
+
+            unless action.nil? then
+              interaction.actions << action
+            end
           end
 
-          unless action.nil? then
-            interaction.actions << action
-          end
 
+          unless data['resource'].nil? then
+            begin
+              resource = Resource.find(data['resource'])
+            rescue
+              return {"message" => "Error: the resource id provided does not exist"}.to_json
+              halt 404
+            end
 
-          begin
-            resource = Resource.find(data['resource'])
-          rescue
-            return {"message" => "Error: the resource id provided does not exist"}.to_json
-            halt 404
-          end
-
-          unless resource.nil? then
-            interaction.resources << resource
+            unless resource.nil? then
+              interaction.resources << resource
+            end
           end
 
           interaction.save

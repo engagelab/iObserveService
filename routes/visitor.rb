@@ -38,6 +38,10 @@ class Iobserve < Sinatra::Application
           unless data['comment'].nil? then
             visitor.update_attributes(:comment => data['comment'])
           end
+
+          unless data['color'].nil? then
+            visitor.update_attributes(:color => data['color'])
+          end
         end
 
       else
@@ -109,6 +113,10 @@ class Iobserve < Sinatra::Application
 
       unless data['comment'].nil? then
         visitor.update_attributes(:comment => data['comment'])
+      end
+
+      unless data['color'].nil? then
+        visitor.update_attributes(:color => data['color'])
       end
 
       return visitor.to_json

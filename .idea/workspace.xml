@@ -7,24 +7,35 @@
     <file path="/mongoid.yml" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365689723665" ignored="false" />
     <file path="/web.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366270276223" ignored="false" />
     <file path="/note.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365751550657" ignored="false" />
-    <file path="$APPLICATION_HOME_DIR$/lib/rubymine.jar!/resources/relaxng.rng" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365770263888" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/rubymine.jar!/resources/relaxng.rng" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <file path="/Gemfile" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365771294416" ignored="false" />
     <file path="/login.html" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365772584242" ignored="false" />
     <file path="/user.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368519064232" ignored="false" />
     <file path="/space.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368538250920" ignored="false" />
-    <file path="/session.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1367858222619" ignored="false" />
-    <file path="/room.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366188352875" ignored="false" />
+    <file path="/session.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369406452142" ignored="false" />
+    <file path="/room.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369298463795" ignored="false" />
     <file path="/coordinate.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366187305567" ignored="false" />
     <file path="/media.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366203576530" ignored="false" />
-    <file path="/event.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368454996828" ignored="false" />
+    <file path="/event.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369667273609" ignored="false" />
     <file path="/visitorgroup.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366209220488" ignored="false" />
-    <file path="/visitor.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368455664571" ignored="false" />
+    <file path="/visitor.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369405380015" ignored="false" />
     <file path="/config.ru" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366269744372" ignored="false" />
     <file path="/init.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1367560630865" ignored="false" />
-    <file path="/interaction.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368455304625" ignored="false" />
+    <file path="/interaction.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369666745698" ignored="false" />
     <file path="/behavior.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1366286252350" ignored="false" />
     <file path="/resource.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368011344055" ignored="false" />
     <file path="/action.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368015766299" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xinclude.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511374" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xslt-1_0.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/XMLSchema-instance.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xslt-2_0.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xml.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xhtml1-frameset.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xhtml1-transitional.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/xhtml1-strict.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/catalog.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/html5/xhtml5.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
+    <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/XMLSchema.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,19 +55,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="visitorgroup.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="23" selection-start="81" selection-end="90" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="interaction.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/interaction.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="2" selection-start="127" selection-end="127" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -65,14 +67,41 @@
       <file leaf-file-name="interaction.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="155" selection-start="242" selection-end="565" vertical-scroll-proportion="0.0">
+            <state line="14" column="13" selection-start="242" selection-end="419" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="uploadedImage.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/uploadedImage.rb">
+      <file leaf-file-name="room.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/room.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="186" column="83" selection-start="5119" selection-end="5119" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="session.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/session.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="6" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="event.rb" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/routes/event.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="197" selection-start="818" selection-end="818" vertical-scroll-proportion="0.47727272">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="space.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/space.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -80,55 +109,37 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="web.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web.rb">
+      <file leaf-file-name="session.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/session.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="32" selection-start="2499" selection-end="2499" vertical-scroll-proportion="0.0">
+            <state line="13" column="20" selection-start="263" selection-end="271" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/user.rb">
+      <file leaf-file-name="visitor.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/visitor.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="35" selection-start="181" selection-end="200" vertical-scroll-proportion="0.0">
+            <state line="15" column="23" selection-start="372" selection-end="386" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="space.rb" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/space.rb">
+      <file leaf-file-name="visitorgroup.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/visitorgroup.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="34" selection-start="349" selection-end="349" vertical-scroll-proportion="0.18018018">
+            <state line="9" column="49" selection-start="368" selection-end="368" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mongoid.yml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/mongoid.yml">
+      <file leaf-file-name="visitor.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/visitor.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Gemfile" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gemfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="12" selection-start="42" selection-end="42" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="71" column="106" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -144,22 +155,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/routes/visitor.rb" />
-        <option value="$PROJECT_DIR$/routes/session.rb" />
-        <option value="$PROJECT_DIR$/routes/room.rb" />
-        <option value="$PROJECT_DIR$/routes/media.rb" />
-        <option value="$PROJECT_DIR$/routes/resource.rb" />
         <option value="$PROJECT_DIR$/models/init.rb" />
         <option value="$PROJECT_DIR$/models/action.rb" />
         <option value="$PROJECT_DIR$/models/resource.rb" />
-        <option value="$PROJECT_DIR$/routes/interaction.rb" />
         <option value="$PROJECT_DIR$/models/interaction.rb" />
-        <option value="$PROJECT_DIR$/models/visitor.rb" />
         <option value="$PROJECT_DIR$/models/event.rb" />
-        <option value="$PROJECT_DIR$/routes/event.rb" />
         <option value="$PROJECT_DIR$/routes/user.rb" />
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/routes/space.rb" />
+        <option value="$PROJECT_DIR$/models/room.rb" />
+        <option value="$PROJECT_DIR$/routes/room.rb" />
+        <option value="$PROJECT_DIR$/models/session.rb" />
+        <option value="$PROJECT_DIR$/models/visitor.rb" />
+        <option value="$PROJECT_DIR$/routes/session.rb" />
+        <option value="$PROJECT_DIR$/routes/visitor.rb" />
+        <option value="$PROJECT_DIR$/routes/interaction.rb" />
+        <option value="$PROJECT_DIR$/routes/event.rb" />
       </list>
     </option>
   </component>
@@ -295,13 +306,13 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="Errors" />
+    <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -488,8 +499,8 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24980111" sideWeight="0.7352246" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10501193" sideWeight="0.8229167" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17708333" sideWeight="0.9681782" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10739857" sideWeight="0.7275641" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2724359" sideWeight="0.9681782" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32939324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -569,95 +580,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/action.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="25" selection-start="63" selection-end="86" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/action.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="58" selection-start="996" selection-end="996" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/session.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="6" selection-start="105" selection-end="105" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="39" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/event.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="21" selection-start="201" selection-end="201" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/event.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="19" selection-start="1571" selection-end="1571" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/uploadedImage.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="32" selection-start="2499" selection-end="2499" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="23" selection-start="81" selection-end="90" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/interaction.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="2" selection-start="127" selection-end="127" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="155" selection-start="242" selection-end="565" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/mongoid.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Gemfile">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="12" selection-start="42" selection-end="42" vertical-scroll-proportion="0.0">
@@ -665,16 +587,101 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/user.rb">
+    <entry file="file://$PROJECT_DIR$/models/user.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="35" selection-start="181" selection-end="200" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/space.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="34" selection-start="349" selection-end="349" vertical-scroll-proportion="0.18018018">
+        <state line="32" column="8" selection-start="950" selection-end="950" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/action.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/room.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="12" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/room.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="186" column="83" selection-start="5119" selection-end="5119" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/space.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="23" selection-start="372" selection-end="386" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/visitorgroup.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="49" selection-start="368" selection-end="368" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/visitor.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="106" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/interaction.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="242" selection-end="419" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/session.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="20" selection-start="263" selection-end="271" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/session.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="6" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/event.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="197" selection-start="818" selection-end="818" vertical-scroll-proportion="0.47727272">
           <folding />
         </state>
       </provider>

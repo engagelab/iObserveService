@@ -76,8 +76,8 @@ class Iobserve < Sinatra::Application
         room.update_attributes(:position => data['position'])
       end
 
-      unless data['representation'].nil?
-        room.update_attributes(:representation => data['representation'])
+      unless data['uri'].nil?
+        room.update_attributes(:uri => data['uri'])
       end
 
       unless data['label'].nil?
