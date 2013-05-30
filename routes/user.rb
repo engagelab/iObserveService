@@ -26,14 +26,24 @@ class Iobserve < Sinatra::Application
   post '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json
-    data = JSON.parse request.body.read
+
+    bdy = request.body.read
+
+    if bdy.length > 2 then
+      data = JSON.parse bdy
+    end
 
     unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
       status 200
       login_id = data['email']
+      password = SecureRandom.uuid
 
       unless data['login_id'].nil?
         login_id = data['login_id']
+      end
+
+      unless data['password'].nil?
+        password = data['password']
       end
 
       existingEmail = User.where(:email => data['email']).first()
@@ -45,7 +55,7 @@ class Iobserve < Sinatra::Application
             :firstname => data['firstname'],
             :email => data['email'],
             :login_id => login_id,
-            :password => SecureRandom.uuid,
+            :password => password,
             :created_on => Time.now.iso8601)
 
         return user.to_json
@@ -64,7 +74,12 @@ class Iobserve < Sinatra::Application
   put '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json;
-    data = JSON.parse request.body.read
+
+    bdy = request.body.read
+
+    if bdy.length > 2 then
+      data = JSON.parse bdy
+    end
 
     unless data.nil? or data['_id'].nil? then
       status 200
