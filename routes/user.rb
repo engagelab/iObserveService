@@ -4,7 +4,7 @@ class Iobserve < Sinatra::Application
   get '/user' do
     content_type :json
     @user = User.without(:password).all()
-    return @user.to_json
+    return {"users" => @user}.to_json
   end
 
   ### get user by id

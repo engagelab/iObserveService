@@ -10,7 +10,7 @@
     <file path="$APPLICATION_HOME_DIR$/lib/rubymine.jar!/resources/relaxng.rng" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <file path="/Gemfile" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365771294416" ignored="false" />
     <file path="/login.html" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365772584242" ignored="false" />
-    <file path="/user.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369915182534" ignored="false" />
+    <file path="/user.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369995733328" ignored="false" />
     <file path="/space.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368538250920" ignored="false" />
     <file path="/session.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369406452142" ignored="false" />
     <file path="/room.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369298463795" ignored="false" />
@@ -130,7 +130,7 @@
       <file leaf-file-name="user.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/user.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="165" column="55" selection-start="4217" selection-end="4223" vertical-scroll-proportion="2.8125">
+            <state line="6" column="29" selection-start="236" selection-end="236" vertical-scroll-proportion="0.10227273">
               <folding />
             </state>
           </provider>
@@ -159,9 +159,9 @@
         <option value="$PROJECT_DIR$/routes/session.rb" />
         <option value="$PROJECT_DIR$/routes/visitor.rb" />
         <option value="$PROJECT_DIR$/routes/interaction.rb" />
-        <option value="$PROJECT_DIR$/routes/user.rb" />
         <option value="$PROJECT_DIR$/routes/event.rb" />
         <option value="$PROJECT_DIR$/models/interaction.rb" />
+        <option value="$PROJECT_DIR$/routes/user.rb" />
       </list>
     </option>
   </component>
@@ -651,13 +651,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/event.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="13" selection-start="2412" selection-end="2412" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/interaction.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="28" selection-start="266" selection-end="266" vertical-scroll-proportion="0.0">
@@ -672,9 +665,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/routes/event.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="13" selection-start="2412" selection-end="2412" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/user.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="165" column="55" selection-start="4217" selection-end="4223" vertical-scroll-proportion="2.8125">
+        <state line="6" column="29" selection-start="236" selection-end="236" vertical-scroll-proportion="0.10227273">
           <folding />
         </state>
       </provider>
