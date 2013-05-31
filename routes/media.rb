@@ -10,7 +10,7 @@ class Iobserve < Sinatra::Application
       sessionob = Sessionob.find(params[:session_id])
       unless sessionob.nil? then
         status 200
-        media = Media.create(:uri => data['uri'], :content_type => data['content_type'], :created_on => Time.now.iso8601)
+        media = Media.create(:uri => data['uri'], :content_type => data['content_type'], :created_on => Time.now.to_i)
         sessionob.medias << media
         sessionob.save
         return sessionob.medias.to_json

@@ -6,7 +6,7 @@ class Visitor
   belongs_to :visitorgroup
   has_and_belongs_to_many :interactions
 
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
   field :age, :type => String
   field :sex, :type => String
   field :nationality, :type => String

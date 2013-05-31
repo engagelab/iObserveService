@@ -15,7 +15,7 @@ class Iobserve < Sinatra::Application
     end
 
     unless (data.nil? and data['visitors'].nil? and data['action'].nil?) or (data.nil? and data['visitors'].nil? and data['resource'].nil?) then
-        interaction = Interaction.create(:created_on => Time.now.iso8601)
+        interaction = Interaction.create(:created_on => Time.now.to_i)
         visitorArray = data['visitors']
 
         if visitorArray.kind_of?(Array)

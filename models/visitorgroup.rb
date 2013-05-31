@@ -9,5 +9,5 @@ class Visitorgroup
   field :visitors, :type => Array, :default => []
 
   field :comment, :type => String, :default => ''
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
 end

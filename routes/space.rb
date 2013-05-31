@@ -29,7 +29,7 @@ class Iobserve < Sinatra::Application
 
     unless data.nil? or data['label'].nil? then
       user = User.without(:password).find(params[:user_id])
-      space = Space.create(:label => data['label'], :created_on => Time.now.iso8601)
+      space = Space.create(:label => data['label'], :created_on => Time.now.to_i)
       user.spaces << space
       user.save
       return user.to_json

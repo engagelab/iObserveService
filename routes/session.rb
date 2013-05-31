@@ -10,8 +10,8 @@ class Iobserve < Sinatra::Application
     end
 
     unless space.nil? then
-      sessionob = Sessionob.create(:created_on => Time.now.iso8601)
-      visitorgroup = Visitorgroup.create(:created_on => Time.now.iso8601)
+      sessionob = Sessionob.create(:created_on => Time.now.to_i)
+      visitorgroup = Visitorgroup.create(:created_on => Time.now.to_i)
       sessionob.visitorgroup = visitorgroup
       space.sessionobs << sessionob
       space.save
@@ -75,7 +75,7 @@ class Iobserve < Sinatra::Application
 
     unless sessionob.nil? then
       status 200
-      sessionob.update_attributes(:finished_on => Time.now.iso8601)
+      sessionob.update_attributes(:finished_on => Time.now.to_i)
 
       return sessionob.to_json
     else

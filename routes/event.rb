@@ -8,7 +8,7 @@ class Iobserve < Sinatra::Application
 
     unless sessionob.nil? then
       status 200
-      eventob = Eventob.create(:created_on => Time.now.iso8601)
+      eventob = Eventob.create(:created_on => Time.now.to_i)
 
       bdy = request.body.read
 
@@ -44,7 +44,7 @@ class Iobserve < Sinatra::Application
   ### list all sessions
   get '/event' do
     content_type :json
-    @eventob = Eventob.all()
+    @eventob = Eventob.order_by(:created_on.asc).all()
     return @eventob.to_json
   end
 

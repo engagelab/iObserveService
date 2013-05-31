@@ -11,7 +11,7 @@ class Eventob
   has_many :interactions
   field :interactions, :type => Array, :default => []
 
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
   field :comment, :type => String
   field :xpos, :type => Integer, :default => 0
   field :ypos, :type => Integer, :default => 0

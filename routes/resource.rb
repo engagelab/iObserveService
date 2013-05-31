@@ -15,14 +15,15 @@ class Iobserve < Sinatra::Application
     end
 
     unless data.nil? or data['type'].nil? then
+      newresource = data['type'].upcase
 
-      if Resource.where({ :type => data['type'] }).count == 0 then
+      if Resource.where({ :type => newresource }).count == 0 then
         status 200
-        resource = Resource.create(:type => data['type'])
+        resource = Resource.create(:type => newresource)
         return  resource.to_json
       else
         status 202
-        return Resource.where({ :type => data['type'] }).first().to_json
+        return Resource.where({ :type => newresource }).first().to_json
       end
     else
       status 404
@@ -34,7 +35,7 @@ class Iobserve < Sinatra::Application
   ### list all resources
   get '/resource' do
     content_type :json
-    @resource = Resource.all()
+    @resource = Resource.order_by(:_id.asc).all()
     return @resource.to_json
   end
 
@@ -59,11 +60,11 @@ class Iobserve < Sinatra::Application
       return {"message" => "Error: provide a valid JSON"}.to_json
     end
 
-    unless data.nil? or data['type'].nil? or Resource.where({ :type => data['type'] }).count > 0 then
+    unless data.nil? or data['type'].nil? or Resource.where({ :type => data['type'].upcase }).count > 0 then
       status 200
 
       resource = Resource.find(data['_id'])
-      resource.update_attributes(:type => data['type'])
+      resource.update_attributes(:type => data['type'].upcase)
 
       return resource.to_json
     else

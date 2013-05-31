@@ -8,6 +8,6 @@ class Media
 
   field :uri, :type => String
   field :content_type, :type => String
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
 
 end

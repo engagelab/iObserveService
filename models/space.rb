@@ -12,5 +12,5 @@ class Space
   field :sessionobs, :type => Array, :default => []
 
   field :label, :type => String
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
 end

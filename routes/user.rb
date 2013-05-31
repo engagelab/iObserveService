@@ -56,7 +56,7 @@ class Iobserve < Sinatra::Application
             :email => data['email'],
             :login_id => login_id,
             :password => password,
-            :created_on => Time.now.iso8601)
+            :created_on => Time.now.to_i)
 
         return user.to_json
       else

@@ -11,6 +11,6 @@ class User
   field :email, :type => String
   field :login_id, :type => String
   field :password, :type => String
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
 
 end

@@ -9,7 +9,10 @@ class Interaction
   field :visitors, :type => Array, :default => []
 
   has_and_belongs_to_many :actions, class_name: "Action"
-  has_and_belongs_to_many :resources, class_name: "Resource"
+  field :actions, :type => Array, :default => []
 
-  field :created_on, :type => Time
+  has_and_belongs_to_many :resources, class_name: "Resource"
+  field :resources, :type => Array, :default => []
+
+  field :created_on, :type => Bignum
 end

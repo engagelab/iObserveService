@@ -15,14 +15,15 @@ class Iobserve < Sinatra::Application
     end
 
     unless data.nil? or data['type'].nil? then
+      newtype = data['type'].upcase
 
-      if Action.where({ :type => data['type'] }).count  == 0 then
+      if Action.where({ :type => newtype }).count  == 0 then
         status 200
-        action = Action.create(:type => data['type'])
+        action = Action.create(:type => newtype)
         return  action.to_json
       else
         status 202
-        return Action.where({ :type => data['type'] }).to_json
+        return Action.where({ :type => newtype }).to_json
       end
     else
       status 404
@@ -34,7 +35,7 @@ class Iobserve < Sinatra::Application
   ### list all actions
   get '/action' do
     content_type :json
-    @action = Action.all()
+    @action = Action.order_by(:type.asc).all()
     return @action.to_json
   end
 
@@ -59,11 +60,11 @@ class Iobserve < Sinatra::Application
       return {"message" => "Error: provide a valid JSON"}.to_json
     end
 
-    unless data.nil? or data['type'].nil? or Action.where({ :type => data['type'] }).count > 0 then
+    unless data.nil? or data['type'].nil? or Action.where({ :type => data['type'].upcase }).count > 0 then
       status 200
 
       action = Action.find(data['_id'])
-      action.update_attributes(:type => data['type'])
+      action.update_attributes(:type => data['type'].upcase)
 
       return action.to_json
     else

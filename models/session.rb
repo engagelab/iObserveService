@@ -15,7 +15,7 @@ class Sessionob
   field :eventob_ids, :type => Array, :default => []
 
   field :label, :type => String
-  field :created_on, :type => Time
+  field :created_on, :type => Bignum
   field :finished_on, :type => Time
   field :surveys, :type => Array, :default => []
   field :stats, :type => Array, :default => []
