@@ -4,7 +4,11 @@ class Iobserve < Sinatra::Application
   get '/user' do
     content_type :json
     @user = User.without(:password).all()
-    return {"users" => @user}.to_json
+    if @user.size > 1
+      return {"users" => @user}.to_json
+    else
+      return {"user" => @user}.to_json
+    end
   end
 
   ### get user by id
@@ -18,7 +22,7 @@ class Iobserve < Sinatra::Application
       status 404
     else
       status 200
-      return user.to_json
+      return {"user" => user}.to_json
     end
   end
 
@@ -33,7 +37,7 @@ class Iobserve < Sinatra::Application
       data = JSON.parse bdy
     end
 
-    unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
+    unless data.nil? or (data['last_name'].nil? and data['first_name'].nil? and data['email'].nil?) then
       status 200
       login_id = data['email']
       password = SecureRandom.uuid
@@ -51,14 +55,14 @@ class Iobserve < Sinatra::Application
 
       if existingEmail.nil? and existingLoginId.nil? then
         user = User.create(
-            :lastname => data['lastname'],
-            :firstname => data['firstname'],
+            :last_name => data['last_name'],
+            :first_name => data['first_name'],
             :email => data['email'],
             :login_id => login_id,
             :password => password,
             :created_on => Time.now.to_i)
 
-        return user.to_json
+        return {"user" => user}.to_json
       else
         status 404
         return {"errorMessage" => "User(email) and/or login id already exist"}.to_json
@@ -86,11 +90,11 @@ class Iobserve < Sinatra::Application
 
       user = User.find(data['_id'])
 
-      unless data['lastname'].nil?
+      unless data['last_name'].nil?
         user.update_attributes(:lastname => data['lastname'])
       end
 
-      unless data['firstname'].nil?
+      unless data['first_name'].nil?
         user.update_attributes(:firstname => data['firstname'])
       end
 
@@ -118,7 +122,7 @@ class Iobserve < Sinatra::Application
         user.update_attributes(:password => data['password'])
       end
 
-      return user.to_json
+      return {"user" => user}.to_json
     else
       status 404
       return {"message" => "Provide _id, lastname, firstname, email and password"}.to_json
