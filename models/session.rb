@@ -16,7 +16,7 @@ class Sessionob
 
   field :label, :type => String
   field :created_on, :type => Bignum
-  field :finished_on, :type => Time
+  field :finished_on, :type => Bignum
   field :surveys, :type => Array, :default => []
   field :stats, :type => Array, :default => []
 end
