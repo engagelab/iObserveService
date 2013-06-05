@@ -1,14 +1,18 @@
 class Iobserve < Sinatra::Application
   ######################## User ##################################
   ### get all users
-  get '/user' do
+  get '/users' do
     content_type :json
     @user = User.without(:password).all()
-    return {"users" => @user}.to_json
+    if @user.size > 1
+      return {"users" => @user}.to_json
+    else
+      return {"user" => @user}.to_json
+    end
   end
 
   ### get user by id
-  get '/user/:id' do
+  get '/users/:id' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -18,12 +22,12 @@ class Iobserve < Sinatra::Application
       status 404
     else
       status 200
-      return user.to_json
+      return {"user" => user}.to_json
     end
   end
 
   ### create a user
-  post '/user' do
+  post '/users' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -32,8 +36,9 @@ class Iobserve < Sinatra::Application
     if bdy.length > 2 then
       data = JSON.parse bdy
     end
+    data = data['user']
 
-    unless data.nil? or (data['lastname'].nil? and data['firstname'].nil? and data['email'].nil?) then
+    unless data.nil? or (data['last_name'].nil? and data['first_name'].nil? and data['email'].nil?) then
       status 200
       login_id = data['email']
       password = SecureRandom.uuid
@@ -51,27 +56,27 @@ class Iobserve < Sinatra::Application
 
       if existingEmail.nil? and existingLoginId.nil? then
         user = User.create(
-            :lastname => data['lastname'],
-            :firstname => data['firstname'],
+            :last_name => data['last_name'],
+            :first_name => data['first_name'],
             :email => data['email'],
             :login_id => login_id,
             :password => password,
             :created_on => Time.now.to_i)
 
-        return user.to_json
+        return {"user" => user}.to_json
       else
-        status 404
+        status 401
         return {"errorMessage" => "User(email) and/or login id already exist"}.to_json
       end
 
     else
-      status 404
+      status 401
       return {"errorMessage" => "Provide lastname, firstname and email"}.to_json
     end
   end
 
   ### update user's properties
-  put '/user' do
+  put '/users' do
     request.body.rewind  # in case someone already read it
     content_type :json;
 
@@ -80,17 +85,17 @@ class Iobserve < Sinatra::Application
     if bdy.length > 2 then
       data = JSON.parse bdy
     end
-
+    data = data['user']
     unless data.nil? or data['_id'].nil? then
       status 200
 
       user = User.find(data['_id'])
 
-      unless data['lastname'].nil?
+      unless data['last_name'].nil?
         user.update_attributes(:lastname => data['lastname'])
       end
 
-      unless data['firstname'].nil?
+      unless data['first_name'].nil?
         user.update_attributes(:firstname => data['firstname'])
       end
 
@@ -118,7 +123,7 @@ class Iobserve < Sinatra::Application
         user.update_attributes(:password => data['password'])
       end
 
-      return user.to_json
+      return {"user" => user}.to_json
     else
       status 404
       return {"message" => "Provide _id, lastname, firstname, email and password"}.to_json
@@ -126,7 +131,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### delete a user by id
-  delete '/user/:id' do
+  delete '/users/:id' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -144,7 +149,7 @@ class Iobserve < Sinatra::Application
     end
   end
 
-  post '/login' do
+  get '/login' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -156,7 +161,7 @@ class Iobserve < Sinatra::Application
       halt 404
       return {"message" => "Error: provide a valid JSON"}.to_json
     end
-
+    data = data['login']
     unless data.nil? and data['login_id'].nil? and data['password'].nil? then
       user = User.where(:login_id => data['login_id']).first()
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>iObserve</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/bootstrap.css" media="screen">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <script type="text/x-handlebars" >
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">iObserve</a>
+        <ul class="nav">
+          <li>{{#linkTo 'about'}}About{{/linkTo}}</li>
+          {{#if controllers.index.userLoggedIn}}
+            <li>{{#linkTo 'profile'}}Profile{{/linkTo}}</li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="index">
+    <div class="container-fluid">
+      {{#unless userLoggedIn}}
+      <form class="form-signin" {{action "login" on="submit"}}>
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <a href="#/registration">or register as a new user..</a>
+        {{#if loginFailed}}
+          <div class="alert">Invalid username or password.</div>
+        {{/if}}
+        {{#if isSlowConnection}}
+          <div class="alert alert-info">The request seems to be taking more time than usual, please wait.</div>
+        {{/if}}
+        <div class="control-group">
+          <div class="control-label">
+            <label>Email</label>
+          </div>
+          <div class="controls">
+            {{input value=email type="text" placeholder="email address"}}
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">
+            <label>Password</label>
+          </div>
+          <div class="controls">
+            {{input value=password type="password" placeholder="password"}}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-medium btn-primary" {{bindAttr disabled="isProcessing"}}>Log in</button>
+      </form>
+      {{else}}
+        <form class="form-signin" {{action "logout" on="submit"}}>
+          <h2 class="form-signin-heading">You are logged in!</h2>
+          <button type="submit" class="btn btn-medium btn-primary" {{bindAttr disabled="isProcessing"}}>Log out</button>
+        </form>
+      {{/unless}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="registration">
+    <div class="container-fluid">
+      <form class="form-signin" {{action "register" on="submit"}}>
+        <h2 class="form-signin-heading">Enter your user details</h2>
+        <div class="control-group">
+          <div class="control-label">
+            <label>First Name</label>
+          </div>
+          <div class="controls">
+            {{view Ember.TextField valueBinding="firstName" placeholder="first name" }}
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">
+            <label>Last Name</label>
+          </div>
+          <div class="controls">
+            {{input value=lastName type="text" placeholder="last name"}}
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">
+            <label>Email</label>
+          </div>
+          <div class="controls">
+            {{input value=email type="text" placeholder="email address"}}
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">
+            <label>Password</label>
+          </div>
+          <div class="controls">
+            {{input value=password type="password" placeholder="password"}}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-medium btn-primary" {{bindAttr disabled="isProcessing"}}>Register</button>
+      </form>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="about">
+    <div class='about'>
+      <p>The iObserve Portal enables members to review the results of their spacial surveys</p>
+      <p>Login to begin discovery...</p>
+    </div>
+
+    <div class='about'>
+      <p>EngageLab <a href="http://www.engagelab.net/">EngageLab</a>, a research organisation working with pedagogy and practice based reserch in Oslo</p>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="profile">
+    <div class='profile'>
+      <li>{{model.firstName}}&nbsp{{model.lastName}}</li>
+    </div>
+  </script>
+
+
+<script src="js/libs/jquery-1.9.1.js"></script>
+<script src="js/libs/handlebars-1.0.0-rc.4.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+<script src="js/libs/ember-1.0.0-rc.4.js"></script>
+<script src="js/libs/ember-data-latest.js"></script>
+<script src="js/libs/showdown.js"></script>
+<script src="js/libs/moment.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
