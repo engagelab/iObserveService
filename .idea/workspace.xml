@@ -10,7 +10,7 @@
     <file path="$APPLICATION_HOME_DIR$/lib/rubymine.jar!/resources/relaxng.rng" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <file path="/Gemfile" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365771294416" ignored="false" />
     <file path="/login.html" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1365772584242" ignored="false" />
-    <file path="/user.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1370004274866" ignored="false" />
+    <file path="/user.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1370341762330" ignored="false" />
     <file path="/space.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1368538250920" ignored="false" />
     <file path="/session.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369406452142" ignored="false" />
     <file path="/room.rb" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369298463795" ignored="false" />
@@ -37,6 +37,8 @@
     <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/html5/xhtml5.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/lib/openapi.jar!/standardSchemas/XMLSchema.xsd" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1369297511375" ignored="false" />
     <file path="/a.dummy" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1370003141427" ignored="false" />
+    <file path="/app.js" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1370360199840" ignored="false" />
+    <file path="/index.html" changelist="e30ce5ac-1d62-42da-8c93-d855a881e949" time="1370360299141" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,91 +58,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="visitorgroup.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/iObserveJquery/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="2" selection-start="216" selection-end="216" vertical-scroll-proportion="0.0">
+            <state line="26" column="90" selection-start="966" selection-end="966" vertical-scroll-proportion="-16.25">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="resource.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/resource.rb">
+      <file leaf-file-name="app.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/iObserveJquery/js/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="room.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/room.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="2" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="event.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/event.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="2" selection-start="237" selection-end="237" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="media.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/media.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="2" selection-start="178" selection-end="178" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="space.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/space.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="2" selection-start="299" selection-end="299" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="14" selection-start="261" selection-end="261" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.rb" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/user.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="123" column="21" selection-start="3244" selection-end="3244" vertical-scroll-proportion="0.45394737">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="session.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/session.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="2" selection-start="360" selection-end="360" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="visitor.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/visitor.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="2" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
+            <state line="13" column="44" selection-start="324" selection-end="324" vertical-scroll-proportion="0.23159145">
               <folding />
             </state>
           </provider>
@@ -156,12 +86,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/routes/interaction.rb" />
-        <option value="$PROJECT_DIR$/models/interaction.rb" />
-        <option value="$PROJECT_DIR$/routes/event.rb" />
-        <option value="$PROJECT_DIR$/routes/media.rb" />
-        <option value="$PROJECT_DIR$/routes/room.rb" />
-        <option value="$PROJECT_DIR$/routes/session.rb" />
         <option value="$PROJECT_DIR$/routes/space.rb" />
         <option value="$PROJECT_DIR$/routes/visitor.rb" />
         <option value="$PROJECT_DIR$/models/event.rb" />
@@ -171,13 +95,19 @@
         <option value="$PROJECT_DIR$/models/visitorgroup.rb" />
         <option value="$PROJECT_DIR$/models/session.rb" />
         <option value="$PROJECT_DIR$/models/user.rb" />
+        <option value="localhost:9292/iObserveEmber/js/libs/ember-1.0.0-rc.4.js" />
         <option value="$PROJECT_DIR$/routes/user.rb" />
+        <option value="$PROJECT_DIR$/public/iObserveEmber/js/app.js" />
+        <option value="localhost:9292/iObserveEmber/js/app.js" />
+        <option value="localhost:9292/iObserveJquery/js/libs/angular.min.js" />
+        <option value="$PROJECT_DIR$/public/iObserveJquery/index.html" />
+        <option value="$PROJECT_DIR$/public/iObserveJquery/js/app.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="22" />
-    <option name="width" value="2560" />
+    <option name="width" value="1920" />
     <option name="height" value="1178" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -225,6 +155,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -254,6 +185,104 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveJquery" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveJquery" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveJquery" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="iObserveEmber" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -301,19 +330,18 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="options.lastSelected" value="editor.preferences.appearance" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="Errors" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -322,7 +350,7 @@
       <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
-  <component name="RunManager" selected="Rack.config.ru">
+  <component name="RunManager" selected="JavaScript Debug.iObserveJquery">
     <configuration default="false" name="config.ru" type="RackRunConfigurationType" factoryName="Rack" temporary="true">
       <module name="iObserveService" />
       <RACK_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
@@ -426,6 +454,13 @@
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
       <method />
     </configuration>
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Remote" singleton="true">
+      <JSRemoteDebuggerConfigurationSettings>
+        <option name="engineId" value="chrome" />
+        <option name="fileUrl" value="localhost:9292/iObserveEmber/index.html" />
+      </JSRemoteDebuggerConfigurationSettings>
+      <method />
+    </configuration>
     <configuration default="true" type="JavascriptDebugSession" factoryName="Local" singleton="true">
       <JSDebuggerConfigurationSettings>
         <option name="engineId" value="embedded" />
@@ -456,8 +491,30 @@
       <RACK_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="false" />
       <method />
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Rack.config.ru" />
+    <configuration default="false" name="iObserveEmber" type="JavascriptDebugSession" factoryName="Remote" singleton="true">
+      <JSRemoteDebuggerConfigurationSettings>
+        <option name="engineId" value="firefox" />
+        <option name="fileUrl" value="localhost:9292/iObserveEmber/index.html" />
+        <mapping url="localhost:9292/iObserveEmber/index.html" local-file="$PROJECT_DIR$/public/iObserveEmber/index.html" />
+      </JSRemoteDebuggerConfigurationSettings>
+      <RunnerSettings RunnerId="JavascriptDebugRunner" />
+      <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="iObserveJquery" type="JavascriptDebugSession" factoryName="Remote" singleton="true">
+      <JSRemoteDebuggerConfigurationSettings>
+        <option name="engineId" value="chrome" />
+        <option name="fileUrl" value="localhost:9292/iObserveJquery/index.html" />
+        <mapping url="localhost:9292/iObserveJquery/index.html" local-file="$PROJECT_DIR$/public/iObserveJquery/index.html" />
+      </JSRemoteDebuggerConfigurationSettings>
+      <RunnerSettings RunnerId="JavascriptDebugRunner" />
+      <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
+      <method />
+    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.iObserveEmber" />
+      <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.iObserveJquery" />
+      <item index="2" class="java.lang.String" itemvalue="Rack.config.ru" />
     </list>
     <recent_temporary>
       <list size="1">
@@ -466,7 +523,7 @@
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false">
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />
     <option name="mySSHConnectionTimeout" value="30000" />
@@ -476,7 +533,6 @@
     <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
     <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
     <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="DETECT_NESTED_COPIES" value="true" />
     <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
@@ -493,15 +549,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="2560" height="1178" extended-state="0" />
+    <frame x="0" y="22" width="1920" height="1178" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24980111" sideWeight="0.7352246" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10819411" sideWeight="0.7276085" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2723915" sideWeight="0.9681782" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16808964" sideWeight="0.80481035" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19518964" sideWeight="0.9681782" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32939324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -574,49 +630,25 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>http://localhost:9292/iObserveEmber/js/app.js</url>
+          <line>107</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>http://localhost:9292/iObserveEmber/js/app.js</url>
+          <line>103</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="29" />
+      <option name="time" value="66" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/routes/media.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="104" selection-start="586" selection-end="586" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/room.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="65" selection-start="468" selection-end="468" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/session.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="50" selection-start="1966" selection-end="1966" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/space.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="67" selection-start="924" selection-end="924" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/visitor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="48" selection-start="613" selection-end="613" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/interaction.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/event.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="2" selection-start="237" selection-end="237" vertical-scroll-proportion="0.0">
@@ -627,27 +659,6 @@
     <entry file="file://$PROJECT_DIR$/models/media.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="2" selection-start="178" selection-end="178" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitorgroup.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="2" selection-start="216" selection-end="216" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/resource.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="2" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -666,23 +677,82 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/room.rb">
+    <entry file="file://$PROJECT_DIR$/models/visitor.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="2" selection-start="193" selection-end="193" vertical-scroll-proportion="0.0">
+        <state line="8" column="2" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/user.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="14" selection-start="261" selection-end="261" vertical-scroll-proportion="0.0">
+        <state line="11" column="14" selection-start="261" selection-end="261" vertical-scroll-proportion="0.195962">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="http://localhost:9292/iObserveEmber/js/libs/ember-1.0.0-rc.4.js">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="http://localhost:9292/iObserveEmber/js/app.js">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveEmber/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="107" column="31" selection-start="2168" selection-end="2168" vertical-scroll-proportion="0.5463183">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/user.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="21" selection-start="3244" selection-end="3244" vertical-scroll-proportion="0.45394737">
+        <state line="67" column="0" selection-start="1735" selection-end="1735" vertical-scroll-proportion="0.33254156">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="http://localhost:9292/iObserveJquery/js/libs/angular.min.js">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveEmber/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="36" selection-start="398" selection-end="398" vertical-scroll-proportion="0.2567237">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveJquery/js/libs/moment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveJquery/js/libs/ui-bootstrap-tpls-0.3.0.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveJquery/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="90" selection-start="966" selection-end="966" vertical-scroll-proportion="-16.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/iObserveJquery/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="44" selection-start="324" selection-end="324" vertical-scroll-proportion="0.23159145">
           <folding />
         </state>
       </provider>
