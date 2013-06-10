@@ -66,12 +66,12 @@ class Iobserve < Sinatra::Application
         return {"user" => user}.to_json
       else
         status 401
-        return {"errorMessage" => "User(email) and/or login id already exist"}.to_json
+        return {"message" => "User(email) and/or login id already exist"}.to_json
       end
 
     else
       status 401
-      return {"errorMessage" => "Provide lastname, firstname and email"}.to_json
+      return {"message" => "Provide lastname, firstname and email"}.to_json
     end
   end
 
