@@ -19,4 +19,5 @@ class Sessionob
   field :finished_on, :type => Bignum
   field :surveys, :type => Array, :default => []
   field :stats, :type => Array, :default => []
+  field :map, :type => String
 end

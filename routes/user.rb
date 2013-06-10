@@ -149,7 +149,7 @@ class Iobserve < Sinatra::Application
     end
   end
 
-  get '/login' do
+  post '/login' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -161,7 +161,7 @@ class Iobserve < Sinatra::Application
       halt 404
       return {"message" => "Error: provide a valid JSON"}.to_json
     end
-    data = data['login']
+
     unless data.nil? and data['login_id'].nil? and data['password'].nil? then
       user = User.where(:login_id => data['login_id']).first()
 

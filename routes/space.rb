@@ -2,9 +2,9 @@ class Iobserve < Sinatra::Application
   ######################## Space ##################################
   ### list all spaces
   get '/space' do
-    content_type :json
-    @space = Space.all()
-    return @space.to_json
+      content_type :json
+      @space = Space.all()
+      return @space.to_json
   end
 
   ### list all spaces by user id
