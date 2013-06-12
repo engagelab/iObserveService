@@ -8,10 +8,12 @@ App.store = DS.Store.create({
 	})
 });
 
-// Models
+
+
+// *************   Models   ********************
 
 var attr = DS.attr;
-
+var currentUserID = "";
 /*
 App.Profile = DS.Model.extend({
 	lastName: DS.attr('string'),
@@ -47,7 +49,9 @@ App.Login = DS.Model.extend({
     password: DS.attr('string')
 });
 
-// Routers
+
+
+// ******************   Routers   *******************
 
 App.Router.map(function() {
 	this.resource('about');
@@ -55,27 +59,33 @@ App.Router.map(function() {
 	this.resource('registration');
 });
 
-App.IndexRoute = Ember.Route.extend({
-	model: function() {
-		;
-	}
+App.ApplicationRoute = Ember.Route.extend({
+
+});
+
+App.AboutRoute = Ember.Route.extend({
+
 });
 
 App.ProfileRoute = Ember.Route.extend({
 	model: function() {
-    	return App.User.find("51a89b49069ea5a5b9000001");
+    	return App.User.find(currentUserID);
  	}
 });
 
 App.RegistrationRoute = Ember.Route.extend({
-	model: function() {
-    	;
- 	}
+
 });
+
+
+
+
+// ****************   Controllers   ******************
+
 
 // Default controller
 App.ApplicationController = Ember.Controller.extend({
-	needs: "index"
+    needs: "login"
 });
 
 App.ProfileController = Ember.Controller.extend({
@@ -87,30 +97,71 @@ App.RegistrationController = Ember.Controller.extend({
     indexBinding: "controllers.index",
   	loginFailed: false,
 
-	register: function() {
+    register: function() {
 
-		if(this.validate()) {
-            var myPromise;
-			var transaction = App.store.transaction();
-			var newUser = transaction.createRecord(App.User, {
-               	lastName: this.lastName,
-				firstName: this.firstName,
-				email: this.email,
-				password: this.password,
-				createdOn: new Date()
-        	});
-            newUser.on('didLoad', function() {
+        if(this.validate()) {
+            var newUser = {
+                "last_name" : this.lastName,
+                "first_name" : this.firstName,
+                "email" : this.email
+            };
+            /*
+             var myPromise;
+             var transaction = App.store.transaction();
+             var newUser = transaction.createRecord(App.User, {
+             lastName: this.lastName,
+             firstName: this.firstName,
+             email: this.email,
+             password: this.password,
+             createdOn: new Date()
+             });
+             newUser.on('didLoad', function() {
 
-                this.success();
+             this.success();
+             });
+             newUser.on('becameError', function() {
+             // Console.log(myPromise.rejectedReason.toString());
+             this.failure();
+             });
+             myPromise = transaction.commit(); //.then(this.success.bind(this), this.failure.bind(this));
+             */
+            /*
+             var request = $.ajax({
+             url: "http://localhost:9292/users",
+             type: "GET",
+             //data: { "user" : { last_name : "nesnass", first_name : "rich", email : "test"}},
+             dataType: "json",
+             async: true
+             });
+             */
+            var request = $.ajax({
+                url: "http://localhost:9292/users",
+                type: "POST",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(newUser),
+                async: true,
+                processData: false
             });
-            newUser.on('becameError', function() {
-               // Console.log(myPromise.rejectedReason.toString());
-                this.failure();
-            });
-            myPromise = transaction.commit(); //.then(this.success.bind(this), this.failure.bind(this));
+            var doneClosure = function(data) {
+                //var result = JSON.parse(data);
+                //    for (var i=0; i<data.users.length; i++) {
+                //        console.log(data.users[i].first_name + data.users[i].last_name);
+                //    }
+                alert("Created User: " + data.users.first_name + data.users.last_name);
+                currentUserID = data.users._id;
+                App.get('router').transitionTo('index')
+                // alert( result.users. );
+            };
+            request.done(doneClosure);
 
-    	}
-  	},
+            request.fail(function(jqXHR, textStatus) {
+                alert( "Request failed: " + jqXHR.responseText );
+            });
+
+
+        }
+    },
 
 	validate: function() {
 		return true;
@@ -119,22 +170,22 @@ App.RegistrationController = Ember.Controller.extend({
   	success: function() {
         this.indexBinding.email = this.email;
         this.indexBinding.password = this.password;
-    //    this.transitionToRoute('index');
+        this.transitionToRoute('index');
   	},
 
   	registration: function() {
-    	this.reset();
+    //	this.reset();
     //	this.transitionToRoute('registration');
   	},
 
   	failure: function() {
-    	this.reset();
-    	this.set("loginFailed", true);
+    //	this.reset();
+   // 	this.set("loginFailed", true);
   	}
 
 });
 
-App.IndexController = Ember.Controller.extend({
+App.LoginController = Ember.Controller.extend({
 
   loginFailed: false,
   userLoggedIn: false,

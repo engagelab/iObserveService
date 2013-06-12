@@ -9,6 +9,8 @@
 </head>
 <body>
 
+  <div id="log"></div>
+
   <script type="text/x-handlebars" >
     <div class="navbar">
       <div class="navbar-inner">
@@ -25,6 +27,7 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="index">
+      <h1>Welcome to iObserve!</h1>
     <div class="container-fluid">
       {{#unless userLoggedIn}}
       <form class="form-signin" {{action "login" on="submit"}}>

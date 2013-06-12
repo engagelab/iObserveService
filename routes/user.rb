@@ -4,11 +4,13 @@ class Iobserve < Sinatra::Application
   get '/users' do
     content_type :json
     @user = User.without(:password).all()
-    if @user.size > 1
+    #if @user.size > 1
       return {"users" => @user}.to_json
-    else
-      return {"user" => @user}.to_json
-    end
+      #@user.to_json
+    #else
+      #return {"user" => @user}.to_json
+      #@user.to_json
+    #end
   end
 
   ### get user by id
@@ -36,7 +38,6 @@ class Iobserve < Sinatra::Application
     if bdy.length > 2 then
       data = JSON.parse bdy
     end
-    data = data['user']
 
     unless data.nil? or (data['last_name'].nil? and data['first_name'].nil? and data['email'].nil?) then
       status 200
@@ -63,15 +64,15 @@ class Iobserve < Sinatra::Application
             :password => password,
             :created_on => Time.now.to_i)
 
-        return {"user" => user}.to_json
+        return {"users" => user}.to_json
       else
         status 401
-        return {"errorMessage" => "User(email) and/or login id already exist"}.to_json
+        return {"message" => "User(email) and/or login id already exist"}.to_json
       end
 
     else
       status 401
-      return {"errorMessage" => "Provide lastname, firstname and email"}.to_json
+      return {"message" => "Provide lastname, firstname and email"}.to_json
     end
   end
 
@@ -85,7 +86,7 @@ class Iobserve < Sinatra::Application
     if bdy.length > 2 then
       data = JSON.parse bdy
     end
-    data = data['user']
+
     unless data.nil? or data['_id'].nil? then
       status 200
 
@@ -149,7 +150,7 @@ class Iobserve < Sinatra::Application
     end
   end
 
-  get '/login' do
+  post '/login' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -161,7 +162,7 @@ class Iobserve < Sinatra::Application
       halt 404
       return {"message" => "Error: provide a valid JSON"}.to_json
     end
-    data = data['login']
+
     unless data.nil? and data['login_id'].nil? and data['password'].nil? then
       user = User.where(:login_id => data['login_id']).first()
 
