@@ -1,0 +1,49 @@
+<form ng-app="form-example" class="row form-horizontal" ng-controller="RegisterCtrl" novalidate>
+    <div class="control-group">
+        <label class="control-label" for="inputFirstname">First Name</label>
+        <div class="controls">
+            <input type="text" id="inputFirstname" placeholder="First Name" ng-model="user.firstName" required>
+            <div class="input-help">
+                <h4>Invalid Text</h4>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputLast">Last Name</label>
+        <div class="controls">
+            <input type="text" id="inputLast" placeholder="Last Name" ng-model="user.lastName" required>
+            <div class="input-help">
+                <h4>Invalid Text</h4>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputEmail">Email</label>
+        <div class="controls">
+            <input type="email" id="inputEmail" placeholder="Email" ng-model="user.email" required>
+            <div class="input-help">
+                <h4>Invalid Email</h4>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputPassword">Password</label>
+        <div class="controls">
+            <input type="password" ng-model="user.password" class="immediate-help" password-validate required id="inputPassword" placeholder="Password">
+            <div class="input-help">
+                <h4>Password must meet the following requirements:</h4>
+                <ul>
+                    <li ng-class="pwdHasLetter">At least <strong>one letter</strong></li>
+                    <li ng-class="pwdHasNumber">At least <strong>one number</strong></li>
+                    <li ng-class="pwdValidLength">At least <strong>8 characters long</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn" ng-click="registerMe($event)">Create Account</button>
+            <button class="btn" disabled>Create Account</button>
+        </div>
+    </div>
+</form>
