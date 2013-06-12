@@ -14,4 +14,5 @@ class Visitor
   field :consent, :type => String
   field :color, :type => String
   field :isGroupVisitor, :type => Boolean, :default => false
+  field :artefacts, :type => Array, :default => []
 end

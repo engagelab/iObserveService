@@ -69,13 +69,13 @@ class Iobserve < Sinatra::Application
 
 
   ### update session's properties
-  put '/session/:session_id/close' do
+  put '/session/:session_id/:map_id/close' do
     content_type :json
     sessionob = Sessionob.find(params[:session_id])
 
     unless sessionob.nil? then
       status 200
-      sessionob.update_attributes(:finished_on => Time.now.to_i)
+      sessionob.update_attributes(:finished_on => Time.now.to_i, :map => params[:map_id])
 
       return sessionob.to_json
     else
