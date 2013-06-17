@@ -119,6 +119,32 @@ class Iobserve < Sinatra::Application
         visitor.update_attributes(:color => data['color'])
       end
 
+      unless data['artefacts'].nil? then
+        artefactsArray = data['artefacts']
+        newArtefactsArray = []
+        if artefactsArray.kind_of?(Array)
+          artefactsArray.each do |resource_id|
+            begin
+              resource = Artefact.find(resource_id)
+            rescue
+              return {"message" => "Error: the artefact id provided does not exist"}.to_json
+              halt 404
+            end
+
+            if resource
+              newArtefactsArray.push(resource)
+            end
+          end
+
+          if newArtefactsArray.length > 0 then
+            visitor.artefacts.clear
+            newArtefactsArray.each do |artefact|
+              visitor.artefacts << artefact
+            end
+          end
+        end
+      end
+
       return visitor.to_json
     else
       status 404

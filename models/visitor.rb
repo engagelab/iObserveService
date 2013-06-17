@@ -14,5 +14,6 @@ class Visitor
   field :consent, :type => String
   field :color, :type => String
   field :isGroupVisitor, :type => Boolean, :default => false
-  field :artefacts, :type => Array, :default => []
+
+  has_and_belongs_to_many :artefacts, class_name: "Artefact"
 end
