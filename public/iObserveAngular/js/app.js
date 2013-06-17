@@ -15,6 +15,20 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         async: true,
         processData: false
     }
+    var putConfiguration = {
+        type: "PUT",
+        contentType: 'application/json',
+        dataType: "json",
+        async: true,
+        processData: false
+    }
+    var getConfiguration = {
+        type: "GET",
+        contentType: 'application/json',
+        dataType: "json",
+        async: true,
+        processData: false
+    }
 
     var userLogout = function() {
         navigationState= "iObserve";
@@ -24,7 +38,6 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
     }
 
     var userLogin = function(data) {
-        //create our deferred object.
         var deferred = $q.defer();
 
         $http.post('/login', data, postConfiguration).success(function(data) {
@@ -36,14 +49,12 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
-            });
+          });
 
-        //return the promise that work will be done.
         return deferred.promise;
     }
 
     var userRegistration = function(data) {
-        //create our deferred object.
         var deferred = $q.defer();
 
         $http.post('/users', data, postConfiguration).success(function(data) {
@@ -52,11 +63,43 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
-            });
+          });
 
-        //return the promise that work will be done.
         return deferred.promise;
     }
+
+    var getProfile = function() {
+
+        if(loginState) {
+            var deferred = $q.defer();
+
+            $http.get('/users/'+userId, getConfiguration).success(function(data) {
+                deferred.resolve(data);
+            }).error(function(data, status){
+                    alert( "Request failed: " + data.message  );
+                    deferred.reject();
+              });
+
+            return deferred.promise;
+        }
+        else
+            return null;
+    }
+
+    var updateProfile = function(data) {
+        var deferred = $q.defer();
+
+        $http.put('/users', data, postConfiguration).success(function(data) {
+            userLogin(data.users);
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+
+        return deferred.promise;
+    }
+
 
     return {
         getNavigationState: function() {
@@ -83,6 +126,8 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         setUserId: function(id) {
             userId = id;
         },
+        doUpdateProfile : updateProfile,
+        doGetProfile : getProfile,
         doUserRegistration: userRegistration,
         doUserLogin: userLogin,
         doUserLogout: userLogout
@@ -185,17 +230,79 @@ iObserveApp.controller('AboutCtrl', function($scope, iObserveResources) {
 
 iObserveApp.controller('LoginCtrl', function($scope, iObserveResources) {
 
-    $scope.logMeIn = function($event) {
-        if(loginValidated()) {
-            var data = {login_id : $scope.email, password: $scope.password};
-            iObserveResources.doUserLogin(data).then(function(resultData) {
-                $scope.resultData = resultData;
-            });
-        }
+$scope.logMeIn = function($event) {
+    if(loginValidated()) {
+        var data = {login_id : $scope.email, password: $scope.password};
+        iObserveResources.doUserLogin(data).then(function(resultData) {
+            $scope.resultData = resultData;
+        });
+    }
+}
+
+function loginValidated() {
+    return true;
+}
+
+})//.$inject = ['$scope'];
+
+iObserveApp.controller('ProfileCtrl', function($scope, iObserveResources) {
+
+    $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"login_id", name: "Login ID", value:""},{key:"password", name: "Password", value:""}]
+
+    function getProfile() {
+        iObserveResources.doGetProfile().then(function(resultData) {
+            $scope.user = resultData.user;
+            $scope.userEdit[0].value = $scope.user.first_name;
+            $scope.userEdit[1].value = $scope.user.last_name;
+            $scope.userEdit[2].value = $scope.user.email;
+            $scope.userEdit[3].value = $scope.user.login_id;
+            $scope.userEdit[4].value = $scope.user.password;
+        });
     }
 
-    function loginValidated() {
-        return true;
+    $scope.updateProfile = function($event) {
+            var data = {_id : iObserveResources.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, login_id: $scope.user.login_id, password: $scope.user.password};
+            iObserveResources.doUpdateProfile(data).then(function(resultData) {
+                $scope.user = resultData.user;
+            });
+    }
+
+
+    if($scope.user == null) {
+        getProfile();
     }
 
 })//.$inject = ['$scope'];
+
+iObserveApp.controller('UserEditorController', function($scope) {
+
+    $scope.isCollapsed = true;
+    $scope.isNotCollapsed = false;
+
+    // Some code taken from the 'todos' AngularJS example
+    $scope.editorEnabled = true;
+
+    $scope.enableEditor = function() {
+   //     $scope.editorEnabled = true;
+        $scope.editValue = $scope.itemToEdit.value;
+        $scope.isCollapsed = !$scope.isCollapsed;
+        $scope.isNotCollapsed = !$scope.isCollapsed;
+    }
+
+    $scope.disableEditor = function() {
+  //    $scope.editorEnabled = false;
+        $scope.isCollapsed = !$scope.isCollapsed;
+        $scope.isNotCollapsed = !$scope.isCollapsed;
+    }
+
+    $scope.retain = function() {
+        if ($scope.editValue == "") {
+            return false;
+        }
+        $scope.itemToEdit.value = $scope.editValue;
+      //  angular.element("updateBtn").$setValidity(true);
+      //  $scope.updateBtn.$setValidity('updateBtn', true);
+
+        $scope.disableEditor();
+    }
+});

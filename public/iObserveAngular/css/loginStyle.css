@@ -119,6 +119,9 @@ form .btn, form.ng-valid .btn[disabled] {
 form.ng-invalid .btn[disabled], form.ng-valid .btn {
     display: inline-block;
 }
+form.ng-invalid .btnManual[disabled], .btnManual {
+    display: inline-block;
+}
 
 body {
     padding: 20px 0;

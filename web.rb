@@ -69,7 +69,7 @@ get '/' do
   $log.debug "Session: #{session['iObserveSession']}"
   session['iObserveSession'] = nil
   if session['iObserveSession'].nil?
-    send_file File.join('public', 'loginOld.html')
+    send_file File.join('public', 'login.html')
   else
     send_file File.join('public', 'index.html')
   end

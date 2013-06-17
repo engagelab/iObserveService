@@ -93,11 +93,11 @@ class Iobserve < Sinatra::Application
       user = User.find(data['_id'])
 
       unless data['last_name'].nil?
-        user.update_attributes(:lastname => data['lastname'])
+        user.update_attributes(:last_name => data['last_name'])
       end
 
       unless data['first_name'].nil?
-        user.update_attributes(:firstname => data['firstname'])
+        user.update_attributes(:first_name => data['first_name'])
       end
 
       unless data['login_id'].nil?
