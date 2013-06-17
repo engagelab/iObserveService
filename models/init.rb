@@ -1,4 +1,5 @@
 require_relative 'action'
+require_relative 'artefact'
 require_relative 'event'
 require_relative 'interaction'
 require_relative 'media'

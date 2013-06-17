@@ -37,9 +37,6 @@ class Iobserve < Sinatra::Application
     set :raise_errors, false #false will show nicer error page
     set :show_exceptions, false #true will ignore raise_errors and display backtrace in browser
   end
-
-
-
 end
 
 require_relative 'routes/init'
