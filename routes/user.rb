@@ -1,20 +1,14 @@
 class Iobserve < Sinatra::Application
   ######################## User ##################################
   ### get all users
-  get '/users' do
+  get '/user' do
     content_type :json
     @user = User.without(:password).all()
-    #if @user.size > 1
-      return {"users" => @user}.to_json
-      #@user.to_json
-    #else
-      #return {"user" => @user}.to_json
-      #@user.to_json
-    #end
+    return @user.to_json
   end
 
   ### get user by id
-  get '/users/:id' do
+  get '/user/:id' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -24,12 +18,12 @@ class Iobserve < Sinatra::Application
       status 404
     else
       status 200
-      return {"user" => user}.to_json
+      return user.to_json
     end
   end
 
   ### create a user
-  post '/users' do
+  post '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
@@ -64,7 +58,7 @@ class Iobserve < Sinatra::Application
             :password => password,
             :created_on => Time.now.to_i)
 
-        return {"users" => user}.to_json
+        return user.to_json
       else
         status 401
         return {"message" => "User(email) and/or login id already exist"}.to_json
@@ -77,7 +71,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### update user's properties
-  put '/users' do
+  put '/user' do
     request.body.rewind  # in case someone already read it
     content_type :json;
 
@@ -124,7 +118,7 @@ class Iobserve < Sinatra::Application
         user.update_attributes(:password => data['password'])
       end
 
-      return {"user" => user}.to_json
+      return user.to_json
     else
       status 404
       return {"message" => "Provide _id, lastname, firstname, email and password"}.to_json
@@ -132,7 +126,7 @@ class Iobserve < Sinatra::Application
   end
 
   ### delete a user by id
-  delete '/users/:id' do
+  delete '/user/:id' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
