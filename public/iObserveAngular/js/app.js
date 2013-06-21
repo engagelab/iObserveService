@@ -27,14 +27,15 @@ var getConfiguration = {
 
 iObserveApp.factory('iObserveData', function ($http, $q) {
 
+    var spaceListObject = null;
+    var selectedSpace = null;
     var sessionListObject = null;
+    var selectedSession = null;
     var chartDataObject = null;
-    var spaceObject = null;
 
     var requestSessionListObject = function() {
-        if(spaceObject != null) {
             var deferred = $q.defer();
-            var route = routePrePath + "/space/" + spaceObject.space_id + "/sessions";
+            var route = routePrePath + "/space/" + spaceListObject.space_id + "/sessions";
 
             $http.get(route, getConfiguration).success(function(data) {
                 deferred.resolve(data);
@@ -43,14 +44,11 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
                     deferred.reject();
                 });
             return deferred.promise;
-        }
-        else
-            alert( "A space must be selected before sessions can be shown");
     }
 
-    var requestSpaceObject = function(user_id) {
+    var requestSpaceListObject = function(userId) {
         var deferred = $q.defer();
-        var route = routePrePath + "/user/" + user_id + "/space";
+        var route = routePrePath + "/user/" + userId + "/space";
 
         $http.get(route, getConfiguration).success(function(data) {
             deferred.resolve(data);
@@ -62,22 +60,26 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
     }
 
     return {
-        getSessionListObject: function() {
-            return sessionListObject;
-        },
+        sessionListObject : sessionListObject,
         setSessionListObject: function() {
-            requestSessionListObject().then(function(resultData) {
-                sessionListObject = resultData;
+            if(spaceListObject != null) {
+                requestSessionListObject().then(function(resultData) {
+                    sessionListObject = resultData;
+                    selectedSession = sessionListObject[0];
+                });
+            }
+            else
+                alert( "A space must be selected before sessions can be shown");
+        },
+        selectedSession: selectedSession,
+        spaceListObject: spaceListObject,
+        setSpaceListObject: function(userId) {
+            requestSpaceListObject(userId).then(function(resultData) {
+                spaceListObject = resultData;
+                selectedSpace = spaceListObject[0];
             });
         },
-        getSpaceObject: function() {
-            return spaceObject;
-        },
-        setSpaceObject: function() {
-            requestSpaceObject().then(function(resultData) {
-                spaceObject = resultData;
-            });
-        }
+        selectedSpace: selectedSpace
     }
 });
 
@@ -116,7 +118,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         var deferred = $q.defer();
 
         $http.post(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            userLogin(data.users);
+            userLogin(data);
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message );
@@ -148,7 +150,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         var deferred = $q.defer();
 
         $http.put(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            userLogin(data.users);
+            userLogin(data);
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message );
@@ -313,7 +315,7 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
     function getProfile() {
         iObserveStates.doGetProfile().then(function(resultData) {
-            $scope.user = resultData.user;
+            $scope.user = resultData;
             $scope.userEdit[0].value = $scope.user.first_name;
             $scope.userEdit[1].value = $scope.user.last_name;
             $scope.userEdit[2].value = $scope.user.email;
@@ -369,19 +371,56 @@ iObserveApp.controller('UserEditorController', function($scope) {
     }
 });
 
-iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObserveData) {
 
 
 })//.$inject = ['$scope'];
 
 iObserveApp.controller('StatisticsSessionSelectCtrl', function($scope, iObserveData) {
-    $scope.sessions = iObserveData.getSessionListObject.sessions;
-    $scope.selectedSession = iObserveData.getSessionListObject.selectedSession;
+    $scope.sessions = iObserveData.sessionListObject;
+    $scope.selectedSession = iObserveData.selectedSession;
 
     // expose the itemstore service to the dom
-    //$scope.store = ItemStore
+    $scope.store = iObserveData;
 
     $scope.getItem = function(){
-        return(iObserveData.getSessionListObject.selectedSession);
+        return(iObserveData.selectedSession);
     }
+});
+
+iObserveApp.controller('SpacesCtrl', function($scope, iObserveStates, iObserveData) {
+
+
+})//.$inject = ['$scope'];
+
+iObserveApp.controller('SpaceSelectCtrl', function($scope, iObserveStates, iObserveData) {
+
+  //  $scope.$watch('iObserveData.spaceListObject', function(loginState) {
+  //  }, true);
+
+    if(iObserveData.spaceListObject == null)
+        iObserveData.setSpaceListObject(iObserveStates.getUserId());
+
+    $scope.spaces = iObserveData.spaceListObject;
+    $scope.selectedSpace = iObserveData.selectedSpace;
+
+    // expose the itemstore service to the dom
+    $scope.store = iObserveData;
+
+    $scope.getItem = function(){
+        return(iObserveData.selectedSpace);
+    }
+
+    /*
+
+    $scope.spaces = [{label: ' first item '}, {label: ' second item '}];
+    $scope.selectedSpace = iObserveData.selectedSpace;
+
+    // expose the itemstore service to the dom
+    $scope.store = iObserveData;
+
+    $scope.getItem = function(){
+        return($scope.selectedSpace);
+    }
+     */
 });
