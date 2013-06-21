@@ -1,34 +1,92 @@
 var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap']);
 
+// var routePrePath = "http://observe.uio.im";
+var routePrePath = "";
 
-iObserveApp.factory('iObserveResources', function ($http, $q) {
+var postConfiguration = {
+    type: "POST",
+    contentType: 'application/json',
+    dataType: "json",
+    async: true,
+    processData: false
+}
+var putConfiguration = {
+    type: "PUT",
+    contentType: 'application/json',
+    dataType: "json",
+    async: true,
+    processData: false
+}
+var getConfiguration = {
+    type: "GET",
+    contentType: 'application/json',
+    dataType: "json",
+    async: true,
+    processData: false
+}
+
+iObserveApp.factory('iObserveData', function ($http, $q) {
+
+    var sessionListObject = null;
+    var chartDataObject = null;
+    var spaceObject = null;
+
+    var requestSessionListObject = function() {
+        if(spaceObject != null) {
+            var deferred = $q.defer();
+            var route = routePrePath + "/space/" + spaceObject.space_id + "/sessions";
+
+            $http.get(route, getConfiguration).success(function(data) {
+                deferred.resolve(data);
+            }).error(function(data, status){
+                    alert( "Request failed: " + data.message  );
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+        else
+            alert( "A space must be selected before sessions can be shown");
+    }
+
+    var requestSpaceObject = function(user_id) {
+        var deferred = $q.defer();
+        var route = routePrePath + "/user/" + user_id + "/space";
+
+        $http.get(route, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    }
+
+    return {
+        getSessionListObject: function() {
+            return sessionListObject;
+        },
+        setSessionListObject: function() {
+            requestSessionListObject().then(function(resultData) {
+                sessionListObject = resultData;
+            });
+        },
+        getSpaceObject: function() {
+            return spaceObject;
+        },
+        setSpaceObject: function() {
+            requestSpaceObject().then(function(resultData) {
+                spaceObject = resultData;
+            });
+        }
+    }
+});
+
+iObserveApp.factory('iObserveStates', function ($http, $q) {
 
     var navigationState= "iObserve";
     var loginState = false;
     var loginToken = "";
     var userId = "";
-
-    var postConfiguration = {
-        type: "POST",
-        contentType: 'application/json',
-        dataType: "json",
-        async: true,
-        processData: false
-    }
-    var putConfiguration = {
-        type: "PUT",
-        contentType: 'application/json',
-        dataType: "json",
-        async: true,
-        processData: false
-    }
-    var getConfiguration = {
-        type: "GET",
-        contentType: 'application/json',
-        dataType: "json",
-        async: true,
-        processData: false
-    }
 
     var userLogout = function() {
         navigationState= "iObserve";
@@ -40,7 +98,7 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
     var userLogin = function(data) {
         var deferred = $q.defer();
 
-        $http.post('/login', data, postConfiguration).success(function(data) {
+        $http.post(routePrePath + '/login', data, postConfiguration).success(function(data) {
             loginState = true;
             loginToken = data.token;
             userId = data.userId;
@@ -57,11 +115,11 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
     var userRegistration = function(data) {
         var deferred = $q.defer();
 
-        $http.post('/users', data, postConfiguration).success(function(data) {
+        $http.post(routePrePath + '/user', data, postConfiguration).success(function(data) {
             userLogin(data.users);
             deferred.resolve(data);
         }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
+                alert( "Request failed: " + data.message );
                 deferred.reject();
           });
 
@@ -73,7 +131,7 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         if(loginState) {
             var deferred = $q.defer();
 
-            $http.get('/users/'+userId, getConfiguration).success(function(data) {
+            $http.get(routePrePath + '/user/'+userId, getConfiguration).success(function(data) {
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message  );
@@ -89,17 +147,16 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
     var updateProfile = function(data) {
         var deferred = $q.defer();
 
-        $http.put('/users', data, postConfiguration).success(function(data) {
+        $http.put(routePrePath + '/user', data, postConfiguration).success(function(data) {
             userLogin(data.users);
             deferred.resolve(data);
         }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
+                alert( "Request failed: " + data.message );
                 deferred.reject();
             });
 
         return deferred.promise;
     }
-
 
     return {
         getNavigationState: function() {
@@ -113,6 +170,12 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         },
         setLoginState: function(state) {
             loginState = state;
+        },
+        getSessionObject: function() {
+            return sessionObject;
+        },
+        setSessionObject: function(so) {
+            sessionObject = so;
         },
         getLoginToken: function() {
             return loginToken;
@@ -131,7 +194,6 @@ iObserveApp.factory('iObserveResources', function ($http, $q) {
         doUserRegistration: userRegistration,
         doUserLogin: userLogin,
         doUserLogout: userLogout
-
     };
 });
 
@@ -148,7 +210,7 @@ iObserveApp.run(function($rootScope) {
 });
   */
 
-iObserveApp.controller('NavCtrl', function($scope, iObserveResources) {
+iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
     showHideNavTabs(false);
 
@@ -180,18 +242,18 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveResources) {
         return navState;
     }
 
-    $scope.loginState =  iObserveResources.getLoginState;
+    $scope.loginState =  iObserveStates.getLoginState;
     $scope.$watch('loginState()', function(loginState) {
         showHideNavTabs(loginState);
     }, true);
 
     $scope.$watch('active()', function(navState) {
         if(navState == "Logout") {
-            iObserveResources.doUserLogout();
+            iObserveStates.doUserLogout();
             $scope.componentState = "iObserve";
         }
         else {
-            iObserveResources.setNavigationState(navState);
+            iObserveStates.setNavigationState(navState);
             $scope.componentState = navState;
         }
     });
@@ -204,12 +266,12 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveResources) {
 //.$inject = ['$scope'];
 
 
-iObserveApp.controller('RegisterCtrl', function($scope, iObserveResources) {
+iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
 
     $scope.registerMe = function($event) {
         if(registrationValidated()) {
             var data = {last_name : $scope.user.lastName, first_name: $scope.user.firstName, email: $scope.user.email, password : $scope.user.password};
-            iObserveResources.doUserRegistration(data).then(function(resultData) {
+            iObserveStates.doUserRegistration(data).then(function(resultData) {
                 $scope.resultData = resultData;
             });
         }
@@ -222,18 +284,18 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveResources) {
 })//.$inject = ['$scope'];
 
 
-iObserveApp.controller('AboutCtrl', function($scope, iObserveResources) {
+iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
 
 
 })//.$inject = ['$scope'];
 
 
-iObserveApp.controller('LoginCtrl', function($scope, iObserveResources) {
+iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
 
 $scope.logMeIn = function($event) {
     if(loginValidated()) {
         var data = {login_id : $scope.email, password: $scope.password};
-        iObserveResources.doUserLogin(data).then(function(resultData) {
+        iObserveStates.doUserLogin(data).then(function(resultData) {
             $scope.resultData = resultData;
         });
     }
@@ -245,12 +307,12 @@ function loginValidated() {
 
 })//.$inject = ['$scope'];
 
-iObserveApp.controller('ProfileCtrl', function($scope, iObserveResources) {
+iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
     $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"login_id", name: "Login ID", value:""},{key:"password", name: "Password", value:""}]
 
     function getProfile() {
-        iObserveResources.doGetProfile().then(function(resultData) {
+        iObserveStates.doGetProfile().then(function(resultData) {
             $scope.user = resultData.user;
             $scope.userEdit[0].value = $scope.user.first_name;
             $scope.userEdit[1].value = $scope.user.last_name;
@@ -261,8 +323,8 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveResources) {
     }
 
     $scope.updateProfile = function($event) {
-            var data = {_id : iObserveResources.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, login_id: $scope.user.login_id, password: $scope.user.password};
-            iObserveResources.doUpdateProfile(data).then(function(resultData) {
+            var data = {_id : iObserveStates.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, login_id: $scope.user.login_id, password: $scope.user.password};
+            iObserveStates.doUpdateProfile(data).then(function(resultData) {
                 $scope.user = resultData.user;
             });
     }
@@ -304,5 +366,22 @@ iObserveApp.controller('UserEditorController', function($scope) {
       //  $scope.updateBtn.$setValidity('updateBtn', true);
 
         $scope.disableEditor();
+    }
+});
+
+iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates) {
+
+
+})//.$inject = ['$scope'];
+
+iObserveApp.controller('StatisticsSessionSelectCtrl', function($scope, iObserveData) {
+    $scope.sessions = iObserveData.getSessionListObject.sessions;
+    $scope.selectedSession = iObserveData.getSessionListObject.selectedSession;
+
+    // expose the itemstore service to the dom
+    //$scope.store = ItemStore
+
+    $scope.getItem = function(){
+        return(iObserveData.getSessionListObject.selectedSession);
     }
 });
