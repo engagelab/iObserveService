@@ -35,7 +35,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var requestSessionListObject = function() {
             var deferred = $q.defer();
-            var route = routePrePath + "/space/" + spaceListObject.space_id + "/sessions";
+            var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
 
             $http.get(route, getConfiguration).success(function(data) {
                 deferred.resolve(data);
