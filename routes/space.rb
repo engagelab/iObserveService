@@ -90,6 +90,46 @@ class Iobserve < Sinatra::Application
     if space.nil? then
       status 404
     else
+      space.sessionobs.each do|session|
+        sessionob = Sessionob.find(session._id)
+
+        unless sessionob.visitorgroup.nil? then
+          visitorgroup = Visitorgroup.find(sessionob.visitorgroup._id)
+
+          unless visitorgroup.visitors.nil? then
+            visitorgroup.visitors.each do|visitor|
+              visitor = Visitor.find(visitor._id)
+              visitor.destroy
+            end
+          end
+
+          visitorgroup.destroy
+        end
+
+        unless sessionob.storage.nil? then
+          storage = Storage.find(sessionob.storage._id)
+          storage.destroy
+        end
+
+        unless sessionob.eventob_ids.nil? then
+          sessionob.eventob_ids.each do|evt|
+            eventob = Eventob.find(evt)
+
+            unless eventob.interactions.nil? then
+              eventob.interactions.each do|inter|
+                interaction = Interaction.find(inter._id)
+                interaction.destroy
+              end
+            end
+
+            eventob.destroy
+          end
+        end
+
+        sessionob.destroy
+
+      end
+
       if space.destroy then
         status 200
         return {"message" => "Space deleted"}.to_json

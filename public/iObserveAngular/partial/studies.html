@@ -1,0 +1,83 @@
+<div ng-controller="StudiesCtrl">
+    <div id="studyListHeader">
+        <h2>List of studies <button class="btn" ng-click="isAddStudyCollapsed = !isAddStudyCollapsed"><img src="img/plus.png" width="30"></button></h2>
+
+        <div collapse="isAddStudyCollapsed">
+            <input type="text" ng-model="studyLabel" placeholder="Study label" >
+            <button class="btn btn-primary" ng-click="isCollapsed=true;createNewStudy()">OK</button>
+        </div>
+        <hr>
+    </div>
+
+    <br>
+    <ul>
+        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><img src="img/minus.png" width="20"></button><a href=""> Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
+    </ul>
+    <br>
+    <br>
+    <div ng-show="isStudyChosen">
+        <h2>List of spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><img src="img/plus.png" width="30"></button></h2>
+
+        <div collapse="isAddRoomCollapsed">
+            <form action="/image" ng-upload>
+                <input type="text" ng-model="roomLabel" placeholder="Room label" >
+                <input type="file" name="file" class="btn"></input>
+                <input class="btn btn-primary" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)"></input>
+             </form>
+            <div class="alert alert-info">Server Response: {{uploadResponse}}</div>
+            <img ng-src="{{uploadResponse.url}}" style="margin:auto;" width="300px">
+        </div>
+
+        <div>
+            <div collapse="!isEditRoomCollapsed">
+                <carousel interval="-1" class="studyCarousel">
+                    <slide ng-repeat="room in rooms" active="room.active">
+                        <img ng-src="{{room.uri}}" style="margin:auto;" width="300px">
+                        <div class="carousel-caption">
+                            <h4>Room {{$index}}</h4>
+                            <p>{{room.label}}</p>
+                            <div class="studyCarouselRemoveRoom"><button class="btn btn-primary" ng-click="openEditRoom(room)"><img src="img/edit.png" width="20"><button class="btn" ng-click="openRemoveRoom(room)"><img src="img/minus.png" width="20"></button></div>
+                        </div>
+                    </slide>
+                </carousel>
+            </div>
+            <div collapse="isEditRoomCollapsed">
+                <button class="btn btn-primary" ng-click="isEditRoomCollapsed = !isEditRoomCollapsed">Close</button>
+
+                <!--div data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{animate:true, onStart:'startCallback', onStop: 'stopCallback', onDrag: 'dragCallback'}">
+                    <img src="img/pin.png" >
+                </div-->
+
+                <div data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true, onStart:'startCallback', onStop: 'stopCallback', onDrag: 'dragCallback'}" ng-hide="!list1.emage"><img src="img/{{list1.emage}}"></div>
+                <div id="landing">
+                    <div data-drop="true" data-jqyoui-options ng-model="list2" jqyoui-droppable>
+                        <div style="width: 1024px; z-index: 0">
+                            <img ng-src="{{roomToEdit.uri}}" style="width: 1024px;height: 768px" >
+                        </div>
+                        <div data-drag="false" data-jqyoui-options ng-model="list2" jqyoui-draggable ng-hide="!list2.emage" style="z-index: 10000;position: absolute;"><img src="img/{{list2.emage}}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- div ng-switch-on="video">
+            <div ng-switch-when="video.large">
+
+            </div>
+            <div ng-switch-default>
+
+            </div>
+    </div -->
+        <br>
+        <br>
+        <h2>List of sessions</h2>
+        <accordion close-others="true">
+            <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
+                <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
+                <p>Duration: {{ tDiff(session.created_on, session.finished_on) }}</p>
+                <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
+                <p>Event(s): {{ session.eventob_ids.length }}</p>
+                <img src="{{ session.storage.url }}" width="500px" />
+            </accordion-group>
+        </accordion>
+    </div>
+</div>

@@ -14,10 +14,12 @@ class Sessionob
   has_many :eventobs
   field :eventob_ids, :type => Array, :default => []
 
+  has_one :storage, class_name: "Storage"
+  field :storage, :type => Object, :default => nil
+
   field :label, :type => String
   field :created_on, :type => Bignum
   field :finished_on, :type => Bignum
   field :surveys, :type => Array, :default => []
   field :stats, :type => Array, :default => []
-  field :map, :type => String
 end

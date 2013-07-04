@@ -20,7 +20,8 @@ class Iobserve < Sinatra::Application
     bucket     = 'net.engagelab.iobserveservice'
     file       = params[:file][:tempfile]
     filename   = params[:file][:filename]
-    imageuid   = SecureRandom.uuid+'.jpg'
+    filextension = filename.split('.').last
+    imageuid   = SecureRandom.uuid+'.'+filextension
 
     AWS::S3::DEFAULT_HOST.replace 's3-us-west-2.amazonaws.com'
     AWS::S3::Base.establish_connection!(

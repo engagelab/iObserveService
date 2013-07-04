@@ -21,3 +21,21 @@ a {
   padding-top: 25px;
   border-top: 1px solid #000;
 }
+
+.studyListHeader {
+    float: left;
+}
+
+.studyCarousel {
+    width: 400px;
+}
+
+.studyCarouselRemoveRoom {
+    float: right;
+}
+
+#landing {
+    width: 1024px;
+    height: 768px;
+    background-color: #c0c0c0;
+}

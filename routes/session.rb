@@ -75,7 +75,12 @@ class Iobserve < Sinatra::Application
 
     unless sessionob.nil? then
       status 200
-      sessionob.update_attributes(:finished_on => Time.now.to_i, :map => params[:map_id])
+
+      storage = Storage.find(params[:map_id])
+
+      unless storage.nil?
+        sessionob.update_attributes(:finished_on => Time.now.to_i, :storage => storage)
+      end
 
       return sessionob.to_json
     else
@@ -94,6 +99,39 @@ class Iobserve < Sinatra::Application
     if sessionob.nil? then
       status 404
     else
+      unless sessionob.visitorgroup.nil? then
+        visitorgroup = Visitorgroup.find(sessionob.visitorgroup._id)
+
+        unless visitorgroup.visitors.nil? then
+          visitorgroup.visitors.each do|visitor|
+            visitor = Visitor.find(visitor._id)
+            visitor.destroy
+          end
+        end
+
+        visitorgroup.destroy
+      end
+
+      unless sessionob.storage.nil? then
+        storage = Storage.find(sessionob.storage._id)
+        storage.destroy
+      end
+
+      unless sessionob.eventob_ids.nil? then
+        sessionob.eventob_ids.each do|evt|
+          eventob = Eventob.find(evt)
+
+          unless eventob.interactions.nil? then
+            eventob.interactions.each do|inter|
+              interaction = Interaction.find(inter._id)
+              interaction.destroy
+            end
+          end
+
+          eventob.destroy
+        end
+      end
+
       if sessionob.destroy then
         status 200
         return {"message" => "Session deleted"}.to_json

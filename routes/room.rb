@@ -9,7 +9,11 @@ class Iobserve < Sinatra::Application
     unless data.nil? or data['label'].nil? then
       status 200
       space = Space.find(params[:space_id])
-      room = Room.create(:label => data['label'], :created_on => Time.now.to_i)
+      unless data['uri'].nil? then
+        room = Room.create(:label => data['label'], :created_on => Time.now.to_i, :uri => data['uri'])
+     else
+        room = Room.create(:label => data['label'], :created_on => Time.now.to_i)
+      end
       space.rooms << room
       space.save
       return space.to_json

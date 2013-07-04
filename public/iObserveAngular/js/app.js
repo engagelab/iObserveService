@@ -1,4 +1,4 @@
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap']);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
 
 // var routePrePath = "http://observe.uio.im";
 var routePrePath = "";
@@ -24,14 +24,23 @@ var getConfiguration = {
     async: true,
     processData: false
 }
+var deleteConfiguration = {
+    type: "DELETE",
+    contentType: 'application/json',
+    dataType: "json",
+    async: true,
+    processData: false
+}
 
 iObserveApp.factory('iObserveData', function ($http, $q) {
 
+    var currentUserId = null;
     var spaceListObject = null;
     var selectedSpace = null;
     var sessionListObject = null;
     var selectedSession = null;
     var chartDataObject = null;
+    var studyIdToDelete = null;
 
     var requestSessionListObject = function() {
             var deferred = $q.defer();
@@ -44,23 +53,76 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
                     deferred.reject();
                 });
             return deferred.promise;
-    }
+    };
 
-    var requestSpaceListObject = function(userId) {
+    var requestStudyListObject = function() {
         var deferred = $q.defer();
-        var route = routePrePath + "/user/" + userId + "/space";
 
-        $http.get(route, getConfiguration).success(function(data) {
+        $http.get(routePrePath + "/user/" + currentUserId + "/space", getConfiguration).success(function(data) {
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
             });
         return deferred.promise;
-    }
+    };
+
+    var requestNewStudyObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/user/" + currentUserId + "/space", data, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestDeleteStudyObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.delete(routePrePath + "/space/"+data, deleteConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestDeleteRoomObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.delete(routePrePath + "/room/"+data, deleteConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestAddStudyRoomObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/space/"+data.spaceid+"/room", data, postConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
 
     return {
+
+        setUserId: function(id) {
+            currentUserId = id;
+        },
+
         sessionListObject : sessionListObject,
+
         setSessionListObject: function() {
             if(spaceListObject != null) {
                 requestSessionListObject().then(function(resultData) {
@@ -71,14 +133,23 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             else
                 alert( "A space must be selected before sessions can be shown");
         },
+
         selectedSession: selectedSession,
+
         spaceListObject: spaceListObject,
-        setSpaceListObject: function(userId) {
+
+        /*doGetSpaces: function(userId) {
             requestSpaceListObject(userId).then(function(resultData) {
                 spaceListObject = resultData;
                 selectedSpace = spaceListObject[0];
             });
-        },
+        },   */
+
+        doGetStudies: requestStudyListObject,
+        doNewStudy: requestNewStudyObject,
+        doDeleteStudy: requestDeleteStudyObject,
+        doCreateStudyRoom: requestAddStudyRoomObject,
+        doDeleteRoom: requestDeleteRoomObject,
         selectedSpace: selectedSpace
     }
 });
@@ -221,7 +292,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
             $scope.panes = [
                 { title:"iObserve", content:"", active: true },
                 { title:"Profile", content:"" },
-                { title:"Spaces", content:"" },
+                { title:"Studies", content:"" },
                 { title:"Statistics", content:"" },
                 { title:"About", content:"" },
                 { title:"Logout", content:"" }
@@ -386,41 +457,4 @@ iObserveApp.controller('StatisticsSessionSelectCtrl', function($scope, iObserveD
     $scope.getItem = function(){
         return(iObserveData.selectedSession);
     }
-});
-
-iObserveApp.controller('SpacesCtrl', function($scope, iObserveStates, iObserveData) {
-
-
-})//.$inject = ['$scope'];
-
-iObserveApp.controller('SpaceSelectCtrl', function($scope, iObserveStates, iObserveData) {
-
-  //  $scope.$watch('iObserveData.spaceListObject', function(loginState) {
-  //  }, true);
-
-    if(iObserveData.spaceListObject == null)
-        iObserveData.setSpaceListObject(iObserveStates.getUserId());
-
-    $scope.spaces = iObserveData.spaceListObject;
-    $scope.selectedSpace = iObserveData.selectedSpace;
-
-    // expose the itemstore service to the dom
-    $scope.store = iObserveData;
-
-    $scope.getItem = function(){
-        return(iObserveData.selectedSpace);
-    }
-
-    /*
-
-    $scope.spaces = [{label: ' first item '}, {label: ' second item '}];
-    $scope.selectedSpace = iObserveData.selectedSpace;
-
-    // expose the itemstore service to the dom
-    $scope.store = iObserveData;
-
-    $scope.getItem = function(){
-        return($scope.selectedSpace);
-    }
-     */
 });
