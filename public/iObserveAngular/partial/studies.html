@@ -50,11 +50,11 @@
 
                 <div data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{animate:true, onStart:'startCallback', onStop: 'stopCallback', onDrag: 'dragCallback'}" ng-hide="!list1.emage"><img src="img/{{list1.emage}}"></div>
                 <div id="landing">
-                    <div data-drop="true" data-jqyoui-options ng-model="list2" jqyoui-droppable>
-                        <div style="width: 1024px; z-index: 0">
+                    <div data-drop="true" data-jqyoui-options ng-model="list2" jqyoui-droppable style="position: relative; width: 1024px; height: 768px">
+                        <div data-drag="true" data-jqyoui-options ng-model="list2" jqyoui-draggable ng-hide="!list2.emage" style="z-index: 10000;position: absolute"><img src="img/{{list2.emage}}"></div>
+                        <div style="width: 1024px; z-index: 0; position: absolute; top: 0; left: 0 ">
                             <img ng-src="{{roomToEdit.uri}}" style="width: 1024px;height: 768px" >
                         </div>
-                        <div data-drag="false" data-jqyoui-options ng-model="list2" jqyoui-draggable ng-hide="!list2.emage" style="z-index: 10000;position: absolute;"><img src="img/{{list2.emage}}"></div>
                     </div>
                 </div>
             </div>
