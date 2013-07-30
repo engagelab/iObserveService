@@ -113,6 +113,14 @@ class Iobserve < Sinatra::Application
     if eventob.nil? then
       status 404
     else
+
+      unless eventob.interactions.nil? then
+        eventob.interactions.each do|inter|
+          interaction = Interaction.find(inter._id)
+          interaction.destroy
+        end
+      end
+
       if eventob.destroy then
         status 200
         return {"message" => "Event deleted"}.to_json
