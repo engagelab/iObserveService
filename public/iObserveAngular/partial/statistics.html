@@ -1,6 +1,50 @@
 <div ng-controller="StatisticsCtrl">
-    <div ng-controller="StatisticsSessionSelectCtrl">
-        <select ng-model="store.currentItem" ng-options="i.name for i in items">
-        </select>
+
+    <h2>Studies</h2>
+    <ul>
+        <li ng-repeat="study in studies">
+            <p> Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</p>
+            <button class="btn" ng-click="foldStudyChart(study)"><i class="icon-signal"></i></button>
+            <button class="btn" ng-click="foldSessions(study)"><i class="icon-calendar"></i></button>
+        </li>
+    </ul>
+
+    <div collapse="!studyChartRequested">
+        <h2>Charts for {{ currentStudy.label }}</h2>
+
     </div>
+
+    <div collapse="!sessionListRequested">
+        <h2>Sessions recorded for {{ currentStudy.label }}</h2>
+        <accordion close-others="true">
+            <accordion-group  ng-repeat="session in sessions" ng-click="currentSession = session" heading="Session ({{ sessions.indexOf(session) }}) : {{ timeConverter(session.created_on) }}">
+                <div>
+                    <img ng-src="{{ session.storage.url }}" width="500px" />
+                    <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
+                    <p>Duration: {{ tDiff(session.created_on, session.finished_on) }}</p>
+                    <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
+                    <p>Event(s): {{ session.eventob_ids.length }}</p>
+                    <button class="btn" ng-click="foldSessionChart(session)"><i class="icon-signal"></i></button>
+                </div>
+
+                <div collapse="!sessionChartRequested">
+                    <h2>Charts for Session {{ sessions.indexOf(session) }}</h2>
+                    <ul>
+                        <li ng-repeat="chart in sessionChartList">
+                            <a ng-click="displayChart(chart)">{{ chart.name }}</a>
+                        </li>
+                    </ul>
+                    <div collapse="!sessionChartRequested">
+                        <markdown>
+                            Testing the element!
+                            ---------------------
+                                - list item 1
+                        </markdown>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+
+
 </div>

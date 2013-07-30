@@ -55,6 +55,18 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             return deferred.promise;
     };
 
+    var requestEventListObject = function() {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/session/" + currentUserId + "/space", getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     var requestStudyListObject = function() {
         var deferred = $q.defer();
 
@@ -145,6 +157,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             });
         },   */
 
+        doGetEvents: requestEventListObject,
         doGetStudies: requestStudyListObject,
         doNewStudy: requestNewStudyObject,
         doDeleteStudy: requestDeleteStudyObject,
@@ -309,13 +322,13 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     }
 
     $scope.active = function() {
-        var navState =   $scope.panes.filter(function(pane){
+        var navState = $scope.panes.filter(function(pane){
             return pane.active;
         })[0].title;
         return navState;
     }
 
-    $scope.loginState =  iObserveStates.getLoginState;
+    $scope.loginState = iObserveStates.getLoginState;
     $scope.$watch('loginState()', function(loginState) {
         showHideNavTabs(loginState);
     }, true);
@@ -439,22 +452,5 @@ iObserveApp.controller('UserEditorController', function($scope) {
       //  $scope.updateBtn.$setValidity('updateBtn', true);
 
         $scope.disableEditor();
-    }
-});
-
-iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObserveData) {
-
-
-})//.$inject = ['$scope'];
-
-iObserveApp.controller('StatisticsSessionSelectCtrl', function($scope, iObserveData) {
-    $scope.sessions = iObserveData.sessionListObject;
-    $scope.selectedSession = iObserveData.selectedSession;
-
-    // expose the itemstore service to the dom
-    $scope.store = iObserveData;
-
-    $scope.getItem = function(){
-        return(iObserveData.selectedSession);
     }
 });
