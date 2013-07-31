@@ -1,6 +1,6 @@
 <div ng-controller="StudiesCtrl">
     <div id="studyListHeader">
-        <h2>List of studies <button class="btn" ng-click="isAddStudyCollapsed = !isAddStudyCollapsed"><i class="icon-plus"></i></button></h2>
+        <h2>Studies <button class="btn" ng-click="isAddStudyCollapsed = !isAddStudyCollapsed"><i class="icon-plus"></i></button></h2>
 
         <div collapse="isAddStudyCollapsed">
             <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
@@ -16,7 +16,7 @@
     <br>
     <br>
     <div ng-show="isStudyChosen">
-        <h2>List of spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button></h2>
+        <h3>Spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button></h3>
 
         <div collapse="isAddRoomCollapsed">
             <form action="/image" ng-upload>
@@ -69,7 +69,7 @@
     </div -->
         <br>
         <br>
-        <h2>List of sessions</h2>
+        <h3>Sessions</h3>
         <accordion close-others="true">
             <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                 <p>Finished on: {{ timeConverter(session.finished_on) }}</p>

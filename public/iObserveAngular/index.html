@@ -10,6 +10,7 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+    <script src="http://mbostock.github.com/d3/d3.js"></script>
 
     <script src="js/libs/angular.js"></script>
     <script src="js/libs/angular-resource.js"></script>
@@ -18,14 +19,12 @@
     <script src="js/libs/handlebars-1.0.0-rc.4.js"></script>
     <script src="js/libs/showdown.js"></script>
     <script src="js/libs/moment.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/studies.js"></script>
     <script src="js/libs/ng-upload.js"></script>
     <!-- script src="js/libs/angular-dragdrop.js"></script -->
-    <script src="js/libs/d3.v3.min.js"></script>
+    <!--script src="js/libs/d3.v3.min.js"></script-->
 
+    <script src="js/factories.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/utilities.js"></script>
     <script src="js/studies.js"></script>
     <script src="js/statistics.js"></script>
     <script src="js/charts.js"></script>
@@ -35,9 +34,11 @@
 
     <div ng-controller="NavCtrl">
 
-        <tabs>
-            <pane ng-repeat="pane in panes" heading="{{pane.title}}" active="pane.active" ng-click="active()">{{pane.content}}</pane>
-        </tabs>
+        <div class="navtabs">
+            <tabs>
+                <pane ng-repeat="pane in panes" heading="{{pane.title}}" active="pane.active" ng-click="active()">{{pane.content}}</pane>
+            </tabs>
+        </div>
 
         <div>
             <div ng-switch on="componentState" >
