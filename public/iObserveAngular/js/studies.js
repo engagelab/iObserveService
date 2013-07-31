@@ -74,6 +74,7 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
 
             $scope.studyLabel = '';
         }
+        $scope.isAddStudyCollapsed = true;
     };
 
     $scope.openRemoveStudy = function($selectedStudy){

@@ -14,21 +14,25 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
     $scope.tDiff = iObserveUtilities.tDiff;
 
     $scope.foldStudyChart = function($study) {
+        if($scope.currentStudy == $study || $scope.sessionChartRequested == false)
+            $scope.studyChartRequested = !$scope.studyChartRequested;
         $scope.currentStudy = $study;
-        $scope.studyChartRequested = !$scope.studyChartRequested;
+
 
 
     };
 
     $scope.foldSessionChart = function($session) {
+
         $scope.sessionChartRequested = !$scope.sessionChartRequested;
 
 
     };
 
     $scope.foldSessions = function($study) {
+        if($scope.currentStudy == $study || $scope.sessionListRequested == false)
+            $scope.sessionListRequested = !$scope.sessionListRequested;
         $scope.currentStudy = $study;
-        $scope.sessionListRequested = !$scope.sessionListRequested;
 
         $scope.sessions = $scope.currentStudy.sessionobs;
 
