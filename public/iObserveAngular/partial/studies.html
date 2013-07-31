@@ -1,9 +1,9 @@
 <div ng-controller="StudiesCtrl">
     <div id="studyListHeader">
-        <h2>List of studies <button class="btn" ng-click="isAddStudyCollapsed = !isAddStudyCollapsed"><img src="img/plus.png" width="30"></button></h2>
+        <h2>List of studies <button class="btn" ng-click="isAddStudyCollapsed = !isAddStudyCollapsed"><i class="icon-plus"></i></button></h2>
 
         <div collapse="isAddStudyCollapsed">
-            <input type="text" ng-model="studyLabel" placeholder="Study label" >
+            <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
             <button class="btn btn-primary" ng-click="isCollapsed=true;createNewStudy()">OK</button>
         </div>
         <hr>
@@ -11,12 +11,12 @@
 
     <br>
     <ul>
-        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><img src="img/minus.png" width="20"></button><a href=""> Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
+        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><i class="icon-minus"></i></button><a href=""> Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
     </ul>
     <br>
     <br>
     <div ng-show="isStudyChosen">
-        <h2>List of spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><img src="img/plus.png" width="30"></button></h2>
+        <h2>List of spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button></h2>
 
         <div collapse="isAddRoomCollapsed">
             <form action="/image" ng-upload>
@@ -36,7 +36,7 @@
                         <div class="carousel-caption">
                             <h4>Room {{$index}}</h4>
                             <p>{{room.label}}</p>
-                            <div class="studyCarouselRemoveRoom"><button class="btn btn-primary" ng-click="openEditRoom(room)"><img src="img/edit.png" width="20"><button class="btn" ng-click="openRemoveRoom(room)"><img ng-src="img/minus.png" width="20"></button></div>
+                            <div class="studyCarouselRemoveRoom"><button class="btn btn-primary" ng-click="openEditRoom(room)"><i class="icon-pencil"></i><button class="btn" ng-click="openRemoveRoom(room)"><i class="icon-minus"></i></button></div>
                         </div>
                     </slide>
                 </carousel>
