@@ -46,18 +46,19 @@
 
                  <div style="position: relative; width: 100%; height: 768px">
                     <div style="width: 1024px; z-index: 0; float: left">
-                        <img ng-src="{{roomToEdit.uri}}" style="width: 1024px;height: 768px" >
+                        <img ng-src="{{roomToEdit.uri}}" >
                         <div id="roomToEditLocs" style="position: absolute; top: 0; left: 0; width: 1024px;height: 768px">
-                            <div class="rStartPoint" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png"></div>
+                            <div class="startEndPoint" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png"></div>
+                            <div class="startEndPoint" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png"></div>
                         </div>
                     </div>
                     <div style="float: left;margin-left: 15px">
                         <img src="img/walkin.png">
-                        <button><i class="icon-plus-sign"></i></button>
+                        <button ng-click="addStartPoint()"><i class="icon-plus-sign"></i></button>
                     </div>
                      <div style="float: left;margin-left: 15px">
                          <img src="img/walkaway.png">
-                         <button><i class="icon-plus-sign"></i></button>
+                         <button ng-click="addEndPoint()"><i class="icon-plus-sign"></i></button>
                      </div>
                  </div>
             </div>

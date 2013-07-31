@@ -107,7 +107,7 @@ class Iobserve < Sinatra::Application
 
       unless room.nil? then
         unless room.end_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
-          room.end_points.push(:xpos => data['xpos'], :ypos => data['ypos'])
+          room.end_points.push(:coord_id => SecureRandom.uuid ,:xpos => data['xpos'], :ypos => data['ypos'])
           room.save
         end
       end
@@ -130,7 +130,7 @@ class Iobserve < Sinatra::Application
 
       unless room.nil? then
         unless room.start_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
-          room.start_points.push(:xpos => data['xpos'], :ypos => data['ypos'])
+          room.start_points.push(:coord_id => SecureRandom.uuid ,:xpos => data['xpos'], :ypos => data['ypos'])
           room.save
         end
       end

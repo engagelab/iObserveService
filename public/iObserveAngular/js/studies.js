@@ -5,7 +5,7 @@
  * Time: 9:15 AM
  * To change this template use File | Settings | File Templates.
  */
-iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
+iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
     $scope.isAddStudyCollapsed = true;
     $scope.isAddRoomCollapsed = true;
     $scope.isStudyChosen = false;
@@ -20,13 +20,14 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
     $scope.isEditRoomCollapsed = true;
     $scope.roomToEdit = null;
     $scope.roomStartPoints = null;
+    $scope.roomEndPoints = null;
 
-    $scope.roomSubmited = function(content, completed) {
-        if(completed) {
+    $scope.roomSubmited = function (content, completed) {
+        if (completed) {
             $scope.uploadResponse = content;
-            if($scope.uploadResponse._id != "") {
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getRoomLabel(), uri: $scope.uploadResponse.url}).then(function(resultData) {
-                    if(resultData._id != "") {
+            if ($scope.uploadResponse._id != "") {
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getRoomLabel(), uri: $scope.uploadResponse.url}).then(function (resultData) {
+                    if (resultData._id != "") {
                         $scope.studies = iObserveData.doGetStudies();
                         $scope.isAddRoomCollapsed = true;
                         $scope.isStudyChosen = false;
@@ -38,7 +39,7 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
     };
 
     function getRoomLabel() {
-        if($scope.roomLabel != "") {
+        if ($scope.roomLabel != "") {
             return $scope.roomLabel;
         }
         else {
@@ -58,7 +59,7 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
 
-    $scope.unfoldSessions = function($study) {
+    $scope.unfoldSessions = function ($study) {
         $scope.currentStudy = $study;
         $scope.isStudyChosen = true;
 
@@ -66,10 +67,10 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
         $scope.sessions = $scope.currentStudy.sessionobs;
     };
 
-    $scope.createNewStudy = function() {
-        if($scope.studyLabel != "") {
-            var data = {label : $scope.studyLabel};
-            iObserveData.doNewStudy(data).then(function(resultData) {
+    $scope.createNewStudy = function () {
+        if ($scope.studyLabel != "") {
+            var data = {label: $scope.studyLabel};
+            iObserveData.doNewStudy(data).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
             });
 
@@ -78,16 +79,19 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
         $scope.isAddStudyCollapsed = true;
     };
 
-    $scope.openRemoveStudy = function($selectedStudy){
+    $scope.openRemoveStudy = function ($selectedStudy) {
         $scope.studyToDelete = $selectedStudy;
 
         var title = 'Are you sure to delete this study?';
         var msg = 'Please note that all session data for this study will be also deleted.';
-        var btns = [{result:'cancel', label: 'Cancel'}, {result:'ok', label: 'OK', cssClass: 'btn-primary'}];
+        var btns = [
+            {result: 'cancel', label: 'Cancel'},
+            {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
+        ];
 
-        $dialog.messageBox(title, msg, btns).open().then(function(result) {
-            if(result == "ok") {
-                iObserveData.doDeleteStudy($selectedStudy._id).then(function(resultData) {
+        $dialog.messageBox(title, msg, btns).open().then(function (result) {
+            if (result == "ok") {
+                iObserveData.doDeleteStudy($selectedStudy._id).then(function (resultData) {
                     $scope.studies = iObserveData.doGetStudies();
                     $scope.isStudyChosen = false;
                 });
@@ -98,16 +102,19 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
         });
     };
 
-    $scope.openRemoveRoom = function($selectedRoom){
+    $scope.openRemoveRoom = function ($selectedRoom) {
         $scope.roomToDelete = $selectedRoom;
 
         var title = 'Are you sure to delete this room?';
         var msg = 'Please note that sessions will not be using this room to map anymore.';
-        var btns = [{result:'cancel', label: 'Cancel'}, {result:'ok', label: 'OK', cssClass: 'btn-primary'}];
+        var btns = [
+            {result: 'cancel', label: 'Cancel'},
+            {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
+        ];
 
-        $dialog.messageBox(title, msg, btns).open().then(function(result) {
-            if(result == "ok") {
-                iObserveData.doDeleteRoom($selectedRoom._id).then(function(resultData) {
+        $dialog.messageBox(title, msg, btns).open().then(function (result) {
+            if (result == "ok") {
+                iObserveData.doDeleteRoom($selectedRoom._id).then(function (resultData) {
                     console.log(resultData);
                     $scope.studies = iObserveData.doGetStudies();
                     $scope.isStudyChosen = false;
@@ -120,27 +127,35 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
         });
     };
 
-    $scope.openEditRoom = function($selectedRoom) {
+    $scope.openEditRoom = function ($selectedRoom) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
         $scope.roomToEdit = $selectedRoom;
 
         /*var roomStartPoints = $scope.roomToEdit.start_points;
-        var roomEndPoints = $scope.roomToEdit.end_points;
+         var roomEndPoints = $scope.roomToEdit.end_points;
 
-        $('#roomToEditLocs').empty();
+         $('#roomToEditLocs').empty();
 
-        roomStartPoints.forEach(function(entry) {
-           $('#roomToEditLocs').append("<div style='position: absolute; top: "+entry.ypos+"px; left: "+entry.xpos+"px'><img src='img/walkin.png'></div>");
-        }); */
+         roomStartPoints.forEach(function(entry) {
+         $('#roomToEditLocs').append("<div style='position: absolute; top: "+entry.ypos+"px; left: "+entry.xpos+"px'><img src='img/walkin.png'></div>");
+         }); */
 
         $scope.roomStartPoints = $scope.roomToEdit.start_points;
+        $scope.roomEndPoints = $scope.roomToEdit.end_points;
     };
 
-    $scope.showhideEditMode = function() {
+    $scope.showhideEditMode = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
     }
 
+    $scope.addStartPoint = function () {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        $scope.roomToEdit.start_points.push({xpos: 1024/2, ypos: 768/2});
+        $scope.openEditRoom($scope.roomToEdit);
+    }
 
-
+    $scope.addEndPoint = function () {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+    }
 
 });
