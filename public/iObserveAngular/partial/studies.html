@@ -36,21 +36,29 @@
                         <div class="carousel-caption">
                             <h4>Room {{$index}}</h4>
                             <p>{{room.label}}</p>
-                            <div class="studyCarouselRemoveRoom"><button class="btn btn-primary" ng-click="openEditRoom(room)"><img src="img/edit.png" width="20"><button class="btn" ng-click="openRemoveRoom(room)"><img src="img/minus.png" width="20"></button></div>
+                            <div class="studyCarouselRemoveRoom"><button class="btn btn-primary" ng-click="openEditRoom(room)"><img src="img/edit.png" width="20"><button class="btn" ng-click="openRemoveRoom(room)"><img ng-src="img/minus.png" width="20"></button></div>
                         </div>
                     </slide>
                 </carousel>
             </div>
             <div collapse="isEditRoomCollapsed">
-                <button class="btn btn-primary" ng-click="isEditRoomCollapsed = !isEditRoomCollapsed">Close</button>
+                <button class="btn btn-primary" ng-click="showhideEditMode()">Close</button>
 
                  <div style="position: relative; width: 100%; height: 768px">
-                    <div style="width: 1024px; z-index: 0; position: absolute; top: 0; left: 0 ">
+                    <div style="width: 1024px; z-index: 0; float: left">
                         <img ng-src="{{roomToEdit.uri}}" style="width: 1024px;height: 768px" >
+                        <div id="roomToEditLocs" style="position: absolute; top: 0; left: 0; width: 1024px;height: 768px">
+                            <div class="rStartPoint" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png"></div>
+                        </div>
                     </div>
-                    <div>
-
+                    <div style="float: left;margin-left: 15px">
+                        <img src="img/walkin.png">
+                        <button>+</button>
                     </div>
+                     <div style="float: left;margin-left: 15px">
+                         <img src="img/walkaway.png">
+                         <button>+</button>
+                     </div>
                  </div>
             </div>
         </div>

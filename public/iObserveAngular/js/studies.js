@@ -19,6 +19,7 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
     $scope.uploadResponse = "nothing";
     $scope.isEditRoomCollapsed = true;
     $scope.roomToEdit = null;
+    $scope.roomStartPoints = null;
 
     $scope.roomSubmited = function(content, completed) {
         if(completed) {
@@ -153,33 +154,24 @@ iObserveApp.controller('StudiesCtrl', function($scope, $dialog, iObserveStates, 
     $scope.openEditRoom = function($selectedRoom) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
         $scope.roomToEdit = $selectedRoom;
+
+        /*var roomStartPoints = $scope.roomToEdit.start_points;
+        var roomEndPoints = $scope.roomToEdit.end_points;
+
+        $('#roomToEditLocs').empty();
+
+        roomStartPoints.forEach(function(entry) {
+           $('#roomToEditLocs').append("<div style='position: absolute; top: "+entry.ypos+"px; left: "+entry.xpos+"px'><img src='img/walkin.png'></div>");
+        }); */
+
+        $scope.roomStartPoints = $scope.roomToEdit.start_points;
     };
 
-    $scope.list1 = {'emage': 'pin.png'};
-    $scope.list2 = {};
+    $scope.showhideEditMode = function() {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+    }
 
-    $scope.startCallback = function(event, ui) {
-        console.log('You started draggin');
-    };
 
-    $scope.stopCallback = function(event, ui) {
-        console.log('Why did you stop draggin me?');
-    };
 
-    $scope.dragCallback = function(event, ui) {
-        console.log('hey, look I`m flying');
-    };
-
-    $scope.dropCallback = function(event, ui) {
-        console.log('hey, you dumped me :-(');
-    };
-
-    $scope.overCallback = function(event, ui) {
-        console.log('Look, I`m over you');
-    };
-
-    $scope.outCallback = function(event, ui) {
-        console.log('I`m not, hehe');
-    };
 
 });
