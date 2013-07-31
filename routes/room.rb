@@ -106,10 +106,18 @@ class Iobserve < Sinatra::Application
       room = Room.find(data['_id'])
 
       unless room.nil? then
-        unless room.end_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
-          room.end_points.push(:coord_id => SecureRandom.uuid ,:xpos => data['xpos'], :ypos => data['ypos'])
+        pointsArray = data['end_points']
+
+        if pointsArray.kind_of?(Array)
+          room.end_points = pointsArray
           room.save
         end
+
+
+        #unless room.end_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
+        #  room.end_points.push(:coord_id => SecureRandom.uuid ,:xpos => data['xpos'], :ypos => data['ypos'])
+        #  room.save
+        #end
       end
 
       return room.to_json
@@ -129,10 +137,17 @@ class Iobserve < Sinatra::Application
       room = Room.find(data['_id'])
 
       unless room.nil? then
-        unless room.start_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
-          room.start_points.push(:coord_id => SecureRandom.uuid ,:xpos => data['xpos'], :ypos => data['ypos'])
+        pointsArray = data['start_points']
+
+        if pointsArray.kind_of?(Array)
+          room.start_points = pointsArray
           room.save
         end
+
+        #unless room.start_points.any?{|h| h["xpos"] == data['xpos'] and h["ypos"] == data['ypos']} then
+        #  room.start_points.push(:uuid => data['uuid'] ,:xpos => data['xpos'], :ypos => data['ypos'])
+        #  room.save
+        #end
       end
 
       return room.to_json
@@ -143,57 +158,46 @@ class Iobserve < Sinatra::Application
   end
 
   ### delete room's end coordinates
-  put '/room/endcoords/delete' do
-    request.body.rewind  # in case someone already read it
-    content_type :json;
-    data = JSON.parse request.body.read
-
-    unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
-      room = Room.find(data['_id'])
-
-      unless room.nil? then
-        room.end_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
-        room.save
-      end
-
-      return room.to_json
-    else
-      status 404
-      return {"message" => "Provide _id, xpos, and ypos"}.to_json
-    end
-  end
+#  put '/room/endcoords/delete' do
+#    request.body.rewind  # in case someone already read it
+#    content_type :json;
+#    data = JSON.parse request.body.read
+#
+#    unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+#      room = Room.find(data['_id'])
+#
+#      unless room.nil? then
+#        room.end_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
+#        room.save
+#      end
+#
+#      return room.to_json
+#    else
+#      status 404
+#      return {"message" => "Provide _id, xpos, and ypos"}.to_json
+#    end
+#  end
 
   ### delete room's start coordinates
-  put '/room/startcoords/delete' do
-    request.body.rewind  # in case someone already read it
-    content_type :json;
-    data = JSON.parse request.body.read
-
-    unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
-      room = Room.find(data['_id'])
-
-      unless room.nil? then
-        room.start_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
-        room.save
-      end
-
-      return room.to_json
-    else
-      status 404
-      return {"message" => "Provide _id, xpos, and ypos"}.to_json
-    end
-  end
-
-  ### update room's start coordinates
-  put '/room/startcoords' do
-    unless data['end_points'].nil?
-      room.update_attributes(:end_points => data['end_points'])
-    end
-
-    unless data['start_points'].nil?
-      room.update_attributes(:start_points => data['start_points'])
-    end
-  end
+#  put '/room/startcoords/delete' do
+#    request.body.rewind  # in case someone already read it
+#    content_type :json;
+#    data = JSON.parse request.body.read
+#
+#    unless data.nil? or (data['_id'].nil? and data['xpos'].nil? and data['ypos'].nil?) then
+#      room = Room.find(data['_id'])
+#
+#      unless room.nil? then
+#        room.start_points.delete({'xpos' => data['xpos'], 'ypos' => data['ypos']})
+#        room.save
+#      end
+#
+#      return room.to_json
+#    else
+#      status 404
+#      return {"message" => "Provide _id, xpos, and ypos"}.to_json
+#    end
+#  end
 
   ### delete a room by id
   delete '/room/:room_id' do

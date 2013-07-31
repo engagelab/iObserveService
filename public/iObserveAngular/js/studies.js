@@ -26,7 +26,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         if (completed) {
             $scope.uploadResponse = content;
             if ($scope.uploadResponse._id != "") {
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getRoomLabel(), uri: $scope.uploadResponse.url}).then(function (resultData) {
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getRandomUUID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
                     if (resultData._id != "") {
                         $scope.studies = iObserveData.doGetStudies();
                         $scope.isAddRoomCollapsed = true;
@@ -38,7 +38,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
     };
 
-    function getRoomLabel() {
+    function getRandomUUID() {
         if ($scope.roomLabel != "") {
             return $scope.roomLabel;
         }
@@ -145,17 +145,40 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     };
 
     $scope.showhideEditMode = function () {
-        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+
+        if($scope.roomStartPoints.length > 0 && $scope.roomEndPoints.length > 0) {
+
+            var data = {_id: $scope.roomToEdit._id, start_points: $scope.roomStartPoints};
+            iObserveData.doUpdateRoomStartCoordinates(data).then(function (resultData) {
+
+                var data = {_id: $scope.roomToEdit._id, end_points: $scope.roomEndPoints};
+                iObserveData.doUpdateRoomEndCoordinates(data).then(function (resultData) {
+                    $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+                });
+
+            });
+        }
+        else {
+
+            var title = 'Missing start or end coordinates';
+            var msg = 'Please make sure to add at least one start point (green arrow) and one end point (red arrow), before saving.';
+            var btns = [
+                {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
+            ];
+
+            $dialog.messageBox(title, msg, btns).open();
+        }
     }
 
     $scope.addStartPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.start_points.push({xpos: 1024/2, ypos: 768/2});
+        $scope.roomToEdit.start_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2});
         $scope.openEditRoom($scope.roomToEdit);
     }
 
     $scope.addEndPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        $scope.roomToEdit.end_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2});
+        $scope.openEditRoom($scope.roomToEdit);
     }
-
 });

@@ -128,6 +128,30 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestUpdateRoomStartCoordinatesObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.put(routePrePath + "/room/startcoords", data, putConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestUpdateRoomEndCoordinatesObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.put(routePrePath + "/room/endcoords", data, putConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -164,6 +188,8 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doDeleteStudy: requestDeleteStudyObject,
         doCreateStudyRoom: requestAddStudyRoomObject,
         doDeleteRoom: requestDeleteRoomObject,
+        doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
+        doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
         selectedSpace: selectedSpace
     }
 });
