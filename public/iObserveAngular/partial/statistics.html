@@ -39,12 +39,10 @@
                                 <a ng-click="displayChart(chart)">{{ chart.name }}</a>
                             </li>
                         </ul>
-                        <div collapse="!sessionChartRequested">
-                            <markdown>
-                                Testing the element!
-                                ---------------------
-                                - list item 1
-                            </markdown>
+                        <div collapse="!showChart">
+
+                            <io-visualization val="chartName"></io-visualization>
+
                         </div>
                     </div>
                 </accordion-group>

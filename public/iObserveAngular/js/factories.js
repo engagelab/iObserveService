@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload']);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload'], null);
 
 // var routePrePath = "http://observe.uio.im";
 var routePrePath = "";
@@ -33,6 +33,47 @@ var deleteConfiguration = {
     processData: false
 }
 
+iObserveApp.factory('iObserveUtilities', function () {
+    var timeConverter = function($ts){
+        var a = new Date($ts*1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date+','+month+' '+year+' '+hour+':'+min+':'+sec ;
+        return time;
+    };
+
+    var tDiff = function($a,$b) {
+        var a = new Date($a*1000);
+        var b = new Date($b*1000);
+
+        var nTotalDiff = b.getTime() - a.getTime();
+        var oDiff = new Object();
+
+        oDiff.days = Math.floor(nTotalDiff/1000/60/60/24);
+        nTotalDiff -= oDiff.days*1000*60*60*24;
+
+        oDiff.hours = Math.floor(nTotalDiff/1000/60/60);
+        nTotalDiff -= oDiff.hours*1000*60*60;
+
+        oDiff.minutes = Math.floor(nTotalDiff/1000/60);
+        nTotalDiff -= oDiff.minutes*1000*60;
+
+        oDiff.seconds = Math.floor(nTotalDiff/1000);
+
+        return oDiff;
+    };
+
+    return {
+        timeConverter : timeConverter,
+        tDiff : tDiff
+    }
+});
+
 iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
@@ -44,16 +85,16 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
     var studyIdToDelete = null;
 
     var requestSessionListObject = function() {
-            var deferred = $q.defer();
-            var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
+        var deferred = $q.defer();
+        var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
 
-            $http.get(route, getConfiguration).success(function(data) {
-                deferred.resolve(data);
-            }).error(function(data, status){
-                    alert( "Request failed: " + data.message  );
-                    deferred.reject();
-                });
-            return deferred.promise;
+        $http.get(route, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
     };
 
     var requestEventListObject = function() {
@@ -311,173 +352,16 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
 });
 
 
-/*
- Receive emitted message and broadcast it.
- Event names must be distinct or browser will blow up!   http://jsfiddle.net/VxafF/
- */
-/*
-iObserveApp.run(function($rootScope) {
-    $rootScope.$on('handleEmit', function(event, args) {
-        $rootScope.$broadcast('handleBroadcast', args);
-    });
-});
-  */
 
-iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
-    showHideNavTabs(false);
-
-    function showHideNavTabs(loginState) {
-        if(loginState) {
-            $scope.panes = [
-                { title:"iObserve", content:"", active: true },
-                { title:"Profile", content:"" },
-                { title:"Studies", content:"" },
-                { title:"Statistics", content:"" },
-                { title:"About", content:"" },
-                { title:"Logout", content:"" }
-            ];
-        }
-        else {
-            $scope.panes = [
-                { title:"iObserve", content:"", active: true },
-                { title:"About", content:"" },
-                { title:"Login", content:"" },
-                { title:"Register", content:""}
-            ];
+//  Place a tag called <markdown></markdown> in a html file and this directive will convert any contained plain text to markup.
+iObserveApp.directive('markdown', function () {
+    var converter = new Showdown.converter();
+    return {
+        restrict: 'E',
+        link:function(scope,element,attrs) {
+            var htmlText = converter.makeHtml(element.text());
+            element.html(htmlText)
         }
     }
-
-    $scope.active = function() {
-        var navState = $scope.panes.filter(function(pane){
-            return pane.active;
-        })[0].title;
-        return navState;
-    }
-
-    $scope.loginState = iObserveStates.getLoginState;
-    $scope.$watch('loginState()', function(loginState) {
-        showHideNavTabs(loginState);
-    }, true);
-
-    $scope.$watch('active()', function(navState) {
-        if(navState == "Logout") {
-            iObserveStates.doUserLogout();
-            $scope.componentState = "iObserve";
-        }
-        else {
-            iObserveStates.setNavigationState(navState);
-            $scope.componentState = navState;
-        }
-    });
 })
- /*
-    $scope.$on('handleBroadcast', function(event, args) {
-        $scope.message = 'ONE: ' + args.message;
-    });
-  */
-//.$inject = ['$scope'];
-
-
-iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
-
-    $scope.registerMe = function($event) {
-        if(registrationValidated()) {
-            var data = {last_name : $scope.user.lastName, first_name: $scope.user.firstName, email: $scope.user.email, password : $scope.user.password};
-            iObserveStates.doUserRegistration(data).then(function(resultData) {
-                $scope.resultData = resultData;
-            });
-        }
-    }
-
-    function registrationValidated() {
-        return true;
-    }
-
-})//.$inject = ['$scope'];
-
-
-iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
-
-
-})//.$inject = ['$scope'];
-
-
-iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
-
-$scope.logMeIn = function($event) {
-    if(loginValidated()) {
-        var data = {login_id : $scope.email, password: $scope.password};
-        iObserveStates.doUserLogin(data).then(function(resultData) {
-            $scope.resultData = resultData;
-        });
-    }
-}
-
-function loginValidated() {
-    return true;
-}
-
-})//.$inject = ['$scope'];
-
-iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
-
-    $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"login_id", name: "Login ID", value:""},{key:"password", name: "Password", value:""}]
-
-    function getProfile() {
-        iObserveStates.doGetProfile().then(function(resultData) {
-            $scope.user = resultData;
-            $scope.userEdit[0].value = $scope.user.first_name;
-            $scope.userEdit[1].value = $scope.user.last_name;
-            $scope.userEdit[2].value = $scope.user.email;
-            $scope.userEdit[3].value = $scope.user.login_id;
-            $scope.userEdit[4].value = $scope.user.password;
-        });
-    }
-
-    $scope.updateProfile = function($event) {
-            var data = {_id : iObserveStates.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, login_id: $scope.user.login_id, password: $scope.user.password};
-            iObserveStates.doUpdateProfile(data).then(function(resultData) {
-                $scope.user = resultData.user;
-            });
-    }
-
-
-    if($scope.user == null) {
-        getProfile();
-    }
-
-})//.$inject = ['$scope'];
-
-iObserveApp.controller('UserEditorController', function($scope) {
-
-    $scope.isCollapsed = true;
-    $scope.isNotCollapsed = false;
-
-    // Some code taken from the 'todos' AngularJS example
-    $scope.editorEnabled = true;
-
-    $scope.enableEditor = function() {
-   //     $scope.editorEnabled = true;
-        $scope.editValue = $scope.itemToEdit.value;
-        $scope.isCollapsed = !$scope.isCollapsed;
-        $scope.isNotCollapsed = !$scope.isCollapsed;
-    }
-
-    $scope.disableEditor = function() {
-  //    $scope.editorEnabled = false;
-        $scope.isCollapsed = !$scope.isCollapsed;
-        $scope.isNotCollapsed = !$scope.isCollapsed;
-    }
-
-    $scope.retain = function() {
-        if ($scope.editValue == "") {
-            return false;
-        }
-        $scope.itemToEdit.value = $scope.editValue;
-      //  angular.element("updateBtn").$setValidity(true);
-      //  $scope.updateBtn.$setValidity('updateBtn', true);
-
-        $scope.disableEditor();
-    }
-});
