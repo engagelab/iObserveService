@@ -37,27 +37,31 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
             $scope.showChart = !$scope.showChart;
         $scope.selectedChart = $chart;
         $scope.chartName = $chart.name;
-  //      var chartSpace = d3.select("#chartSpace");
-  //      iObserveCharting.selectedChart = $chart;
+        $scope.chartShortName = $chart.shortName;
+        $scope.serverData = "Test Data";
 
     };
-
-//    $scope.displayChart = function($chart) {
-//        $scope.sessionChartRequested = true;
-//    };
 })
 
 
-iObserveApp.directive('ioVisualization', function (iObserveCharting) {
+/*
+iObserveApp.directive('chartVisualization', function (iObserveCharting) {
     return {
         restrict: 'E',
+        replace: true,
+        template: '<div id="chartTemplateRootElement">' +
+                      '<form ng-submit="">' +
+                            'Select all <input type="checkbox" ng-model="chartControls.selectAll">' +
+                      '</form>' +
+                      '<div id="chart"></div>' +
+                  '</div>',
         scope: {
-            val: '=',
-            grouped: '='
+            val: '=val',
+            chartControls: '='
         },
         link: function (scope, element, attrs) {
-            // set up initial svg object
-            var vis = d3.select(element[0])
+
+            var svg = d3.select("#chart")
                 .append("svg")
                 .attr("width", 100)
                 .attr("height", 100);
@@ -66,11 +70,18 @@ iObserveApp.directive('ioVisualization', function (iObserveCharting) {
                 if (!newVal || newVal === oldVal) {
                     return;
                 }
-                vis.selectAll('*').remove();
-
-                iObserveCharting.plotChart(newVal, vis);
-
+                svg.selectAll('*').remove();
+                iObserveCharting.plotChart(newVal, svg);
             });
+
+            scope.$watch('chartControls.selectAll', function (newVal, oldVal) {
+                if (newVal === oldVal) {
+                    return;
+                }
+                if (newVal)
+                    iObserveCharting.modifyChart("selectAllCircles", newVal, svg);
+            })
         }
     }
 });
+*/

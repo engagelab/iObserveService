@@ -46,3 +46,7 @@ a {
 .startEndPoint {
     position: absolute;
 }
+
+.filter_options form input {
+    margin-top: 0;
+}

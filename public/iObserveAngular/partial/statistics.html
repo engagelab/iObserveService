@@ -41,8 +41,8 @@
                         </ul>
                         <div collapse="!showChart">
 
-                            <io-visualization val="chartName"></io-visualization>
-
+                            <!--chart-visualization val="chartName" chartControls="chartControls"></chart-visualization-->
+                            <div ng-include="'partial/charts/' + chartShortName + '.html'"></div>
                         </div>
                     </div>
                 </accordion-group>
