@@ -48,8 +48,8 @@
                     <div style="width: 1024px; z-index: 0; float: left">
                         <img ng-src="{{roomToEdit.uri}}" >
                         <div id="roomToEditLocs" style="position: absolute; top: 0; left: 0; width: 1024px;height: 768px">
-                            <div class="startEndPoint" id="{{ roomStartPoint.uuid }}" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png"></div>
-                            <div class="startEndPoint" id="{{ roomEndPoint.uuid }}" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png"></div>
+                            <div jer-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="startPoint" id="{{ roomStartPoint.uuid }}" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png" ng-style="{transform: 'rotate('+roomStartPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeStartPoint(roomStartPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateStartPoint(roomStartPoint.uuid)"><i class="icon-repeat"></i></button></div></div>
+                            <div jer-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="endPoint" id="{{ roomEndPoint.uuid }}" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png" ng-style="{transform: 'rotate('+roomEndPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeEndPoint(roomEndPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateEndPoint(roomEndPoint.uuid)"><i class="icon-repeat"></i></button></div></div>
                         </div>
                     </div>
                     <div style="float: left;margin-left: 15px">

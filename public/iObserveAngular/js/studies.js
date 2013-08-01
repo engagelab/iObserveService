@@ -5,6 +5,16 @@
  * Time: 9:15 AM
  * To change this template use File | Settings | File Templates.
  */
+iObserveApp.directive('jerDraggable', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, elm, attrs) {
+            var options = scope.$eval(attrs.jerDraggable);
+            elm.draggable(options);
+        }
+    };
+});
+
 iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
     $scope.isAddStudyCollapsed = true;
     $scope.isAddRoomCollapsed = true;
@@ -130,16 +140,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.openEditRoom = function ($selectedRoom) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
         $scope.roomToEdit = $selectedRoom;
-
-        /*var roomStartPoints = $scope.roomToEdit.start_points;
-         var roomEndPoints = $scope.roomToEdit.end_points;
-
-         $('#roomToEditLocs').empty();
-
-         roomStartPoints.forEach(function(entry) {
-         $('#roomToEditLocs').append("<div style='position: absolute; top: "+entry.ypos+"px; left: "+entry.xpos+"px'><img src='img/walkin.png'></div>");
-         }); */
-
         $scope.roomStartPoints = $scope.roomToEdit.start_points;
         $scope.roomEndPoints = $scope.roomToEdit.end_points;
     };
@@ -147,11 +147,25 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.showhideEditMode = function () {
 
         if($scope.roomStartPoints.length > 0 && $scope.roomEndPoints.length > 0) {
+            var newSPoints = new Array();
 
-            var data = {_id: $scope.roomToEdit._id, start_points: $scope.roomStartPoints};
+            var look = angular.element.find('.startPoint');
+            for(var i=0; i<look.length; i++) {
+                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px","")), ypos: Number((look[i].style.top.replace("px","")))});
+            }
+            $scope.roomToEdit.start_points = newSPoints;
+
+            var data = {_id: $scope.roomToEdit._id, start_points: $scope.roomToEdit.start_points };
             iObserveData.doUpdateRoomStartCoordinates(data).then(function (resultData) {
+                var newEPoints = new Array();
 
-                var data = {_id: $scope.roomToEdit._id, end_points: $scope.roomEndPoints};
+                var look = angular.element.find('.endPoint');
+                for(var i=0; i<look.length; i++) {
+                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px","")), ypos: Number((look[i].style.top.replace("px","")))});
+                }
+                $scope.roomToEdit.end_points = newEPoints;
+
+                var data = {_id: $scope.roomToEdit._id, end_points: $scope.roomToEdit.end_points};
                 iObserveData.doUpdateRoomEndCoordinates(data).then(function (resultData) {
                     $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
                 });
@@ -170,15 +184,85 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
     }
 
+    function getStartObjectRotation(uid) {
+
+        for(var i in $scope.roomToEdit.start_points){
+            if($scope.roomToEdit.start_points[i].uuid == uid){
+                return $scope.roomToEdit.start_points[i].rotation;
+                break;
+            }
+        }
+    };
+
+    function getEndObjectRotation(uid) {
+
+        for(var i in $scope.roomToEdit.end_points){
+            if($scope.roomToEdit.end_points[i].uuid == uid){
+                return $scope.roomToEdit.end_points[i].rotation;
+                break;
+            }
+        }
+    };
+
     $scope.addStartPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.start_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2});
+        $scope.roomToEdit.start_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
         $scope.openEditRoom($scope.roomToEdit);
     }
 
     $scope.addEndPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.end_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2});
+        $scope.roomToEdit.end_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
+        $scope.openEditRoom($scope.roomToEdit);
+    }
+
+    $scope.removeStartPoint = function ($uid) {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        for(var i in $scope.roomToEdit.start_points){
+            if($scope.roomToEdit.start_points[i].uuid == $uid){
+                $scope.roomToEdit.start_points.splice(i,1);
+                break;
+            }
+        }
+        $scope.openEditRoom($scope.roomToEdit);
+    }
+
+    $scope.removeEndPoint = function ($uid) {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        for(var i in $scope.roomToEdit.end_points){
+            if($scope.roomToEdit.end_points[i].uuid == $uid){
+                $scope.roomToEdit.end_points.splice(i,1);
+                break;
+            }
+        }
+        $scope.openEditRoom($scope.roomToEdit);
+    }
+
+    $scope.rotateStartPoint = function ($uid) {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        for(var i in $scope.roomToEdit.start_points){
+            if($scope.roomToEdit.start_points[i].uuid == $uid){
+                $scope.roomToEdit.start_points[i].rotation = $scope.roomToEdit.start_points[i].rotation + 90;
+                if($scope.roomToEdit.start_points[i].rotation >= 360) {
+                    $scope.roomToEdit.start_points[i].rotation = 0;
+                }
+                break;
+            }
+        }
+        $scope.openEditRoom($scope.roomToEdit);
+    }
+
+    $scope.rotateEndPoint = function ($uid) {
+        $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
+        for(var i in $scope.roomToEdit.end_points){
+            if($scope.roomToEdit.end_points[i].uuid == $uid){
+                $scope.roomToEdit.end_points[i].rotation = $scope.roomToEdit.end_points[i].rotation + 90;
+                if($scope.roomToEdit.end_points[i].rotation >= 360) {
+                    $scope.roomToEdit.end_points[i].rotation = 0;
+                }
+                break;
+            }
+        }
         $scope.openEditRoom($scope.roomToEdit);
     }
 });
