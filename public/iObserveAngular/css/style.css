@@ -42,8 +42,8 @@ a {
     float: right;
 }
 
-
-.startEndPoint {
+.startPoint,
+.endPoint {
     position: absolute;
 }
 
