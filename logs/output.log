@@ -36,3 +36,31 @@ Session: 144a9cc2-efc8-4fa7-b8e3-74a8b23c05e6
 Session: 258a96c6-6771-4a05-a068-58b44ba20e40
 Session: 52536dfd-74a8-41d1-86ee-69941f33a803
 Date: -4712-01-01
+shit
+shit
+shit
+shit
+shit
+shit
+51c92f129c95051d08000002
+51c92f129c95051d08000002
+shit
+shit
+shit
+shit
+#<Sessionob _id: 51ff709e0ac19cd495000001, space_ids: ["51c92f129c95051d08000002"], visitorgroup: nil, media_ids: [], eventob_ids: [], storage: nil, room: nil, label: nil, created_on: 1375695006, finished_on: 1375695027, surveys: [], stats: []>
+#<Sessionob _id: 51ff8fb90ac19c43d2000009, space_ids: ["51c92f129c95051d08000002"], visitorgroup: nil, media_ids: [], eventob_ids: [], storage: nil, room: nil, label: nil, created_on: 1375702969, finished_on: 1375702999, surveys: [], stats: []>
+#<Sessionob _id: 51ff709e0ac19cd495000001, space_ids: ["51c92f129c95051d08000002"], visitorgroup: nil, media_ids: [], eventob_ids: [], storage: nil, room: nil, label: nil, created_on: 1375695006, finished_on: 1375695027, surveys: [], stats: []>
+#<Sessionob _id: 51ff8fb90ac19c43d2000009, space_ids: ["51c92f129c95051d08000002"], visitorgroup: nil, media_ids: [], eventob_ids: [], storage: nil, room: nil, label: nil, created_on: 1375702969, finished_on: 1375702999, surveys: [], stats: []>
+#<Room _id: 51c92f589c95051d08000003, space_ids: ["51c92f129c95051d08000002"], sessionob_id: "51ff709e0ac19cd495000001", label: "my room", uri: "http://net.engagelab.iobserveservice.s3.amazonaws.com/c62e2420-b229-42ff-a77e-bc1666a3788f.jpg", position: nil, created_on: 1372139352, start_points: [{"uuid"=>"31489984-42ea-d242-3fff-c82d705ed926", "rotation"=>0, "xpos"=>163, "ypos"=>703}], end_points: [{"uuid"=>"0ad4ef83-5ed6-520c-80b3-94a58a0dcf14", "rotation"=>0, "xpos"=>308, "ypos"=>683}]>
+#<Room _id: 51c92f829c95051d08000004, space_ids: ["51c92f129c95051d08000002"], sessionob_id: "51ff8fb90ac19c43d2000009", label: "munch gallery", uri: "http://net.engagelab.iobserveservice.s3.amazonaws.com/e09d06b1-6651-49a5-b4ed-d4fc4df19ec8.jpg", position: nil, created_on: 1372139394, start_points: [{"uuid"=>"ba02c318-e045-42be-9fa4-58a054222f18", "xpos"=>954, "ypos"=>340}], end_points: [{"uuid"=>"9077342e-0f75-42e3-8773-fea1c46e289a", "xpos"=>940, "ypos"=>240}]>
+"51c92f589c95051d08000003"
+"51c92f829c95051d08000004"
+"51c92f589c95051d08000003"
+"51c92f829c95051d08000004"
+"51c92f589c95051d08000003"
+"51c92f829c95051d08000004"
+"51c92f589c95051d08000003"
+"51c92f829c95051d08000004"
+"51c92f589c95051d08000003"
+"51c92f829c95051d08000004"

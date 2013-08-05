@@ -5,6 +5,8 @@ class Room
 
   has_and_belongs_to_many :spaces
 
+  belongs_to :sessionob
+
   field :label, :type => String
   field :uri, :type => String
   field :position, :type => String
