@@ -1,18 +1,41 @@
 class Iobserve < Sinatra::Application
   ######################## Session ##################################
   ### create a session by space id
-  post '/space/:space_id/session' do
+  #post '/space/:space_id/session' do
+  #  request.body.rewind  # in case someone already read it
+  #  content_type :json
+  #
+  #  begin
+  #    space = Space.find(params[:space_id])
+  #  end
+  #
+  #  unless space.nil? then
+  #    sessionob = Sessionob.create(:created_on => Time.now.to_i)
+  #    visitorgroup = Visitorgroup.create(:created_on => Time.now.to_i)
+  #    sessionob.visitorgroup = visitorgroup
+  #    space.sessionobs << sessionob
+  #    space.save
+  #    return sessionob.to_json
+  #  else
+  #    status 404
+  #    return {"message" => "Space not found"}.to_json
+  # end
+  #end
+
+  post '/space/:space_id/:room_id/session' do
     request.body.rewind  # in case someone already read it
     content_type :json
 
     begin
       space = Space.find(params[:space_id])
+      room = Room.find(params[:room_id])
     end
 
-    unless space.nil? then
+    unless space.nil? and room.nil? then
       sessionob = Sessionob.create(:created_on => Time.now.to_i)
       visitorgroup = Visitorgroup.create(:created_on => Time.now.to_i)
       sessionob.visitorgroup = visitorgroup
+      sessionob.room = room
       space.sessionobs << sessionob
       space.save
       return sessionob.to_json
@@ -32,10 +55,30 @@ class Iobserve < Sinatra::Application
 
 
   ### list all sessions by space id
-  get '/space/:space_id/sessions' do
+  get '/space/:space_id/session' do
     content_type :json
     space = Space.find(params[:space_id])
     return space.sessionobs.to_json
+  end
+
+  ### list all sessions by space id  and room id
+  get '/space/:space_id/:room_id/session' do
+    content_type :json
+    space = Space.find(params[:space_id])
+
+    unless space.nil? then
+
+      @allSessionsForSpace = [];
+
+      space.sessionobs.each do |session|
+        if String(session.room._id).include?(params[:room_id]) then
+          @allSessionsForSpace.push(session)
+        end
+      end
+    end
+
+
+      return @allSessionsForSpace.to_json
   end
 
   ###  get a session by id
