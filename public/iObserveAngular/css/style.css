@@ -50,3 +50,60 @@ a {
 .filter_options form input {
     margin-top: 0;
 }
+
+.colStudies
+{
+    float: left;
+    width: 15%;
+}
+
+.colRooms
+{
+    float: left;
+    width: 10%;
+}
+
+.colSessions
+{
+    float: left;
+    width: 15%;
+}
+
+.last{
+    float: right;
+    width: 55%;
+}
+
+.col li {
+    padding-bottom: 20px;
+}
+
+.innerColumnLeft {
+    width: 60%;
+    display: inline-block;
+    float: left;
+}
+
+.innerColumnRight {
+    width: 39%;
+    display: inline-block;
+    float: right;
+}
+
+.visitor-color-10012411 {
+    background-color: #98C6FB;
+}
+.visitor-color-6013275 {
+    background-color: #5BC15B;
+}
+.visitor-color-13778730 {
+    background-color: #D23F2A;
+}
+.visitor-color-15567670 {
+    background-color: #ED8B36;
+}
+/*
+.btn active {
+    background-color: blue;
+  }
+*/

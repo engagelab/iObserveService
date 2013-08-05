@@ -1,0 +1,21 @@
+{
+    "sessionChartList" : [
+        {
+            "id": 1,
+            "name": "Position over time",
+            "shortName": "positionOverTime"
+        },
+        {
+            "id": 2,
+            "name": "Demographics",
+            "shortName": "demographics"
+        }
+    ],
+    "studyChartList" : [
+        {
+            "id": 4,
+            "name": "Visitor demographics",
+            "shortName": "visitorDemographics"
+        }
+    ]
+}

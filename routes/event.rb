@@ -41,7 +41,7 @@ class Iobserve < Sinatra::Application
   end
 
 
-  ### list all sessions
+  ### list all events
   get '/event' do
     content_type :json
     @eventob = Eventob.order_by(:created_on.asc).all()

@@ -33,8 +33,13 @@ var deleteConfiguration = {
     processData: false
 }
 
-iObserveApp.factory('iObserveUtilities', function () {
+iObserveApp.factory('iObserveUtilities', function ($http) {
+
     var timeConverter = function($ts){
+
+        return moment($ts).format("ddd Do MMM YYYY, h:mm a");
+
+    /*
         var a = new Date($ts*1000);
         var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var year = a.getFullYear();
@@ -45,6 +50,12 @@ iObserveApp.factory('iObserveUtilities', function () {
         var sec = a.getSeconds();
         var time = date+','+month+' '+year+' '+hour+':'+min+':'+sec ;
         return time;
+
+        */
+    };
+
+    var timeConverterShort = function($ts) {
+        return moment.unix($ts).format("h:mm:ss a");
     };
 
     var tDiff = function($a,$b) {
@@ -68,9 +79,21 @@ iObserveApp.factory('iObserveUtilities', function () {
         return oDiff;
     };
 
+    var loadJSONFile =  function(fileName) {
+
+        var obj = {content:null};
+
+        $http.get(fileName).success(function(data) {
+            obj.content = data;
+        });
+
+        return obj;
+    }
     return {
         timeConverter : timeConverter,
-        tDiff : tDiff
+        timeConverterShort : timeConverterShort,
+        tDiff : tDiff,
+        loadJSONFile: loadJSONFile
     }
 });
 
@@ -97,10 +120,10 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
-    var requestEventListObject = function() {
+    var requestEventListObject = function(sessionID) {
         var deferred = $q.defer();
 
-        $http.get(routePrePath + "/session/" + currentUserId + "/space", getConfiguration).success(function(data) {
+        $http.get(routePrePath + "/session/" + sessionID + "/events", getConfiguration).success(function(data) {
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );

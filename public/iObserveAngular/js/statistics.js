@@ -1,47 +1,131 @@
-iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObserveData, iObserveCharting, iObserveUtilities) {
-    $scope.studyChartRequested = false;
-    $scope.sessionChartRequested = false;
+iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
+    $scope.roomListRequested = false;
     $scope.sessionListRequested = false;
+    $scope.sessionInfoListRequested = false;
+    $scope.sessionSequenceRequested = false;
+
+    $scope.studyChartRequested = false;
     $scope.sessionChartRequested = false;
     $scope.showChart = false;
 
-    $scope.sessionChartList = iObserveCharting.sessionChartList;
+    $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
     $scope.selectedChart = null;
 
     iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
 
     $scope.timeConverter = iObserveUtilities.timeConverter;
+    $scope.timeConverterShort = iObserveUtilities.timeConverterShort;
     $scope.tDiff = iObserveUtilities.tDiff;
 
+    $scope.chartDialogOpts = {
+        backdrop: true,
+        keyboard: true,
+        backdropClick: true,
+        templateUrl:  'default.html',
+        controller: 'TestDialogController',
+        resolve: {
+            chartData: function() {
+                return $scope.chartData;
+            }
+        }
+    };
+/*
     $scope.foldStudyChart = function($study) {
         if($scope.currentStudy == $study || $scope.sessionChartRequested == false)
             $scope.studyChartRequested = !$scope.studyChartRequested;
         $scope.currentStudy = $study;
     };
-
-    $scope.foldSessionChart = function($session) {
+*/
+/*
+    $scope.displaySessionChart = function($session) {
         $scope.sessionChartRequested = !$scope.sessionChartRequested;
+        $scope.currentSession = $session;
+    };
+*/
+
+    $scope.foldRooms = function($study) {
+        if($scope.currentStudy == $study || $scope.roomListRequested == false)
+            $scope.roomListRequested = !$scope.roomListRequested;
+        $scope.currentStudy = $study;
+
+        $scope.rooms = [
+            {
+                label: "room 1"
+            }
+        ]
     };
 
-    $scope.foldSessions = function($study) {
-        if($scope.currentStudy == $study || $scope.sessionListRequested == false)
+    $scope.foldSessions = function($room) {
+        if($scope.currentRoom == $room || $scope.sessionListRequested == false)
             $scope.sessionListRequested = !$scope.sessionListRequested;
-        $scope.currentStudy = $study;
+        $scope.currentRoom = $room;
 
         $scope.sessions = $scope.currentStudy.sessionobs;
     };
 
-    $scope.displayChart = function($chart) {
-        if($scope.selectedChart == $chart || $scope.showChart == false)
-            $scope.showChart = !$scope.showChart;
+    $scope.foldSessionInfo = function($session) {
+        if($scope.currentSession == $session || $scope.sessionInfoListRequested == false)
+            $scope.sessionInfoListRequested = !$scope.sessionInfoListRequested;
+        $scope.currentSession = $session;
+
+        $scope.chartData = iObserveData.doGetEvents($scope.currentSession._id);
+
+    };
+
+
+    // ***   Ideally, doGetEvents below should be requested only once, when a session is selected, triggered by the accordion opening, but this is not possible in current BootstrapUI version
+    // ***   It would also remove the need for a button to activate the session sequence display
+
+    $scope.displaySessionChart = function($chart) {
         $scope.selectedChart = $chart;
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
-        $scope.serverData = "Test Data";
-
+        $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
+        openDialog();
     };
+
+    $scope.displaySessionSequence = function($session) {
+        $scope.sessionSequenceRequested = !$scope.sessionSequenceRequested;
+    }
+/*
+    $scope.$watch('chartData', function(chartData) {
+        angular.forEach(chartData, function(event, idx){
+
+        })
+    }, true);
+*/
+
+
+    $scope.setVisitorClass = function (visitorColor) {
+           return "visitor-color-" + visitorColor;
+   //     var computedColour = "visitor-color-" + visitors.indexOf(visitor).toString();
+   //         return computedColour;
+    };
+
+    var openDialog = function(){
+        var d = $dialog.dialog($scope.chartDialogOpts);
+        d.open().then(function(result){
+            if(result)
+            {
+                alert('dialog closed with result: ' + result);
+            }
+        });
+    };
+
+
+
+
 })
+
+iObserveApp.controller('TestDialogController', function($scope, dialog, chartData) {
+    $scope.chartData = chartData;
+    $scope.close = function(result){
+        dialog.close(result);
+    };
+});
+
+
 
 
 /*
