@@ -30,6 +30,12 @@ class Iobserve < Sinatra::Application
     unless data.nil? or data['label'].nil? then
       user = User.without(:password).find(params[:user_id])
       space = Space.create(:label => data['label'], :created_on => Time.now.to_i)
+
+      startAction = Action.without(:interaction_ids).where(type: "START").first
+      space.actions << {:_id => startAction._id, :type => startAction.type }
+      stopAction = Action.without(:interaction_ids).where(type: "STOP").first
+      space.actions << {:_id => stopAction._id, :type => stopAction.type }
+
       user.spaces << space
       user.save
       return user.to_json
@@ -79,6 +85,57 @@ class Iobserve < Sinatra::Application
       return {"message" => "Provide a new label"}.to_json
     end
   end
+
+  ### add space's available actions
+  put '/space/action' do
+    request.body.rewind  # in case someone already read it
+    content_type :json;
+    data = JSON.parse request.body.read
+
+    unless data.nil? or (data['_id'].nil? and data['actions'].nil?) then
+      space = Space.find(data['_id'])
+
+      unless space.nil? then
+        actionsArray = data['actions']
+
+        if actionsArray.kind_of?(Array)
+          space.actions = actionsArray
+          space.save
+        end
+      end
+
+      return space.to_json
+    else
+      status 404
+      return {"message" => "Provide _id and actions"}.to_json
+    end
+  end
+
+  ### add space's available resources
+  put '/space/resource' do
+    request.body.rewind  # in case someone already read it
+    content_type :json;
+    data = JSON.parse request.body.read
+
+    unless data.nil? or (data['_id'].nil? and data['resources'].nil?) then
+      space = Space.find(data['_id'])
+
+      unless space.nil? then
+        resourcesArray = data['resources']
+
+        if resourcesArray.kind_of?(Array)
+          space.resources = resourcesArray
+          space.save
+        end
+      end
+
+      return space.to_json
+    else
+      status 404
+      return {"message" => "Provide _id and actions"}.to_json
+    end
+  end
+
 
   ### delete a space by id
   delete '/space/:space_id' do

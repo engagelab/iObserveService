@@ -216,6 +216,30 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestListActionsObject = function() {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/action/simple", getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestUpdateSpaceActionsObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.put(routePrePath + "/space/action", data, putConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -254,6 +278,8 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doDeleteRoom: requestDeleteRoomObject,
         doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
         doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
+        doGetActions: requestListActionsObject,
+        doUpdateSpaceActions: requestUpdateSpaceActionsObject,
         selectedSpace: selectedSpace
     }
 });

@@ -39,6 +39,13 @@ class Iobserve < Sinatra::Application
     return @action.to_json
   end
 
+  ### list all actions
+  get '/action/simple' do
+    content_type :json
+    @action = Action.without(:interaction_ids).order_by(:type.asc).all()
+    return @action.to_json
+  end
+
   ###  get a action by id
   get '/action/:action_id' do
     content_type :json
