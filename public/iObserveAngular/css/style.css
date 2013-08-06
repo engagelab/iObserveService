@@ -36,6 +36,12 @@ a {
 
 .studyCarousel {
     width: 400px;
+    float: left;
+}
+
+.actionPickerDiv {
+    float: right;
+    background-color: #FF0000;
 }
 
 .studyCarouselRemoveRoom {

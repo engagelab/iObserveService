@@ -16,7 +16,36 @@
     <br>
     <br>
     <div ng-show="isStudyChosen">
-        <h3>Spaces  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button></h3>
+        <h3>Space  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button>&nbsp;<button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button>&nbsp;<button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
+
+        <div modal="showSpaceActions" close="closeSpaceActions()" class="actionPickerDiv">
+            <div class="modal-header">
+                <h3>Actions</h3>
+            </div>
+            <div style="margin: 15px">
+                <div style="float: left; height: 300px;">
+                    <h5>All actions</h5>
+                    <select multiple ng-multiple="true" style="height: 250px">
+                        <option ng-repeat="action in allActions" value="action._id">{{ action.type }}</option>
+                    </select>
+                </div>
+                <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
+                    <button><i class="icon-arrow-left"></i></button>
+                    <button><i class="icon-arrow-right"></i></button>
+                </div>
+                <div style="float: left; height: 300px">
+                    <h5>Space's actions</h5>
+                    <select multiple ng-multiple="true" style="height: 250px">
+                        <option ng-repeat="action in spaceActions" value="action._id">{{ action.type }}</option>
+                    </select>
+                </div>
+                <div style="clear: both;margin-top: 20px;text-align: center;width: 100%">
+                    <button class="btn btn-primary" ng-click="closeAndSaveSpaceActions()">Save</button>
+                    <button class="btn btn-danger" ng-click="closeSpaceActions()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
 
         <div collapse="isAddRoomCollapsed">
             <form action="/image" ng-upload>
@@ -40,6 +69,7 @@
                         </div>
                     </slide>
                 </carousel>
+
             </div>
             <div collapse="isEditRoomCollapsed">
                 <button class="btn btn-primary" ng-click="showhideEditMode()">Save</button>

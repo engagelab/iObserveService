@@ -86,9 +86,9 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
 
-    var requestSessionsForSpaceAndRoom = function(space_id, room_id) {
+    var requestSessionListObject = function() {
         var deferred = $q.defer();
-        var route = routePrePath + "/space/" + space_id + "/" + room_id + "/session";
+        var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
 
         $http.get(route, getConfiguration).success(function(data) {
             deferred.resolve(data);
@@ -208,6 +208,30 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestListActionsObject = function() {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/action/simple", getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestUpdateSpaceActionsObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.put(routePrePath + "/space/action", data, putConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -215,15 +239,15 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         },
 
         doGetEvents: requestEventListObject,
-        doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
         doGetStudies: requestStudyListObject,
-        doGetRoomsForSpace: requestRoomsForSpace,
         doNewStudy: requestNewStudyObject,
         doDeleteStudy: requestDeleteStudyObject,
         doCreateStudyRoom: requestAddStudyRoomObject,
         doDeleteRoom: requestDeleteRoomObject,
         doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
-        doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject
+        doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
+        doGetActions: requestListActionsObject,
+        doUpdateSpaceActions: requestUpdateSpaceActionsObject
     }
 });
 

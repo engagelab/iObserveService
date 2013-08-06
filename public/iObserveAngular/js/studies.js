@@ -26,7 +26,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.roomLabel = "";
     $scope.studyToDelete = null;
     $scope.roomToDelete = null;
-    $scope.uploadResponse = "nothing";
+    $scope.uploadResponse = "";
     $scope.isEditRoomCollapsed = true;
     $scope.roomToEdit = null;
     $scope.roomStartPoints = null;
@@ -75,6 +75,26 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
         $scope.rooms = $scope.currentStudy.rooms;
         $scope.sessions = $scope.currentStudy.sessionobs;
+
+        iObserveData.doGetActions().then(function (resultData) {
+
+            var actionsIds = [];
+            for(var j=0; j<$scope.currentStudy.actions.length; j++) {
+                actionsIds.push($scope.currentStudy.actions[j]._id);
+            }
+
+            $scope.allActions = [];
+            $scope.spaceActions = [];
+
+            for(var i=0; i<resultData.length; i++) {
+                if(actionsIds.indexOf(resultData[i]._id) > -1) {
+                    $scope.spaceActions.push(resultData[i]);
+                }
+                else {
+                    $scope.allActions.push(resultData[i]);
+                }
+            }
+        });
     };
 
     $scope.createNewStudy = function () {
@@ -208,13 +228,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
         $scope.roomToEdit.start_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
 
     $scope.addEndPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
         $scope.roomToEdit.end_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
 
     $scope.removeStartPoint = function ($uid) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
@@ -225,7 +245,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         }
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
 
     $scope.removeEndPoint = function ($uid) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
@@ -236,7 +256,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         }
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
 
     $scope.rotateStartPoint = function ($uid) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
@@ -250,7 +270,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         }
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
 
     $scope.rotateEndPoint = function ($uid) {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
@@ -264,5 +284,20 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         }
         $scope.openEditRoom($scope.roomToEdit);
-    }
+    };
+
+    $scope.showActionSelector = function() {
+        $scope.showSpaceActions = true;
+    };
+
+    $scope.closeSpaceActions = function() {
+        $scope.showSpaceActions = false;
+    };
+
+    $scope.closeAndSaveSpaceActions = function() {
+        var data = {_id: $scope.currentStudy._id, actions: $scope.spaceActions};
+        iObserveData.doUpdateSpaceActions(data).then(function (resultData) {
+            $scope.showSpaceActions = false;
+        });
+    };
 });
