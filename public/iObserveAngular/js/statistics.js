@@ -30,30 +30,14 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             }
         }
     };
-/*
-    $scope.foldStudyChart = function($study) {
-        if($scope.currentStudy == $study || $scope.sessionChartRequested == false)
-            $scope.studyChartRequested = !$scope.studyChartRequested;
-        $scope.currentStudy = $study;
-    };
-*/
-/*
-    $scope.displaySessionChart = function($session) {
-        $scope.sessionChartRequested = !$scope.sessionChartRequested;
-        $scope.currentSession = $session;
-    };
-*/
 
     $scope.foldRooms = function($study) {
         if($scope.currentStudy == $study || $scope.roomListRequested == false)
             $scope.roomListRequested = !$scope.roomListRequested;
         $scope.currentStudy = $study;
 
-        $scope.rooms = [
-            {
-                label: "room 1"
-            }
-        ]
+        $scope.rooms = iObserveData.doGetRoomsForSpace($scope.currentStudy._id)
+
     };
 
     $scope.foldSessions = function($room) {
@@ -61,7 +45,8 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             $scope.sessionListRequested = !$scope.sessionListRequested;
         $scope.currentRoom = $room;
 
-        $scope.sessions = $scope.currentStudy.sessionobs;
+     //   $scope.sessions = $scope.currentStudy.sessionobs;
+        $scope.sessions = iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id)
     };
 
     $scope.foldSessionInfo = function($session) {
@@ -72,10 +57,6 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $scope.chartData = iObserveData.doGetEvents($scope.currentSession._id);
 
     };
-
-
-    // ***   Ideally, doGetEvents below should be requested only once, when a session is selected, triggered by the accordion opening, but this is not possible in current BootstrapUI version
-    // ***   It would also remove the need for a button to activate the session sequence display
 
     $scope.displaySessionChart = function($chart) {
         $scope.selectedChart = $chart;

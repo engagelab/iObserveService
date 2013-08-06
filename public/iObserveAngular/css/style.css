@@ -60,7 +60,7 @@ a {
 .colRooms
 {
     float: left;
-    width: 10%;
+    width: 15%;
 }
 
 .colSessions
@@ -88,6 +88,10 @@ a {
     width: 39%;
     display: inline-block;
     float: right;
+}
+
+.eventListingScrollable {
+    height: 200px; overflow-y: scroll;
 }
 
 .visitor-color-10012411 {
