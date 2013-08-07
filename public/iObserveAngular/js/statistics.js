@@ -62,8 +62,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $scope.selectedChart = $chart;
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
-        $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
-        openDialog();
+        $scope.sessionChartRequested = true;
+    //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
+    //    openDialog();
     };
 
     $scope.displaySessionSequence = function($session) {
@@ -99,14 +100,61 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
 
 })
 
-iObserveApp.controller('TestDialogController', function($scope, dialog, chartData) {
+iObserveApp.controller('TestDialogController', ['$scope', function($scope, dialog, chartData) {
     $scope.chartData = chartData;
     $scope.close = function(result){
         dialog.close(result);
     };
-});
 
 
+    function plotChart() {
+
+
+
+
+
+
+    var sampleChartData = [
+        {
+            id: 1,
+            type: "a",
+            radius: 10,
+            x: 50,
+            y: 50
+        },
+        {
+            id: 2,
+            type: "b",
+            radius:20,
+            x: 70,
+            y: 30
+        },
+        {
+            id: 3,
+            type: "a",
+            radius: 5,
+            x: 80,
+            y: 80
+        }
+    ];
+
+
+
+    var svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", 500)
+        .attr("height", 500);
+
+    var theChart = d3.parsets()
+        .dimensions(["Survived", "Sex", "Age", "Class", "Test"]);
+
+    svg.datum(sampleChartData).call(theChart);
+
+    }
+
+
+    plotChart();
+}]);
 
 
 /*

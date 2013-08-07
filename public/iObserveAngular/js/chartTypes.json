@@ -9,6 +9,11 @@
             "id": 2,
             "name": "Demographics",
             "shortName": "demographics"
+        },
+        {
+            "id": 3,
+            "name": "Parallel Sets",
+            "shortName": "parallelSets"
         }
     ],
     "studyChartList" : [
