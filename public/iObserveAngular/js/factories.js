@@ -228,19 +228,19 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
-            });
+        });
         return deferred.promise;
     };
 
     var requestNewActionObject = function(data) {
         var deferred = $q.defer();
 
-        $http.post(routePrePath + "/action", data, getConfiguration).success(function(status) {
-            deferred.resolve(status);
+        $http.post(routePrePath + "/action", data, getConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
-            });
+        });
         return deferred.promise;
     };
 
@@ -259,10 +259,8 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
         doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
         doGetActions: requestListActionsObject,
-        doUpdateSpaceActions: requestUpdateSpaceActionsObject
         doUpdateSpaceActions: requestUpdateSpaceActionsObject,
-        doNewAction: requestNewActionObject,
-        selectedSpace: selectedSpace
+        doNewAction: requestNewActionObject
     }
 });
 

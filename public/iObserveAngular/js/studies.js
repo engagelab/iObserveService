@@ -328,9 +328,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         if ($scope.actionLabel != "") {
             var data = {type: $scope.actionLabel};
 
-            iObserveData.doNewAction(data).then(function(status) {
+            iObserveData.doNewAction(data).then(function(args) {
+                var newAction = args[0];
+                var statusCode = args[1];
 
+                if(Number(statusCode) == 200) {
+                    $scope.allActions.push(newAction);
+                }
 
+                console.log(args);
                 $scope.actionLabel = '';
 
 
