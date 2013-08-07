@@ -36,7 +36,7 @@ var deleteConfiguration = {
 iObserveApp.factory('iObserveUtilities', function ($http) {
 
     var timeConverter = function($ts){
-        return moment($ts).format("ddd Do MMM YYYY, h:mm a");
+        return moment.unix($ts).format("ddd Do MMM YYYY, h:mm a");
     };
 
     var timeConverterShort = function($ts) {

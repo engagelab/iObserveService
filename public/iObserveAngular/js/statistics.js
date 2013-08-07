@@ -10,6 +10,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
 
     $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
     $scope.selectedChart = null;
+    $scope.chartName = "";
 
     iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
@@ -17,7 +18,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.timeConverterShort = iObserveUtilities.timeConverterShort;
     $scope.tDiff = iObserveUtilities.tDiff;
-
+/*
     $scope.chartDialogOpts = {
         backdrop: true,
         keyboard: true,
@@ -30,7 +31,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             }
         }
     };
-
+*/
     $scope.foldRooms = function($study) {
         if($scope.currentStudy == $study || $scope.roomListRequested == false)
             $scope.roomListRequested = !$scope.roomListRequested;
@@ -54,7 +55,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             $scope.sessionInfoListRequested = !$scope.sessionInfoListRequested;
         $scope.currentSession = $session;
 
-        $scope.chartData = iObserveData.doGetEvents($scope.currentSession._id);
+        iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
+            $scope.chartData = resultData;
+        });
 
     };
 
@@ -85,6 +88,10 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
    //         return computedColour;
     };
 
+    $scope.getChartControllerName = function () {
+        return "ChartCtrl-" + $scope.chartShortName;
+    }
+/*
     var openDialog = function(){
         var d = $dialog.dialog($scope.chartDialogOpts);
         d.open().then(function(result){
@@ -94,12 +101,12 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             }
         });
     };
-
+*/
 
 
 
 })
-
+/*
 iObserveApp.controller('TestDialogController', ['$scope', function($scope, dialog, chartData) {
     $scope.chartData = chartData;
     $scope.close = function(result){
@@ -109,53 +116,11 @@ iObserveApp.controller('TestDialogController', ['$scope', function($scope, dialo
 
     function plotChart() {
 
-
-
-
-
-
-    var sampleChartData = [
-        {
-            id: 1,
-            type: "a",
-            radius: 10,
-            x: 50,
-            y: 50
-        },
-        {
-            id: 2,
-            type: "b",
-            radius:20,
-            x: 70,
-            y: 30
-        },
-        {
-            id: 3,
-            type: "a",
-            radius: 5,
-            x: 80,
-            y: 80
-        }
-    ];
-
-
-
-    var svg = d3.select("#chart")
-        .append("svg")
-        .attr("width", 500)
-        .attr("height", 500);
-
-    var theChart = d3.parsets()
-        .dimensions(["Survived", "Sex", "Age", "Class", "Test"]);
-
-    svg.datum(sampleChartData).call(theChart);
-
+        ;
     }
-
-
     plotChart();
 }]);
-
+*/
 
 /*
 iObserveApp.directive('chartVisualization', function (iObserveCharting) {
