@@ -1,73 +1,37 @@
-<div>
+<meta charset="utf-8">
+<style>
+
+    body {
+        font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .bar {
+        fill: steelblue;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+</style>
+<div ng-controller="ChartCtrl-parallelSets">
     <div class="modal-header">
-        <h3>Demographics</h3>
+        <h3>Parallel Sets</h3>
     </div>
-    <script>
-        var sampleChartData = [
-            {
-                id: 1,
-                type: "a",
-                radius: 40,
-                x: 50,
-                y: 50
-            }
-        ];
-
-
-        var svg = d3.select("#chart")
-                .append("svg")
-                .attr("width", 100)
-                .attr("height", 100);
-
-        var circle = svg.selectAll("circle")
-                .data(sampleChartData)
-                .enter()
-                .append("svg:circle");
-
-        d3.selectAll("circle")
-                .style("stroke", "gray")
-                .style("fill", "white")
-                .attr("r", function(d) { return d.radius; })
-                .attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
-
-        d3.selectAll(".filter_button")
-                .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
-                .on("mouseout", function(){d3.select(this).style("fill", "white");})
-                .property("checked", false)
-                .on("change", function() {
-                    if(this.checked) {
-                        svg.selectAll("circle");
-                        circle.style("fill", "steelblue");
-                        circle.transition()
-                                .duration(750)
-                                .delay(function(d, i) { return i * 10; })
-                                .attr("r", function(d) { return Math.sqrt(d.radius * 2); });
-                    }
-                    else {
-                        svg.selectAll("circle");
-                        circle.style("fill", "white");
-                        circle.transition()
-                                .duration(750)
-                                .delay(function(d, i) { return i * 10; })
-                                .attr("r", function(d) { return d.radius; });
-                    }
-                });
-
-
-    </script>
-    <div class="modal-body">
-        <div class="filter_options">
-            <form>
-                Resize <input class="filter_button" id="a_button" type="checkbox" value="a"/><br>
-            </form>
-        </div>
+    <div>
         <div id="chart"></div>
     </div>
-    <!--div class="modal-footer">
-        <button ng-click="close(result)" class="btn btn-primary" >Close</button>
-    </div-->
-
-
-
 </div>
+
+<!--div class="filter_options">
+    <form>
+        Resize <input class="filter_button" id="a_button" type="checkbox" value="a"/><br>
+    </form>
+</div-->
