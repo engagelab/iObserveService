@@ -31,6 +31,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.roomToEdit = null;
     $scope.roomStartPoints = null;
     $scope.roomEndPoints = null;
+    $scope.isAddSActionCollapsed = true;
+    $scope.actionLabel = "";
 
     $scope.roomSubmited = function (content, completed) {
         if (completed) {
@@ -83,8 +85,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 actionsIds.push($scope.currentStudy.actions[j]._id);
             }
 
-            $scope.allActions = [];
-            $scope.spaceActions = [];
+            $scope.allActions = new Array();
+            $scope.spaceActions = new Array();
 
             for(var i=0; i<resultData.length; i++) {
                 if(actionsIds.indexOf(resultData[i]._id) > -1) {
@@ -297,7 +299,50 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.closeAndSaveSpaceActions = function() {
         var data = {_id: $scope.currentStudy._id, actions: $scope.spaceActions};
         iObserveData.doUpdateSpaceActions(data).then(function (resultData) {
+            $scope.currentStudy.actions = $scope.spaceActions;
             $scope.showSpaceActions = false;
         });
+    };
+
+    $scope.removeActionFromSpace = function() {
+        var selectBoxSpaceActions = angular.element.find('#spaceActionsList option:selected');
+
+        for(var i=0; i < selectBoxSpaceActions.length; i++) {
+            if(selectBoxSpaceActions[i].text != "START" && selectBoxSpaceActions[i].text != "STOP") {
+                $scope.allActions.push($scope.spaceActions[selectBoxSpaceActions[i].index]);
+                $scope.spaceActions.splice(selectBoxSpaceActions[i].index, 1);
+            }
+        }
+    };
+
+    $scope.addActionToSpace = function () {
+        var selectBoxAllActions = angular.element.find('#allActionsList option:selected');
+
+        for(var i=0; i < selectBoxAllActions.length; i++) {
+            $scope.spaceActions.push($scope.allActions[selectBoxAllActions[i].index]);
+            $scope.allActions.splice(selectBoxAllActions[i].index, 1);
+        }
+    };
+
+    $scope.createNewAction = function() {
+        if ($scope.actionLabel != "") {
+            var data = {type: $scope.actionLabel};
+
+            iObserveData.doNewAction(data).then(function(args) {
+                var newAction = args[0];
+                var statusCode = args[1];
+
+                if(Number(statusCode) == 200) {
+                    $scope.allActions.push(newAction);
+                }
+
+                console.log(args);
+                $scope.actionLabel = '';
+
+
+            });
+
+        }
+        $scope.isAddSActionCollapsed = true;
     };
 });

@@ -24,18 +24,22 @@
             </div>
             <div style="margin: 15px">
                 <div style="float: left; height: 300px;">
-                    <h5>All actions</h5>
-                    <select multiple ng-multiple="true" style="height: 250px">
+                    <h5>All actions <button class="btn btn-mini" ng-click="isAddSActionCollapsed = !isAddSActionCollapsed"><i class="icon-plus"></i></button></h5>
+                    <div collapse="isAddSActionCollapsed" style="margin-bottom: 10px">
+                        <input type="text" ng-model="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
+                        <button class="btn btn-primary" ng-click="isAddSActionCollapsed=true;createNewAction()">OK</button>
+                    </div>
+                    <select id="allActionsList" size="2" style="height: 230px">
                         <option ng-repeat="action in allActions" value="action._id">{{ action.type }}</option>
                     </select>
                 </div>
                 <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
-                    <button><i class="icon-arrow-left"></i></button>
-                    <button><i class="icon-arrow-right"></i></button>
+                    <button ng-click="removeActionFromSpace()"><i class="icon-arrow-left"></i></button>
+                    <button ng-click="addActionToSpace()"><i class="icon-arrow-right"></i></button>
                 </div>
                 <div style="float: left; height: 300px">
                     <h5>Space's actions</h5>
-                    <select multiple ng-multiple="true" style="height: 250px">
+                    <select id="spaceActionsList" size="2" style="height: 230px;margin-top: 10px">
                         <option ng-repeat="action in spaceActions" value="action._id">{{ action.type }}</option>
                     </select>
                 </div>
