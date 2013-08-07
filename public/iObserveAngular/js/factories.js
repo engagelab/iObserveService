@@ -86,9 +86,9 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
 
-    var requestSessionListObject = function() {
+    var requestSessionsForSpaceAndRoom = function(space_id, room_id) {
         var deferred = $q.defer();
-        var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
+        var route = routePrePath + "/space/" + space_id + "/" + room_id + "/session";
 
         $http.get(route, getConfiguration).success(function(data) {
             deferred.resolve(data);
@@ -251,7 +251,9 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         },
 
         doGetEvents: requestEventListObject,
+        doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
         doGetStudies: requestStudyListObject,
+        doGetRoomsForSpace: requestRoomsForSpace,
         doNewStudy: requestNewStudyObject,
         doDeleteStudy: requestDeleteStudyObject,
         doCreateStudyRoom: requestAddStudyRoomObject,

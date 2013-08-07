@@ -1,5 +1,5 @@
 <div ng-controller="StatisticsCtrl">
-
+    <div style="display: block;">
         <div class="colStudies">
             <h3>Studies</h3>
             <ul>
@@ -10,6 +10,7 @@
                         <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study)"><i class="icon-calendar"></i></button></br>
                         <span>Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</span></br>
                         <span>{{ timeConverter(study.created_on) }}</span>
+                        <br/>
                     </div>
                 </li>
             </ul>
@@ -75,6 +76,11 @@
                                                     <p>{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
                                                 </li>
                                             </ul>
+                                            <ul>
+                                                <li ng-repeat="action in interaction.actions" ng-class="setVisitorClass(visitor.color)">
+                                                    <p>{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </li>
@@ -82,13 +88,10 @@
                             </div>
                         </div>
                     </div>
-
-                <div collapse="!sessionChartRequested">
-
-
-                </div>
             </div>
         </div>
+    </div>
+    <div style="display: block; clear: both;" collapse="!sessionChartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
 
 
 
