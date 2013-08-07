@@ -36,6 +36,9 @@ class Iobserve < Sinatra::Application
       stopAction = Action.without(:interaction_ids).where(type: "STOP").first
       space.actions << {:_id => stopAction._id, :type => stopAction.type }
 
+      noneResource = Resource.without(:interaction_ids).where(type: "NONE").first
+      space.resources << {:_id => noneResource._id, :type => noneResource.type }
+
       user.spaces << space
       user.save
       return user.to_json

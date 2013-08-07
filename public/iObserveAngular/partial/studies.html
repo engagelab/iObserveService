@@ -24,10 +24,10 @@
             </div>
             <div style="margin: 15px">
                 <div style="float: left; height: 300px;">
-                    <h5>All actions <button class="btn btn-mini" ng-click="isAddSActionCollapsed = !isAddSActionCollapsed"><i class="icon-plus"></i></button></h5>
-                    <div collapse="isAddSActionCollapsed" style="margin-bottom: 10px">
+                    <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
+                    <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
                         <input type="text" ng-model="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
-                        <button class="btn btn-primary" ng-click="isAddSActionCollapsed=true;createNewAction()">OK</button>
+                        <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
                     </div>
                     <select id="allActionsList" size="2" style="height: 230px">
                         <option ng-repeat="action in allActions" value="action._id">{{ action.type }}</option>
@@ -46,6 +46,38 @@
                 <div style="clear: both;margin-top: 20px;text-align: center;width: 100%">
                     <button class="btn btn-primary" ng-click="closeAndSaveSpaceActions()">Save</button>
                     <button class="btn btn-danger" ng-click="closeSpaceActions()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div modal="showSpaceResources" close="closeSpaceResources()" class="resourcePickerDiv">
+            <div class="modal-header">
+                <h3>Resources</h3>
+            </div>
+            <div style="margin: 15px">
+                <div style="float: left; height: 300px;">
+                    <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
+                    <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
+                        <input type="text" ng-model="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
+                        <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
+                    </div>
+                    <select id="allResourcesList" size="2" style="height: 230px">
+                        <option ng-repeat="resource in allResources" value="resource._id">{{ resource.type }}</option>
+                    </select>
+                </div>
+                <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
+                    <button ng-click="removeResourceFromSpace()"><i class="icon-arrow-left"></i></button>
+                    <button ng-click="addResourceToSpace()"><i class="icon-arrow-right"></i></button>
+                </div>
+                <div style="float: left; height: 300px">
+                    <h5>Space's resources</h5>
+                    <select id="spaceResourcesList" size="2" style="height: 230px;margin-top: 10px">
+                        <option ng-repeat="resource in spaceResources" value="resource._id">{{ resource.type }}</option>
+                    </select>
+                </div>
+                <div style="clear: both;margin-top: 20px;text-align: center;width: 100%">
+                    <button class="btn btn-primary" ng-click="closeAndSaveSpaceResources()">Save</button>
+                    <button class="btn btn-danger" ng-click="closeSpaceResources()">Cancel</button>
                 </div>
             </div>
         </div>

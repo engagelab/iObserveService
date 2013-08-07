@@ -39,6 +39,13 @@ class Iobserve < Sinatra::Application
     return @resource.to_json
   end
 
+  ### list all resources
+  get '/resource/simple' do
+    content_type :json
+    @resource = Resource.without(:interaction_ids).order_by(:type.asc).all()
+    return @resource.to_json
+  end
+
   ###  get a resource by id
   get '/resource/:resource_id' do
     content_type :json
