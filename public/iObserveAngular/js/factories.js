@@ -240,6 +240,18 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestNewActionObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/action", data, getConfiguration).success(function(status) {
+            deferred.resolve(status);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -280,6 +292,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
         doGetActions: requestListActionsObject,
         doUpdateSpaceActions: requestUpdateSpaceActionsObject,
+        doNewAction: requestNewActionObject,
         selectedSpace: selectedSpace
     }
 });
