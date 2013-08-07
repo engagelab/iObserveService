@@ -30,11 +30,14 @@
             </div>
         </div>
         <div class="colSessions">
-            <div collapse="!studyChartRequested">
-                <h3>Charts for {{ currentStudy.label }}</h3>
-            </div>
             <div collapse="!sessionListRequested">
                 <h3>Sessions</h3>
+                <h4>Charts</h4>
+                <ul>
+                    <li ng-repeat="chart in chartList.content.roomChartList">
+                        <a ng-click="displayChart(chart)">{{ chart.name }}</a>
+                    </li>
+                </ul>
                 <!--span>For {{ currentRoom.label }}</span-->
                 <li ng-repeat="session in sessions">
                     <div>
@@ -56,10 +59,10 @@
                         <p>Duration: {{ tDiff(currentSession.created_on, currentSession.finished_on) }}</p>
                         <p>Visitor(s): {{ currentSession.visitorgroup.visitors.length }}</p>
                         <p>Event(s): {{ currentSession.eventob_ids.length }}</p>
-                        <h3>Charts for Session {{ sessions.indexOf(currentSession) }}</h3>
+                        <h4>Charts for Session {{ sessions.indexOf(currentSession) }}</h4>
                         <ul>
                             <li ng-repeat="chart in chartList.content.sessionChartList">
-                                <a ng-click="displaySessionChart(chart)">{{ chart.name }}</a>
+                                <a ng-click="displayChart(chart)">{{ chart.name }}</a>
                             </li>
                         </ul>
                         <span><b>Events Listing</b></span>
@@ -91,9 +94,5 @@
             </div>
         </div>
     </div>
-    <div style="display: block; clear: both;" collapse="!sessionChartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
-
-
-
-
+    <div style="display: block; clear: both;" collapse="!chartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
 </div>

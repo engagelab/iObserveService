@@ -6,21 +6,16 @@
             "shortName": "positionOverTime"
         },
         {
-            "id": 2,
-            "name": "Demographics",
-            "shortName": "demographics"
-        },
-        {
             "id": 3,
             "name": "Parallel Sets",
             "shortName": "parallelSets"
         }
     ],
-    "studyChartList" : [
+    "roomChartList" : [
         {
             "id": 4,
-            "name": "Visitor demographics",
-            "shortName": "visitorDemographics"
+            "name": "Demographics",
+            "shortName": "demographics"
         }
     ]
 }

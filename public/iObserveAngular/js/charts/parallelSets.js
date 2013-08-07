@@ -16,9 +16,9 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
                         var action = interaction.actions[l];
                         var resource = interaction.resources[l];
                         var dataPoint = {
-                            Nationality : visitor.nationality,
                             Sex : visitor.sex,
                             Age : visitor.age,
+                            Nationality : visitor.nationality,
                             Action : action.type,
                             // check in case fewer resoures than actions
                             Resource : resource === undefined ? "" : resource.type
@@ -33,7 +33,7 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
     processData();
 
     var theChart = d3.parsets()
-        .dimensions(["Nationality", "Sex", "Age", "Action", "Resource"]);
+        .dimensions(["Sex", "Age", "Nationality", "Action", "Resource"]);
 
     var svg = d3.select("#chart")
         .append("svg")

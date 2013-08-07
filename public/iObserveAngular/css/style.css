@@ -108,6 +108,30 @@ a {
 .visitor-color-15567670 {
     background-color: #ED8B36;
 }
+
+
+body {
+    overflow-y:scroll;
+}
+
+text {
+    font: 12px sans-serif;
+}
+
+.chart {
+    margin: 10px;
+    min-width: 100px;
+    min-height: 100px;
+    /*
+      Minimum height and width is a good idea to prevent negative SVG dimensions...
+      For example width should be =< margin.left + margin.right + 1,
+      of course 1 pixel for the entire chart would not be very useful, BUT should not have errors
+    */
+}
+
+.chart svg {
+    height: 500px;
+}
 /*
 .btn active {
     background-color: blue;

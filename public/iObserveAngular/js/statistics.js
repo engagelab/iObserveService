@@ -4,12 +4,10 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.sessionInfoListRequested = false;
     $scope.sessionSequenceRequested = false;
 
-    $scope.studyChartRequested = false;
-    $scope.sessionChartRequested = false;
+    $scope.chartRequested = false;
     $scope.showChart = false;
 
     $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
-    $scope.selectedChart = null;
     $scope.chartName = "";
 
     iObserveData.setUserId(iObserveStates.getUserId());
@@ -37,7 +35,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             $scope.roomListRequested = !$scope.roomListRequested;
         $scope.currentStudy = $study;
 
-        $scope.rooms = iObserveData.doGetRoomsForSpace($scope.currentStudy._id)
+        iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
+            $scope.rooms = resultData;
+        })
 
     };
 
@@ -47,7 +47,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $scope.currentRoom = $room;
 
      //   $scope.sessions = $scope.currentStudy.sessionobs;
-        $scope.sessions = iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id)
+        iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+            $scope.sessions = resultData;
+        })
     };
 
     $scope.foldSessionInfo = function($session) {
@@ -61,11 +63,10 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
 
     };
 
-    $scope.displaySessionChart = function($chart) {
-        $scope.selectedChart = $chart;
+    $scope.displayChart = function($chart) {
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
-        $scope.sessionChartRequested = true;
+        $scope.chartRequested = true;
     //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
     //    openDialog();
     };
