@@ -45,6 +45,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                         $scope.studies = iObserveData.doGetStudies();
                         $scope.isAddRoomCollapsed = true;
                         $scope.isStudyChosen = false;
+                        $scope.roomLabel = "";
+                        (angular.element.find('#imageUploaderForm'))[0].reset();
                     }
                 });
             }
@@ -76,6 +78,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.unfoldSessions = function ($study) {
         $scope.currentStudy = $study;
         $scope.isStudyChosen = true;
+        $scope.isSpaceActionsEmpty = true;
+        $scope.isSpaceResourcesEmpty = true;
 
         $scope.rooms = $scope.currentStudy.rooms;
         $scope.sessions = $scope.currentStudy.sessionobs;
@@ -98,6 +102,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.allActions.push(resultData[i]);
                 }
             }
+
+            if(actionsIds.length < 3) {
+                $scope.isSpaceActionsEmpty = false;
+            }
         });
 
         iObserveData.doGetResources().then(function (resultData) {
@@ -117,6 +125,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 else {
                     $scope.allResources.push(resultData[i]);
                 }
+            }
+
+            if(resourcesIds.length < 2) {
+                $scope.isSpaceResourcesEmpty = false;
             }
         });
     };
@@ -323,6 +335,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         iObserveData.doUpdateSpaceActions(data).then(function (resultData) {
             $scope.currentStudy.actions = $scope.spaceActions;
             $scope.showSpaceActions = false;
+
+            if($scope.currentStudy.actions.length > 2) {
+                $scope.isSpaceActionsEmpty = true;
+            }
+            else {
+                $scope.isSpaceActionsEmpty = false;
+            }
         });
     };
 
@@ -381,6 +400,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         iObserveData.doUpdateSpaceResources(data).then(function (resultData) {
             $scope.currentStudy.resources = $scope.spaceResources;
             $scope.showSpaceResources = false;
+
+            if($scope.currentStudy.resources.length > 1) {
+                $scope.isSpaceResourcesEmpty = true;
+            }
+            else {
+                $scope.isSpaceResourcesEmpty = false;
+            }
         });
     };
 

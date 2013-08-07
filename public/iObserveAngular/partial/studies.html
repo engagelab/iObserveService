@@ -82,15 +82,20 @@
             </div>
         </div>
 
+        <div collapse="isSpaceActionsEmpty">
+            <div class="alert alert-error">Make sure to pick(create) actions for describing events. Click on "Actions" button to do so.</div>
+        </div>
+        <div collapse="isSpaceResourcesEmpty">
+            <div class="alert alert-error">Make sure to pick(create) resources for describing events. Click on "Resources" button to do so.</div>
+        </div>
 
         <div collapse="isAddRoomCollapsed">
-            <form action="/image" ng-upload>
-                <input type="text" ng-model="roomLabel" placeholder="Room label" >
+            <form action="/image" ng-upload id="imageUploaderForm">
+                <div class="alert alert-info">Please not that images should be 1024px in width and 723px in height. All images will be scaled to these dimensions to fit the iPad requirements.</div>
+                <input type="text" ng-model="roomLabel" placeholder="Room label" style="height: 30px"></input>
                 <input type="file" name="file" class="btn"></input>
                 <input class="btn btn-primary" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)"></input>
-             </form>
-            <div class="alert alert-info">Server Response: {{uploadResponse}}</div>
-            <img ng-src="{{uploadResponse.url}}" style="margin:auto;" width="300px">
+            </form>
         </div>
 
         <div>
@@ -112,8 +117,10 @@
 
                  <div style="position: relative; width: 100%; height: 768px">
                     <div style="width: 1024px; z-index: 0; float: left">
-                        <img ng-src="{{roomToEdit.uri}}" >
-                        <div id="roomToEditLocs" style="position: absolute; top: 0; left: 0; width: 1024px;height: 768px">
+                        <div style="width: 1024px; height: 768px; background-color: #333333">
+                            <img ng-src="{{roomToEdit.uri}}" width="1024px" height="723px" style="position: absolute; top: 45px" >
+                        </div>
+                        <div id="roomToEditLocs" style="position: absolute; top: 45px; left: 0; width: 1024px;height: 723px">
                             <div jer-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="startPoint" id="{{ roomStartPoint.uuid }}" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png" ng-style="{transform: 'rotate('+roomStartPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeStartPoint(roomStartPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateStartPoint(roomStartPoint.uuid)"><i class="icon-repeat"></i></button></div></div>
                             <div jer-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="endPoint" id="{{ roomEndPoint.uuid }}" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png" ng-style="{transform: 'rotate('+roomEndPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeEndPoint(roomEndPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateEndPoint(roomEndPoint.uuid)"><i class="icon-repeat"></i></button></div></div>
                         </div>
