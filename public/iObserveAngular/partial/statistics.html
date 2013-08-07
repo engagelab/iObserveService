@@ -17,9 +17,11 @@
         <div class="colRooms">
             <div collapse="!roomListRequested">
                 <h3>Rooms</h3>
+                <!--span>For {{ currentStudy.label }}</span-->
                 <ul>
                     <li ng-repeat="room in rooms">
                         <div>
+                            <span><b> {{ room.label }} </b></span>
                             <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room)"><i class="icon-calendar"></i></button></br>
                         </div>
                     </li>
@@ -31,12 +33,13 @@
                 <h3>Charts for {{ currentStudy.label }}</h3>
             </div>
             <div collapse="!sessionListRequested">
-                <h3>Sessions for {{ currentRoom.label }}</h3>
+                <h3>Sessions</h3>
+                <!--span>For {{ currentRoom.label }}</span-->
                 <li ng-repeat="session in sessions">
                     <div>
-                        <p>Session ({{ sessions.indexOf(session) }}) :</p>
-                        <p>{{ timeConverter(session.created_on) }}</p>
+                        <span><b>Session ({{ sessions.indexOf(session) }})</b></span>
                         <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session)"><i class="icon-calendar"></i></button></br>
+                        <p>{{ timeConverter(session.created_on) }}</p>
                     </div>
                 </li>
             </div>
@@ -58,11 +61,13 @@
                                 <a ng-click="displaySessionChart(chart)">{{ chart.name }}</a>
                             </li>
                         </ul>
+                        <span><b>Events Listing</b></span>
                         <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence()"><i class="icon-tasks"></i></button></br>
                         <div collapse="!sessionSequenceRequested">
+                            <div class="eventListingScrollable">
                             <ul>
                                 <li ng-repeat="event in chartData">
-                                    <p>x: {{ event.xpos }} y: {{ event.ypos }}   {{ timeConverterShort(event.created_on) }}</p>
+                                    <p>x: {{ event.xpos }} y: {{ event.ypos }} &nbsp;&nbsp;  {{ timeConverterShort(event.created_on) }}</p>
                                     <ul>
                                         <li ng-repeat="interaction in event.interactions">
                                             <ul>
@@ -74,6 +79,7 @@
                                     </ul>
                                 </li>
                             </ul>
+                            </div>
                         </div>
                     </div>
 

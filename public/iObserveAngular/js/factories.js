@@ -36,22 +36,7 @@ var deleteConfiguration = {
 iObserveApp.factory('iObserveUtilities', function ($http) {
 
     var timeConverter = function($ts){
-
         return moment($ts).format("ddd Do MMM YYYY, h:mm a");
-
-    /*
-        var a = new Date($ts*1000);
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var hour = a.getHours();
-        var min = a.getMinutes();
-        var sec = a.getSeconds();
-        var time = date+','+month+' '+year+' '+hour+':'+min+':'+sec ;
-        return time;
-
-        */
     };
 
     var timeConverterShort = function($ts) {
@@ -100,16 +85,23 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
 iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
-    var spaceListObject = null;
-    var selectedSpace = null;
-    var sessionListObject = null;
-    var selectedSession = null;
-    var chartDataObject = null;
-    var studyIdToDelete = null;
 
     var requestSessionListObject = function() {
         var deferred = $q.defer();
         var route = routePrePath + "/space/" + spaceListObject.space_id + "/session";
+
+        $http.get(route, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestRoomsForSpace = function(space_id) {
+        var deferred = $q.defer();
+        var route = routePrePath + "/space/" + space_id + "/rooms";
 
         $http.get(route, getConfiguration).success(function(data) {
             deferred.resolve(data);
@@ -258,30 +250,6 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             currentUserId = id;
         },
 
-        sessionListObject : sessionListObject,
-
-        setSessionListObject: function() {
-            if(spaceListObject != null) {
-                requestSessionListObject().then(function(resultData) {
-                    sessionListObject = resultData;
-                    selectedSession = sessionListObject[0];
-                });
-            }
-            else
-                alert( "A space must be selected before sessions can be shown");
-        },
-
-        selectedSession: selectedSession,
-
-        spaceListObject: spaceListObject,
-
-        /*doGetSpaces: function(userId) {
-            requestSpaceListObject(userId).then(function(resultData) {
-                spaceListObject = resultData;
-                selectedSpace = spaceListObject[0];
-            });
-        },   */
-
         doGetEvents: requestEventListObject,
         doGetStudies: requestStudyListObject,
         doNewStudy: requestNewStudyObject,
@@ -291,6 +259,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
         doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
         doGetActions: requestListActionsObject,
+        doUpdateSpaceActions: requestUpdateSpaceActionsObject
         doUpdateSpaceActions: requestUpdateSpaceActionsObject,
         doNewAction: requestNewActionObject,
         selectedSpace: selectedSpace
