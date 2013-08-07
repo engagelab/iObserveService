@@ -31,8 +31,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.roomToEdit = null;
     $scope.roomStartPoints = null;
     $scope.roomEndPoints = null;
-    $scope.isAddSActionCollapsed = true;
+    $scope.isAddActionCollapsed = true;
     $scope.actionLabel = "";
+    $scope.isAddResourceCollapsed = true;
+    $scope.resourceLabel = "";
 
     $scope.roomSubmited = function (content, completed) {
         if (completed) {
@@ -94,6 +96,26 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 }
                 else {
                     $scope.allActions.push(resultData[i]);
+                }
+            }
+        });
+
+        iObserveData.doGetResources().then(function (resultData) {
+
+            var resourcesIds = [];
+            for(var j=0; j<$scope.currentStudy.resources.length; j++) {
+                resourcesIds.push($scope.currentStudy.resources[j]._id);
+            }
+
+            $scope.allResources = new Array();
+            $scope.spaceResources = new Array();
+
+            for(var i=0; i<resultData.length; i++) {
+                if(resourcesIds.indexOf(resultData[i]._id) > -1) {
+                    $scope.spaceResources.push(resultData[i]);
+                }
+                else {
+                    $scope.allResources.push(resultData[i]);
                 }
             }
         });
@@ -334,15 +356,73 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
                 if(Number(statusCode) == 200) {
                     $scope.allActions.push(newAction);
+                    $scope.currentStudy.actions.push(newAction);
                 }
 
-                console.log(args);
                 $scope.actionLabel = '';
 
 
             });
 
         }
-        $scope.isAddSActionCollapsed = true;
+        $scope.isAddActionCollapsed = true;
+    };
+
+    $scope.showResourceSelector = function() {
+        $scope.showSpaceResources = true;
+    };
+
+    $scope.closeSpaceResources = function() {
+        $scope.showSpaceResources = false;
+    };
+
+    $scope.closeAndSaveSpaceResources = function() {
+        var data = {_id: $scope.currentStudy._id, resources: $scope.spaceResources};
+        iObserveData.doUpdateSpaceResources(data).then(function (resultData) {
+            $scope.currentStudy.resources = $scope.spaceResources;
+            $scope.showSpaceResources = false;
+        });
+    };
+
+    $scope.removeResourceFromSpace = function() {
+        var selectBoxSpaceResources = angular.element.find('#spaceResourcesList option:selected');
+
+        for(var i=0; i < selectBoxSpaceResources.length; i++) {
+            if(selectBoxSpaceResources[i].text != "NONE") {
+                $scope.allResources.push($scope.spaceResources[selectBoxSpaceResources[i].index]);
+                $scope.spaceResources.splice(selectBoxSpaceResources[i].index, 1);
+            }
+        }
+    };
+
+    $scope.addResourceToSpace = function () {
+        var selectBoxAllResources = angular.element.find('#allResourcesList option:selected');
+
+        for(var i=0; i < selectBoxAllResources.length; i++) {
+            $scope.spaceResources.push($scope.allResources[selectBoxAllResources[i].index]);
+            $scope.allResources.splice(selectBoxAllResources[i].index, 1);
+        }
+    };
+
+    $scope.createNewResource = function() {
+        if ($scope.resourceLabel != "") {
+            var data = {type: $scope.resourceLabel};
+
+            iObserveData.doNewResource(data).then(function(args) {
+                var newResource = args[0];
+                var statusCode = args[1];
+
+                if(Number(statusCode) == 200) {
+                    $scope.allResources.push(newResource);
+                    $scope.currentStudy.resources.push(newResource);
+                }
+
+                $scope.resourceLabel = '';
+
+
+            });
+
+        }
+        $scope.isAddResourceCollapsed = true;
     };
 });

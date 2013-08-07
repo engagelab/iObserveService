@@ -244,6 +244,42 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestListResourcesObject = function() {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/resource/simple", getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestUpdateSpaceResourcesObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.put(routePrePath + "/space/resource", data, putConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestNewResourceObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/resource", data, getConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -262,7 +298,10 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
         doGetActions: requestListActionsObject,
         doUpdateSpaceActions: requestUpdateSpaceActionsObject,
-        doNewAction: requestNewActionObject
+        doNewAction: requestNewActionObject,
+        doGetResources: requestListResourcesObject,
+        doUpdateSpaceResources: requestUpdateSpaceResourcesObject,
+        doNewResource: requestNewResourceObject
     }
 });
 
