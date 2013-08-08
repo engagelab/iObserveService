@@ -7,7 +7,7 @@
                     <div>
                         <span><b> {{ study.label }} </b></span>
                         <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldStudyChart(study)"><i class="icon-signal"></i></button>
-                        <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study)"><i class="icon-calendar"></i></button></br>
+                        <button type="button" class="btn" ng-click="foldRooms(study, $event)"><i class="icon-calendar"></i></button></br>
                         <span>Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</span></br>
                         <span>{{ timeConverter(study.created_on) }}</span>
                         <br/>
@@ -23,7 +23,7 @@
                     <li ng-repeat="room in rooms">
                         <div>
                             <span><b> {{ room.label }} </b></span>
-                            <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room)"><i class="icon-calendar"></i></button></br>
+                            <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-calendar"></i></button></br>
                         </div>
                     </li>
                 </ul>
@@ -42,7 +42,7 @@
                 <li ng-repeat="session in sessions">
                     <div>
                         <span><b>Session ({{ sessions.indexOf(session) }})</b></span>
-                        <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session)"><i class="icon-calendar"></i></button></br>
+                        <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session, $event)"><i class="icon-calendar"></i></button></br>
                         <p>{{ timeConverter(session.created_on) }}</p>
                     </div>
                 </li>
@@ -66,7 +66,7 @@
                             </li>
                         </ul>
                         <span><b>Events Listing</b></span>
-                        <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence()"><i class="icon-tasks"></i></button></br>
+                        <button type="button" class="btn" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-tasks"></i></button></br>
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                             <ul>
