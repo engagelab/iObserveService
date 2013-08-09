@@ -7,6 +7,10 @@ a {
   cursor: pointer;
 }
 
+.selected {
+    background-color: aliceblue;
+}
+
 .navtabs {
     background: rgba(255, 255, 255, 1);
     position:fixed;

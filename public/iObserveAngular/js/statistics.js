@@ -30,38 +30,64 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         }
     };
 */
-    $scope.foldRooms = function($study) {
-        if($scope.currentStudy == $study || $scope.roomListRequested == false)
-            $scope.roomListRequested = !$scope.roomListRequested;
-        $scope.currentStudy = $study;
-
-        iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
-            $scope.rooms = resultData;
-        })
-
+    $scope.foldRooms = function($study, e) {
+        if($scope.currentStudy == $study || $scope.roomListRequested == false) {
+            if($scope.roomListRequested == true) {
+                $scope.roomListRequested = false;
+                $scope.sessionListRequested = false;
+                $scope.sessionInfoListRequested = false;
+                $scope.sessionSequenceRequested = false;
+            }
+            else {
+                $scope.roomListRequested = true;
+                $scope.currentStudy = $study;
+                iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
+                    $scope.rooms = resultData;
+                })
+            }
+            $(angular.element(e.target)).closest("div").toggleClass('selected');
+        }
     };
 
-    $scope.foldSessions = function($room) {
-        if($scope.currentRoom == $room || $scope.sessionListRequested == false)
-            $scope.sessionListRequested = !$scope.sessionListRequested;
-        $scope.currentRoom = $room;
-
-     //   $scope.sessions = $scope.currentStudy.sessionobs;
-        iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
-            $scope.sessions = resultData;
-        })
+    $scope.foldSessions = function($room, e) {
+        if($scope.currentRoom == $room || $scope.sessionListRequested == false) {
+            if($scope.sessionListRequested == true) {
+                $scope.sessionListRequested = false;
+                $scope.sessionInfoListRequested = false;
+                $scope.sessionSequenceRequested = false;
+            }
+            else {
+                $scope.sessionListRequested = true;
+                $scope.currentRoom = $room;
+                iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+                    $scope.sessions = resultData;
+                })
+            }
+            $(angular.element(e.target)).closest("div").toggleClass('selected');
+        }
     };
 
-    $scope.foldSessionInfo = function($session) {
-        if($scope.currentSession == $session || $scope.sessionInfoListRequested == false)
-            $scope.sessionInfoListRequested = !$scope.sessionInfoListRequested;
-        $scope.currentSession = $session;
-
-        iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
-            $scope.chartData = resultData;
-        });
-
+    $scope.foldSessionInfo = function($session, e) {
+        if($scope.currentSession == $session || $scope.sessionInfoListRequested == false) {
+            if($scope.sessionInfoListRequested == true) {
+                $scope.sessionInfoListRequested = false;
+                $scope.sessionSequenceRequested = false;
+            }
+            else {
+                $scope.sessionInfoListRequested = true;
+                $scope.currentSession = $session;
+                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
+                    $scope.chartData = resultData;
+                });
+            }
+            $(angular.element(e.target)).closest("div").toggleClass('selected');
+        }
     };
+
+    $scope.displaySessionSequence = function(e) {
+        $scope.sessionSequenceRequested = !$scope.sessionSequenceRequested;
+      //  $(angular.element(e.target)).closest("div").toggleClass('selected');
+    }
 
     $scope.displayChart = function($chart) {
         $scope.chartName = $chart.name;
@@ -71,9 +97,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     //    openDialog();
     };
 
-    $scope.displaySessionSequence = function($session) {
-        $scope.sessionSequenceRequested = !$scope.sessionSequenceRequested;
-    }
+
 /*
     $scope.$watch('chartData', function(chartData) {
         angular.forEach(chartData, function(event, idx){
