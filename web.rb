@@ -7,6 +7,8 @@ require 'fileutils'
 require 'aws/s3'
 require 'securerandom'
 require 'logger'
+#require 'carrierwave'
+require 'mini_magick'
 
 
 class Iobserve < Sinatra::Application
@@ -38,6 +40,25 @@ class Iobserve < Sinatra::Application
     set :show_exceptions, false #true will ignore raise_errors and display backtrace in browser
   end
 end
+
+
+#CarrierWave.configure do |config|
+#  config.fog_credentials = {
+#      :provider               => 'AWS',                        # required
+#      :aws_access_key_id      => ENV['AWS_ACCESS_KEY_ID'],                        # required
+#      :aws_secret_access_key  => ENV['AWS_SECRET_ACCESS_KEY'],                        # required
+#      :region                 => 'us-west-2'
+#  }
+#  config.fog_directory  = 'net.engagelab.iobserveservice'                     # required
+#  config.fog_public     = :public_read
+#end
+#
+#class AvatarUploader < CarrierWave::Uploader::Base
+#  include CarrierWave::MiniMagick
+#
+#  process :resize_to_fit => [1024, 723]
+#  storage :fog
+#end
 
 require_relative 'routes/init'
 require_relative 'models/init'

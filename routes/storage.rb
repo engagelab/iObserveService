@@ -10,10 +10,21 @@ class Iobserve < Sinatra::Application
   get '/image/:image_id' do
     content_type :json
     storage = Storage.find(params[:image_id])
-    return storage.to_json
+    storage.to_json
   end
 
-  ### post image
+  #post '/imago' do
+  #  filename   = params[:file][:filename]
+  #  filextension = filename.split('.').last
+  #
+  #  uploader = AvatarUploader.new
+  #  return uploader.store!(params[:file])
+  #
+  #
+  #
+  #end
+
+  ## post image
   post '/image' do
     awskey     = ENV['AWS_ACCESS_KEY_ID']
     awssecret  = ENV['AWS_SECRET_ACCESS_KEY']

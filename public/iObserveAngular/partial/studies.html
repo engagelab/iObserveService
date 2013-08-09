@@ -91,9 +91,12 @@
 
         <div collapse="isAddRoomCollapsed">
             <form action="/image" ng-upload id="imageUploaderForm">
-                <div class="alert alert-info">Please not that images should be 1024px in width and 723px in height. All images will be scaled to these dimensions to fit the iPad requirements.</div>
+                <div class="alert alert-info">Please not that images should be 1024px in width and 723px in height.</div>
+                <div collapse="isWrongImageSize">
+                    <div class="alert alert-error">The width and height of the image you chose are not compatible.</div>
+                </div>
                 <input type="text" ng-model="roomLabel" placeholder="Room label" style="height: 30px"></input>
-                <input type="file" name="file" class="btn"></input>
+                <input id="imageFileInput" onchange="angular.element(this).scope().file_changed(this)" accept="image/*" type="file" name="file" class="btn"></input>
                 <input class="btn btn-primary" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)"></input>
             </form>
         </div>
