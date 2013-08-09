@@ -28,14 +28,14 @@ class Iobserve < Sinatra::Application
 
     begin
       space = Space.find(params[:space_id])
-      room = Room.find(params[:room_id])
+      #room = Room.find(params[:room_id])
     end
 
     unless space.nil? and room.nil? then
       sessionob = Sessionob.create(:created_on => Time.now.to_i)
       visitorgroup = Visitorgroup.create(:created_on => Time.now.to_i)
       sessionob.visitorgroup = visitorgroup
-      sessionob.room = room
+      sessionob.room_id = params[:room_id]
       space.sessionobs << sessionob
       space.save
       return sessionob.to_json
@@ -71,7 +71,7 @@ class Iobserve < Sinatra::Application
       @allSessionsForSpace = [];
 
       space.sessionobs.each do |session|
-        if String(session.room._id).include?(params[:room_id]) then
+        if String(session.room_id).include?(params[:room_id]) then
           @allSessionsForSpace.push(session)
         end
       end
