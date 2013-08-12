@@ -6,8 +6,8 @@
                 <li ng-repeat="study in studies">
                     <div>
                         <span><b> {{ study.label }} </b></span>
-                        <button type="button" class="btn" ng-click="foldStudyChart(study)"><i class="icon-signal"></i></button>
-                        <button type="button" class="btn" ng-click="foldRooms(study, $event)"><i class="icon-calendar"></i></button></br>
+                        <button type="button" class="btn btn-primary" ng-model="studyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldStudyChart(study)"><i class="icon-signal"></i></button>
+                        <button type="button" class="btn btn-primary" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="icon-calendar"></i></button></br>
                         <span>Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</span></br>
                         <span>{{ timeConverter(study.created_on) }}</span>
                         <br/>
@@ -23,7 +23,7 @@
                     <li ng-repeat="room in rooms">
                         <div>
                             <span><b> {{ room.label }} </b></span>
-                            <button type="button" class="btn" ng-click="foldSessions(room, $event)"><i class="icon-calendar"></i></button></br>
+                            <button type="button" class="btn btn-primary" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-calendar"></i></button></br>
                         </div>
                     </li>
                 </ul>
@@ -42,7 +42,7 @@
                 <li ng-repeat="session in sessions">
                     <div>
                         <span><b>Session ({{ sessions.indexOf(session) }})</b></span>
-                        <button type="button" class="btn" ng-click="foldSessionInfo(session, $event)"><i class="icon-calendar"></i></button></br>
+                        <button type="button" class="btn btn-primary" ng-model="sessionInfoListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session, $event)"><i class="icon-calendar"></i></button></br>
                         <p>{{ timeConverter(session.created_on) }}</p>
                     </div>
                 </li>
@@ -66,8 +66,8 @@
                             </li>
                         </ul>
                         <span><b>Events Listing</b></span>
-                        <button type="button" class="btn" ng-click="displaySessionSequence($event)"><i class="icon-tasks"></i></button></br>
-                        <div collapse="!sessionSequenceRequested">
+                        <button type="button" class="btn btn-primary" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-tasks"></i></button></br>
+                        <br/><div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                             <ul>
                                 <li ng-repeat="event in chartData">
@@ -75,13 +75,13 @@
                                     <ul>
                                         <li ng-repeat="interaction in event.interactions">
                                             <ul>
-                                                <li ng-repeat="visitor in interaction.visitors" ng-class="setVisitorClass(visitor.color)">
-                                                    <p>{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
+                                                <li ng-repeat="action in interaction.actions">
+                                                    <p>{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
                                                 </li>
                                             </ul>
                                             <ul>
-                                                <li ng-repeat="action in interaction.actions" ng-class="setVisitorClass(visitor.color)">
-                                                    <p>{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
+                                                <li ng-repeat="visitor in interaction.visitors" ng-class="setVisitorClass(visitor.color)">
+                                                    <p>{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
                                                 </li>
                                             </ul>
                                         </li>
@@ -94,5 +94,5 @@
             </div>
         </div>
     </div>
-    <div style="display: block; clear: both;" collapse="!chartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
+    <div style="display: block; clear: both; height: 100%" collapse="!chartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
 </div>

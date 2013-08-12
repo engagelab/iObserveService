@@ -4,7 +4,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
     function showHideNavTabs(loginState) {
         if(loginState) {
-            $scope.panes = [
+            $scope.tabs = [
                 { title:"iObserve", content:"", active: true },
                 { title:"Profile", content:"" },
                 { title:"Studies", content:"" },
@@ -14,7 +14,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
             ];
         }
         else {
-            $scope.panes = [
+            $scope.tabs = [
                 { title:"iObserve", content:"", active: true },
                 { title:"About", content:"" },
                 { title:"Login", content:"" },
@@ -23,9 +23,9 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         }
     }
 
-    $scope.active = function() {
-        var navState = $scope.panes.filter(function(pane){
-            return pane.active;
+    $scope.activateTab = function() {
+        var navState = $scope.tabs.filter(function(tab){
+            return tab.active;
         })[0].title;
         return navState;
     }
@@ -35,7 +35,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         showHideNavTabs(loginState);
     }, true);
 
-    $scope.$watch('active()', function(navState) {
+    $scope.$watch('activateTab()', function(navState) {
         if(navState == "Logout") {
             iObserveStates.doUserLogout();
             $scope.componentState = "iObserve";

@@ -1,8 +1,13 @@
 iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
     $scope.roomListRequested = false;
+    $scope.roomListButton = 0;
+    $scope.studyChartButton = 0;
     $scope.sessionListRequested = false;
+    $scope.sessionListButton = 0;
     $scope.sessionInfoListRequested = false;
+    $scope.sessionInfoListButton = 0;
     $scope.sessionSequenceRequested = false;
+    $scope.sessionSequenceButton = 0;
 
     $scope.chartRequested = false;
     $scope.showChart = false;
@@ -30,6 +35,8 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         }
     };
 */
+
+
     $scope.foldRooms = function($study, e) {
         if($scope.currentStudy == $study || $scope.roomListRequested == false) {
             if($scope.roomListRequested == true) {
