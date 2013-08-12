@@ -17,9 +17,7 @@ class Sessionob
   has_one :storage, class_name: "Storage"
   field :storage, :type => Object, :default => nil
 
-  has_one :room
-  field :room, :type => Object, :default => nil
-
+  field :room_id, :type => String
   field :label, :type => String
   field :created_on, :type => Bignum
   field :finished_on, :type => Bignum

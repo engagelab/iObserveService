@@ -5,11 +5,11 @@
  * Time: 9:15 AM
  * To change this template use File | Settings | File Templates.
  */
-iObserveApp.directive('jerDraggable', function() {
+iObserveApp.directive('poiDraggable', function() {
     return {
         restrict: 'A',
         link: function(scope, elm, attrs) {
-            var options = scope.$eval(attrs.jerDraggable);
+            var options = scope.$eval(attrs.poiDraggable);
             elm.draggable(options);
         }
     };
@@ -35,6 +35,27 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.actionLabel = "";
     $scope.isAddResourceCollapsed = true;
     $scope.resourceLabel = "";
+    $scope.isWrongImageSize = true;
+
+
+    $scope.file_changed = function(element, $scope) {
+        var f = element.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var img = new Image;
+            img.onload = function() {
+                console.log(img.width + " " + img.height);
+                if(img.width == 1024 && img.height == 723) {
+                    console.log('image dimensions OK');
+                }
+                else {
+                    (angular.element.find('#imageUploaderForm'))[0].reset();
+                }
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(f);
+    };
 
     $scope.roomSubmited = function (content, completed) {
         if (completed) {
@@ -61,7 +82,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         else {
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         }
-    }
+    };
 
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -82,7 +103,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isSpaceResourcesEmpty = true;
 
         $scope.rooms = $scope.currentStudy.rooms;
+
         $scope.sessions = $scope.currentStudy.sessionobs;
+
+        // let's remove the unfinished sessions from the result
+        for(var k=0; k<$scope.sessions.length; k++) {
+            if($scope.sessions[k].finished_on == null) {
+                $scope.sessions.splice(k,1);
+            }
+        }
 
         iObserveData.doGetActions().then(function (resultData) {
 
