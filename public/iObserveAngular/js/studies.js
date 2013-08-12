@@ -5,11 +5,11 @@
  * Time: 9:15 AM
  * To change this template use File | Settings | File Templates.
  */
-iObserveApp.directive('jerDraggable', function() {
+iObserveApp.directive('poiDraggable', function() {
     return {
         restrict: 'A',
         link: function(scope, elm, attrs) {
-            var options = scope.$eval(attrs.jerDraggable);
+            var options = scope.$eval(attrs.poiDraggable);
             elm.draggable(options);
         }
     };
@@ -103,7 +103,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isSpaceResourcesEmpty = true;
 
         $scope.rooms = $scope.currentStudy.rooms;
+
         $scope.sessions = $scope.currentStudy.sessionobs;
+
+        // let's remove the unfinished sessions from the result
+        for(var k=0; k<$scope.sessions.length; k++) {
+            if($scope.sessions[k].finished_on == null) {
+                $scope.sessions.splice(k,1);
+            }
+        }
 
         iObserveData.doGetActions().then(function (resultData) {
 
