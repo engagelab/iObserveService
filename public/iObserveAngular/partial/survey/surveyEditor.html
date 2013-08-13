@@ -1,16 +1,21 @@
 <div class="modal-header">
     Add question
 </div>
-<div class="modal-body" style="min-height: 500px; min-width: 400px">
-    {{ currentSurvey }}
-    <div id="btn-group">
-        <button type="button" class="btn" bs-dropdown="dropdown">Choose question type<b class="caret"></b></button>
+<div class="modal-body" style="min-height: 300px; min-width: 400px" ng-controller="SurveyEditor">
+    <div class="btn-group">
+        <button type="button" class="btn" bs-dropdown="dropdown">Choose question type <b class="caret"></b></button>
     </div>
-
+    <br />
+    <hr />
     <div id="quest-group">
-
+        <span>Type: {{ formItemType }}</span>
+        <br />
+        <div ng-switch on="formTypeSelection">
+            <pre>Question: {{tfQuestion| json}}</pre>
+            <input type="text" ng-model="tfQuestion" bs-typeahead="typeahead">
+        </div>
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="parentController(dismiss)">Save</button>
+    <!-- button class="btn btn-primary" ng-click="parentController(dismiss)">Save</button-->
 </div>

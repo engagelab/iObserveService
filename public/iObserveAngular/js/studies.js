@@ -15,6 +15,39 @@ iObserveApp.directive('poiDraggable', function() {
     };
 });
 
+iObserveApp.controller('SurveyEditor', function ($scope) {
+    $scope.tfQuestion = undefined;
+    $scope.formItemType = "";
+    $scope.showFormTF = true;
+
+    $scope.dropdown = [
+        {text: 'Textfield', click: "addSelectedQuestion('tf')"},
+        {text: 'Textarea', click: "addSelectedQuestion('ta')"},
+        {text: 'RadioButtons', click: "addSelectedQuestion('bb')"},
+        {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
+    ];
+
+    $scope.addSelectedQuestion = function(type) {
+        switch(type) {
+            case 'tf':
+                $scope.formItemType='TextField';
+                $scope.showFormTF = false;
+                break;
+            case 'ta':
+                $scope.formItemType='TextArea';
+                break;
+            case 'bb':
+                $scope.formItemType='RadioButtons';
+                break;
+            case 'cb':
+                $scope.formItemType='Checkboxes';
+                break;
+            default:
+                $scope.formItemType='';
+        }
+    };
+});
+
 iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities, $modal) {
     $scope.isAddStudyCollapsed = true;
     $scope.isAddSurveyCollapsed = true;
@@ -517,11 +550,4 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         // do something
         dismiss();
     };
-
-    $scope.dropdown = [
-        {text: 'Textfield', click: ""},
-        {text: 'Textarea', click: ""},
-        {text: 'ButtonBar', click: ""},
-        {text: 'Checkboxes', click: ""}
-    ];
 });
