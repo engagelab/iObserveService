@@ -517,4 +517,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         // do something
         dismiss();
     };
+
+    $scope.dropdown = [
+        {text: 'Textfield', click: ""},
+        {text: 'Textarea', click: ""},
+        {text: 'ButtonBar', click: ""},
+        {text: 'Checkboxes', click: ""}
+    ];
 });
