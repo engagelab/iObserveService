@@ -8,6 +8,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.sessionInfoListButton = 0;
     $scope.sessionSequenceRequested = false;
     $scope.sessionSequenceButton = 0;
+    $scope.chartPartialLoaded = false;
 
     $scope.chartRequested = false;
     $scope.showChart = false;
@@ -37,7 +38,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         }
     };
 */
-
+    $scope.partialLoaded = function () {
+        $scope.chartPartialLoaded = true;
+    }
 
     $scope.foldRooms = function($study, e) {
         if($scope.currentStudy == $study || $scope.roomListRequested == false) {
@@ -46,6 +49,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.sessionListRequested = false;
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
             }
             else {
                 $scope.roomListRequested = true;
@@ -64,6 +68,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.sessionListRequested = false;
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
             }
             else {
                 $scope.sessionListRequested = true;
@@ -83,6 +88,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
             if($scope.sessionInfoListRequested == true) {
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
             }
             else {
                 $scope.sessionInfoListRequested = true;
@@ -107,7 +113,6 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
     //    openDialog();
     };
-
 
 /*
     $scope.$watch('chartData', function(chartData) {

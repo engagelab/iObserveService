@@ -81,8 +81,8 @@ class Iobserve < Sinatra::Application
           @allEventsForSessions.push(events)
       end
     end
-
-    return @allEventsForSessions.to_json
+    result = '{"sessions" : ' + @allSessionsForSpaceAndRoom.to_json + ', "events" : ' + @allEventsForSessions.to_json + '}'
+    return result
   end
 
   ###  get an event by id

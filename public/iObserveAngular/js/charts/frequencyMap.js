@@ -1,213 +1,85 @@
-iObserveApp.controller('ChartCtrl-frequencyMap', function($scope) {
+iObserveApp.controller('ChartCtrl-frequencyMap', function($scope, $timeout, iObserveData) {
 
+    var chartData = [];
 
-    var chartData = [
-        {
-            "key": "Male",
-            "color": "#3B40BF",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Female",
-            "color": "#BF3B3B",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Norwegian",
-            "color": "#3BBF4D",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Tourist",
-            "color": "#157047",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Other",
-            "color": "#000000",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        }
-    ]
-
-    $(function() {
-        $( "#slider" ).slider({
-            value:0,
-            min: 0,
-            max: $scope.sessions.eventob_ids.length,
-            step: 50,
-            slide: function( event, ui ) {
-                $( "#amount" ).val( "$" + ui.value );
-            }
-        });
-        $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-    });
-
-    var objSet = { "Male" : chartData[0], "Female" : chartData[1], "Norwegian" : chartData[2], "Tourist" : chartData[3], "Other" : chartData[4] };
+    var svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", 1024)
+        .attr("height", 723)
+        .attr("top", 45);
 
     var processData = function () {
 
-        for(var i=0; i<$scope.sessions.length; i++) {
-            var session = $scope.sessions[i];
-            // session in sessions
-            for(var j=0; j<session.visitorgroup.visitors.length; j++) {
-                var visitor = session.visitorgroup.visitors[j];
-                var filter = visitor.sex;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
+        for(var i=0; i<$scope.eventCollection.length; i++) {
+            var eventSubset = $scope.eventCollection[i];
+            for(var j=0; j<eventSubset.length; j++) {
+                var event = eventSubset[j];
+                var dataPoint = {
+                    type : i.toString(),
+                    x : event.xpos,
+                    y : event.ypos,
+                    radius : getEventRadius(event),
+                    color : getEventColor(event)
                 }
-                filter = visitor.nationality;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
-                }
+                chartData.push(dataPoint);
             }
         }
     };
 
-    processData();
 
-    var chart;
-    nv.addGraph(function() {
-        // chart = nv.models.multiBarHorizontalChart()
-        chart = nv.models.multiBarChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
-            .margin({top: 30, right: 20, bottom: 50, left: 175})
-            //.showValues(true)
-            //.tooltips(false)
-            //.barColor(d3.scale.category20().range())
-            .showControls(true);
+    var getEventRadius = function (event) {
+        return event.interactions.length * 5;
+    }
 
-        chart.yAxis
-            .tickFormat(d3.format(',d'));
+    var color = d3.scale.category20b();
 
-        d3.select('#chart')
-            .append("svg")
-            .datum(chartData)
-            .transition().duration(500)
-            .call(chart);
+    // At present, visitors are always the same count in each interaction item
+    var getEventColor = function (event) {
+        switch(event.interactions[0].visitors.length) {
+            case 1 : return color(8); break;
+            case 2 : return color(7); break;
+            case 3 : return color(6); break;
+            case 4 : return color(5); break;
+            default : break;
+        }
+    }
 
-        nv.utils.windowResize(chart.update);
-
-        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
-
-        return chart;
+    $scope.$watch('chartPartialLoaded', function(newValue) {
+        iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+            $scope.sessionDetails = resultData.sessions;
+            $scope.eventCollection = resultData.events;
+            processData();
+            drawChart();
+            $timeout(assignCheckBoxes, 0);
+        })
     });
 
+    var drawChart = function () {
+        var circle = svg.selectAll("circle")
+            .data(chartData)
+            .enter()
+            .append("svg:circle");
+
+        d3.selectAll("circle")
+            .style("stroke", "gray")
+            .attr("r", function(d) { return d.radius; })
+            .attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; })
+            .attr("fill", function(d) { return d.color; });
+    }
+
+    var assignCheckBoxes = function () {
+        d3.selectAll(".filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var type = this.value,
+                    display = this.checked ? "inline" : "none";
+
+                svg.selectAll("circle")
+                    .filter(function(d) { return d.type === type; })
+                    .attr("display", display);
+            });
+    }
 });
 
 

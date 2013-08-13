@@ -5,15 +5,18 @@
         <h3>Frequency Map</h3>
     </div>
     <div class="chart">
-        <div id="chart"></div>
+        <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
+        <div id="chart" style="position: absolute; width:1024px; height:723px; top: 55px; z-index: 2;"></div>
     </div>
-    <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" style="top: 45px" />
-    <p>
-        <label for="amount">Event step:</label>
-        <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" />
-    </p>
-
-    <div id="slider" style="width: 1024px;"></div>
+    <div class="filter_options">
+        <form>
+            <b>Session series:</b></br>
+            <span ng-repeat="session in sessionDetails">
+                <input class="filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
+            </span>
+        </form>
+        Darker circles represent multiple visitors (up to four). Larger circles indicate multiple interactions at a location.
+    </div>
 </div>
 
 
