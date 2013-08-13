@@ -28,7 +28,7 @@ class Iobserve < Sinatra::Application
 
     begin
       space = Space.find(params[:space_id])
-      #room = Room.find(params[:room_id])
+      room = Room.find(params[:room_id])
     end
 
     unless space.nil? and room.nil? then

@@ -15,14 +15,18 @@ iObserveApp.directive('poiDraggable', function() {
     };
 });
 
-iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
+iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities, $modal) {
     $scope.isAddStudyCollapsed = true;
+    $scope.isAddSurveyCollapsed = true;
     $scope.isAddRoomCollapsed = true;
     $scope.isStudyChosen = false;
     $scope.currentStudy = null;
+    $scope.currentSurvey = null;
     $scope.rooms = null;
+    $scope.surveys = null;
     $scope.sessions = null;
     $scope.studyLabel = "";
+    $scope.surveyLabel = "";
     $scope.roomLabel = "";
     $scope.studyToDelete = null;
     $scope.roomToDelete = null;
@@ -102,6 +106,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isSpaceActionsEmpty = true;
         $scope.isSpaceResourcesEmpty = true;
 
+        $scope.surveys = $scope.currentStudy.surveys;
+
         $scope.rooms = $scope.currentStudy.rooms;
 
         $scope.sessions = $scope.currentStudy.sessionobs;
@@ -172,6 +178,25 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             $scope.studyLabel = '';
         }
         $scope.isAddStudyCollapsed = true;
+    };
+
+    $scope.createNewSurvey = function () {
+        var data = null;
+        if ($scope.surveyLabel != "") {
+            data = {study_id: $scope.currentStudy._id,label: $scope.surveyLabel};
+        }
+        else {
+            data = {study_id: $scope.currentStudy._id,label: getRandomUUID()};
+        }
+
+        iObserveData.doNewSurvey(data).then(function (resultData) {
+            $scope.studies = iObserveData.doGetStudies();
+            $scope.isAddRoomCollapsed = true;
+            $scope.isStudyChosen = false;
+        });
+
+        $scope.surveyLabel = '';
+        $scope.isAddSurveyCollapsed = true;
     };
 
     $scope.openRemoveStudy = function ($selectedStudy) {
@@ -408,10 +433,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 }
 
                 $scope.actionLabel = '';
-
-
             });
-
         }
         $scope.isAddActionCollapsed = true;
     };
@@ -473,11 +495,26 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 }
 
                 $scope.resourceLabel = '';
-
-
             });
-
         }
         $scope.isAddResourceCollapsed = true;
+    };
+
+    $scope.viaService = function($survey) {
+        $scope.currentSurvey = $survey;
+
+        // do something
+        var modal = $modal({
+            template: 'partial/survey/surveyEditor.html',
+            show: true,
+            backdrop: 'static',
+            scope: $scope
+        });
+    };
+
+    $scope.parentController = function(dismiss) {
+        console.warn(arguments);
+        // do something
+        dismiss();
     };
 });

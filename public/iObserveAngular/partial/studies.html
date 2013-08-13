@@ -4,18 +4,34 @@
 
         <div collapse="isAddStudyCollapsed">
             <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
-            <button class="btn btn-primary" ng-click="isCollapsed=true;createNewStudy()">OK</button>
+            <button class="btn btn-primary" ng-click="createNewStudy()">OK</button>
         </div>
         <hr>
     </div>
 
     <br>
     <ul>
-        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><i class="icon-minus"></i></button><a href=""> Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
+        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><i class="icon-minus"></i></button><a href="">&nbsp;&nbsp;Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Survey(s): {{ study.surveys.length }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
     </ul>
     <br>
     <br>
-    <div ng-show="isStudyChosen">
+    <div ng-show="isStudyChosen" style="background-color: #F9F9F9">
+
+        <h3>Survey  <button class="btn" ng-click="isAddSurveyCollapsed = !isAddSurveyCollapsed"><i class="icon-plus"></i></button></h3>
+
+        <div collapse="isAddSurveyCollapsed">
+            <input type="text" ng-model="surveyLabel" placeholder="Survey label (optional)" style="margin-bottom: 0;">
+            <button class="btn btn-primary" ng-click="createNewSurvey()">OK</button>
+        </div>
+        <br>
+        <accordion close-others="true">
+            <accordion-group  ng-repeat="survey in surveys" heading="Survey ({{ surveys.indexOf(survey) }}): {{ timeConverter(survey.created_on) }}">
+                <button class="btn btn-danger" ng-click="deleteSurvey(survey)">Delete survey</button>
+                <button class="btn btn-primary" ng-click="viaService(survey)">Add question</button>&nbsp;<p>Questions: {{ survey.questions }}</p>
+            </accordion-group>
+        </accordion>
+
+
         <h3>Space  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button>&nbsp;<button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button>&nbsp;<button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
 
         <div modal="showSpaceActions" close="closeSpaceActions()" class="actionPickerDiv">
@@ -121,6 +137,7 @@
                  <div style="position: relative; width: 100%; height: 768px">
                     <div style="width: 1024px; z-index: 0; float: left">
                         <div style="width: 1024px; height: 768px; background-color: #333333">
+                            <span style="font-size: 20; color: #FFFFFF; float: left; position: absolute; top: 5px; left: 5px">Navigation Bar</span>
                             <img ng-src="{{roomToEdit.uri}}" width="1024px" height="723px" style="position: absolute; top: 45px" >
                         </div>
                         <div id="roomToEditLocs" style="position: absolute; top: 45px; left: 0; width: 1024px;height: 723px">

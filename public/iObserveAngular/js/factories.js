@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
 
 // var routePrePath = "http://observe.uio.im";
 var routePrePath = "";
@@ -280,6 +280,18 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestNewSurveyObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/space/" + data.study_id + "/survey", data, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -301,7 +313,8 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doNewAction: requestNewActionObject,
         doGetResources: requestListResourcesObject,
         doUpdateSpaceResources: requestUpdateSpaceResourcesObject,
-        doNewResource: requestNewResourceObject
+        doNewResource: requestNewResourceObject,
+        doNewSurvey: requestNewSurveyObject
     }
 });
 
