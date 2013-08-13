@@ -24,20 +24,21 @@
                         <div>
                             <span><b> {{ room.label }} </b></span>
                             <button type="button" class="btn btn-primary" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-calendar"></i></button></br>
+                            <span>Sessions(s):{{ currentStudy.sessionob_ids.length }}</span>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="colSessions">
-            <div collapse="!sessionListRequested">
+            <div collapse="!sessionListRequested" ng-show="showSessionList">
                 <h3>Sessions</h3>
-                <h4>Charts</h4>
-                <ul>
-                    <li ng-repeat="chart in chartList.content.roomChartList">
-                        <a ng-click="displayChart(chart)">{{ chart.name }}</a>
-                    </li>
-                </ul>
+                    <h4>Charts</h4>
+                    <ul>
+                        <li ng-repeat="chart in chartList.content.roomChartList">
+                            <a ng-click="displayChart(chart)">{{ chart.name }}</a>
+                        </li>
+                    </ul>
                 <!--span>For {{ currentRoom.label }}</span-->
                 <li ng-repeat="session in sessions">
                     <div>

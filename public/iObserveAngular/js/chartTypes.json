@@ -16,6 +16,11 @@
             "id": 4,
             "name": "Demographics",
             "shortName": "demographics"
+        },
+        {
+            "id": 5,
+            "name": "Frequency Map",
+            "shortName": "frequencyMap"
         }
     ]
 }

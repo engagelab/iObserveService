@@ -21,6 +21,8 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.timeConverterShort = iObserveUtilities.timeConverterShort;
     $scope.tDiff = iObserveUtilities.tDiff;
+
+    $scope.showSessionList = false;
 /*
     $scope.chartDialogOpts = {
         backdrop: true,
@@ -52,7 +54,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                     $scope.rooms = resultData;
                 })
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+            $(angular.element(e.target)).parent().siblings().toggleClass('selected');
         }
     };
 
@@ -68,9 +70,11 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.currentRoom = $room;
                 iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
                     $scope.sessions = resultData;
+                    if($scope.sessions.length > 0)
+                        $scope.showSessionList = true;
                 })
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+            $(angular.element(e.target)).parent().siblings().toggleClass('selected');
         }
     };
 
@@ -87,7 +91,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                     $scope.chartData = resultData;
                 });
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+            $(angular.element(e.target)).parent().siblings().toggleClass('selected');
         }
     };
 
