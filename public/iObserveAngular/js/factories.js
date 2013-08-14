@@ -43,6 +43,13 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         return moment.unix($ts).format("h:mm:ss a");
     };
 
+    var tDiffMoment = function ($a,$b) {
+        var a = moment.unix($a);
+        var b = moment.unix($b);
+        var difference = b.diff(a);
+        return moment.duration(difference, "milliseconds").humanize();
+    }
+
     var tDiff = function($a,$b) {
         var a = new Date($a*1000);
         var b = new Date($b*1000);
@@ -78,6 +85,7 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         timeConverter : timeConverter,
         timeConverterShort : timeConverterShort,
         tDiff : tDiff,
+        tDiffMoment: tDiffMoment,
         loadJSONFile: loadJSONFile
     }
 });
