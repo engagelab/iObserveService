@@ -1,71 +1,25 @@
 <div ng-controller="ChartCtrl-positionOverTime">
     <div class="modal-header">
-        <h3>Demographics</h3>
+        <h3>Position over Time</h3>
     </div>
-    <div class="filter_options">
+    <div class="chart">
+        <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
+        <div id="chart" style="position: absolute; width:1024px; height:723px; top: 80px; z-index: 2;"></div>
+        <div id="eventSlider" class="dragdealer" style="width:1024px; top:10px;">
+            <div class="red-bar handle">Event Progress</div>
+        </div>
+    </div>
+    <!--div class="layout-slider" style="width:1024px;">
+        <input id="SliderSingle" type="slider" name="events" value="0" />
+    </div-->
+
+    <!--div class="filter_options">
         <form>
-            A <input class="filter_button" id="a_button" type="checkbox" value="a"/><br>
-            B <input class="filter_button" id="b_button" type="checkbox" value="b"/><br>
-            C <input class="filter_button" id="c_button" type="checkbox" value="c"/><br>
+            <b>Event series:</b></br>
+            <span ng-repeat="session in sessionDetails">
+                <input class="filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
+            </span>
         </form>
-    </div>
-    <div id="chart"></div>
-
-    <div id="coData"><span>Data passed from parent: {{chartData}}</span></div>
-
-    <script>
-        var sampleChartData = [
-            {
-                id: 1,
-                type: "a",
-                radius: 10,
-                x: 50,
-                y: 50
-            },
-            {
-                id: 2,
-                type: "b",
-                radius:20,
-                x: 70,
-                y: 30
-            },
-            {
-                id: 3,
-                type: "a",
-                radius: 5,
-                x: 80,
-                y: 80
-            }
-        ];
-
-
-        var svg = d3.select("#chart")
-                .append("svg")
-                .attr("width", 100)
-                .attr("height", 100);
-
-        var circle = svg.selectAll("circle")
-                .data(sampleChartData)
-                .enter()
-                .append("svg:circle");
-
-        d3.selectAll("circle")
-                .style("stroke", "gray")
-                .style("fill", "white")
-                .attr("r", function(d) { return d.radius; })
-                .attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
-
-        d3.selectAll(".filter_button")
-                .property("checked", true)
-                .on("change", function() {
-                    var type = this.value,
-                        display = this.checked ? "inline" : "none";
-
-                    svg.selectAll("circle")
-                        .filter(function(d) { return d.type === type; })
-                        .attr("display", display);
-        });
-
-    </script>
+        Darker circles represent multiple visitors (up to four). Larger circles indicate multiple interactions at a location.
+    </div-->
 </div>

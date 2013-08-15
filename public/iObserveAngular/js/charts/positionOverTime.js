@@ -1,272 +1,92 @@
-iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData) {
+iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData, iObserveUtilities) {
 
+    var chartData = [];
 
-    var chartData = [
-        {
-            "key": "Male",
-            "color": "#3B40BF",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Female",
-            "color": "#BF3B3B",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Norwegian",
-            "color": "#3BBF4D",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Tourist",
-            "color": "#157047",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        },
-        {
-            "key": "Other",
-            "color": "#000000",
-            "values": [
-                {
-                    "label" : "Child",
-                    "value" : 0
-                },
-                {
-                    "label" : "Young Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Adult",
-                    "value" : 0
-                },
-                {
-                    "label" : "Middle Aged",
-                    "value" : 0
-                },
-                {
-                    "label" : "Senior",
-                    "value" : 0
-                }
-            ]
-        }
-    ]
-
-    iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
-        $scope.sessions = resultData;
-    })
-
-    $(function() {
-        $( "#slider" ).slider({
-            value:0,
-            min: 0,
-            max: $scope.sessions.eventob_ids.length,
-            step: 50,
-            slide: function( event, ui ) {
-                $( "#amount" ).val( "$" + ui.value );
-            }
-        });
-        $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-    });
-
-    var objSet = { "Male" : chartData[0], "Female" : chartData[1], "Norwegian" : chartData[2], "Tourist" : chartData[3], "Other" : chartData[4] };
+    var svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", 1024)
+        .attr("height", 723)
+        .attr("top", 45);
 
     var processData = function () {
 
-        for(var i=0; i<$scope.sessions.length; i++) {
-            var session = $scope.sessions[i];
-            // session in sessions
-            for(var j=0; j<session.visitorgroup.visitors.length; j++) {
-                var visitor = session.visitorgroup.visitors[j];
-                var filter = visitor.sex;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
-                }
-                filter = visitor.nationality;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
+        for(var i=0; i<$scope.chartData.length; i++) {
+            var event = $scope.chartData[i];
+            for(var j=0; j<event.interactions.length; j++) {
+                var interaction = event.interactions[j];
+                for(var k=0;  k<interaction.visitors.length; k++) {
+                    var visitor = interaction.visitors[k];
+                    var dataPoint = {
+                        eventIndex : i,
+                        visitorIndex : interaction.visitors.indexOf(visitor),
+                        x : event.xpos,
+                        y : event.ypos,
+                        radius : 5,
+                        color : iObserveUtilities.decColor2hex(visitor.color),
+                        sex: visitor.sex,
+                        age: visitor.age,
+                        nationality : visitor.nationality
+                    }
+                    chartData.push(dataPoint);
                 }
             }
         }
     };
 
-    processData();
+    var getEventRadius = function (event) {
+        return event.interactions.length * 5;
+    }
 
-    var chart;
-    nv.addGraph(function() {
-        // chart = nv.models.multiBarHorizontalChart()
-        chart = nv.models.multiBarChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
-            .margin({top: 30, right: 20, bottom: 50, left: 175})
-            //.showValues(true)
-            //.tooltips(false)
-            //.barColor(d3.scale.category20().range())
-            .showControls(true);
-
-        chart.yAxis
-            .tickFormat(d3.format(',d'));
-
-        d3.select('#chart')
-            .append("svg")
-            .datum(chartData)
-            .transition().duration(500)
-            .call(chart);
-
-        nv.utils.windowResize(chart.update);
-
-        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
-
-        return chart;
+    $scope.$watch('chartPartialLoaded', function(newValue) {
+        iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+            $scope.sessionDetails = resultData.sessions;
+            $scope.eventCollection = resultData.events;
+            processData();
+            drawChart();
+         //   $timeout(assignCheckBoxes, 0);
+        })
     });
 
-
-
-    // Old demographics test
- /*   var sampleChartData = [
-        {
-            id: 1,
-            type: "a",
-            radius: 40,
-            x: 50,
-            y: 50
+    var calculateClusterCoordinates = function (x,y,visitorIndex) {
+        var newCoords = {x : 0, y : 0};
+        switch(visitorIndex) {
+            case 0 : newCoords.x = x - 7; newCoords.y = y - 7; break;
+            case 1 : newCoords.x = x + 7; newCoords.y = y - 7; break;
+            case 2 : newCoords.x = x - 7; newCoords.y = y + 7; break;
+            case 3 : newCoords.x = x + 7; newCoords.y = y + 7; break;
         }
-    ];
+        return newCoords;
+    }
 
+    var drawChart = function () {
+        var circle = svg.selectAll("circle")
+            .data(chartData)
+            .enter()
+            .append("svg:circle");
 
-    var svg = d3.select("#chart")
-        .append("svg")
-        .attr("width", 100)
-        .attr("height", 100);
+        d3.selectAll("circle")
+            .style("stroke", "gray")
+            .attr("r", function(d) { return d.radius; })
+            .attr("cx", function(d) { return calculateClusterCoordinates(d.x, d.y, d.visitorIndex).x; })
+            .attr("cy", function(d) { return calculateClusterCoordinates(d.x, d.y, d.visitorIndex).y; })
+            .attr("display", function(d) { return d.eventIndex <= 0 ? "inline" : "none"})
+            .attr("fill", function(d) { return d.color; });
 
-    var circle = svg.selectAll("circle")
-        .data(sampleChartData)
-        .enter()
-        .append("svg:circle");
-
-    d3.selectAll("circle")
-        .style("stroke", "gray")
-        .style("fill", "white")
-        .attr("r", function(d) { return d.radius; })
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-
-    d3.selectAll(".filter_button")
-        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
-        .on("mouseout", function(){d3.select(this).style("fill", "white");})
-        .property("checked", false)
-        .on("change", function() {
-            if(this.checked) {
-                svg.selectAll("circle");
-                circle.style("fill", "steelblue");
-                circle.transition()
-                    .duration(750)
-                    .delay(function(d, i) { return i * 10; })
-                    .attr("r", function(d) { return Math.sqrt(d.radius * 2); });
-            }
-            else {
-                svg.selectAll("circle");
-                circle.style("fill", "white");
-                circle.transition()
-                    .duration(750)
-                    .delay(function(d, i) { return i * 10; })
-                    .attr("r", function(d) { return d.radius; });
-            }
+        new Dragdealer('eventSlider', {
+                horizontal: true,
+                vertical: false,
+                xPrecision: 1024,
+                x: 0,
+                animationCallback: function(x, y)
+                {
+                    var totalSteps = $scope.chartData.length;
+                    svg.selectAll("circle")
+                        .attr("display", function(d) { return d.eventIndex+1 <= x*totalSteps ? "inline" : "none"})
+                }
         });
 
-*/
+    }
+
 });
 
 

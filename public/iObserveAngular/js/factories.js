@@ -81,10 +81,23 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
 
         return obj;
     }
+
+    var decColor2hex = function (color){
+        // input:   (String) decimal color (i.e. 16711680)
+        // returns: (String) hex color (i.e. 0xFF0000)
+        var colorNumber = new Number(color);
+        var colArr = colorNumber.toString(16).toUpperCase().split('');
+        var numChars = colArr.length;
+        for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
+        var result = '#' + colArr.join('');
+        return result;
+    }
+
     return {
         timeConverter : timeConverter,
         timeConverterShort : timeConverterShort,
         tDiff : tDiff,
+        decColor2hex : decColor2hex,
         tDiffMoment: tDiffMoment,
         loadJSONFile: loadJSONFile
     }
