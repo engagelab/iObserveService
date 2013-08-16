@@ -66,6 +66,12 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
     ];
 
+    $scope.studyTabs = [
+        {title:'Survey'},
+        {title:'Space'}
+    ];
+    $scope.studyTabs.activeTab = 0;
+
 
     /*
 

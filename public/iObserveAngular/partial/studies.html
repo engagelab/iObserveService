@@ -15,6 +15,17 @@
     </ul>
     <br>
     <br>
+
+    <div data-fade="1" ng-model="studyTabs.activeTab" bs-tabs>
+        <div ng-repeat="tab in studyTabs" data-title="{{tab.title}}"></div>
+    </div>
+
+    <div ng-switch on="studyTabs.activeTab" >
+        <div ng-switch-when="0">Yo</div>
+        <div ng-switch-when="1">yeah</div>
+    </div>
+
+
     <div ng-show="isStudyChosen" style="background-color: #F9F9F9">
 
         <h3>Survey  <button class="btn" ng-click="isAddSurveyCollapsed = !isAddSurveyCollapsed"><i class="icon-plus"></i></button></h3>

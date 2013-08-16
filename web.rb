@@ -8,14 +8,14 @@ require 'aws/s3'
 require 'securerandom'
 require 'logger'
 #require 'carrierwave'
-require 'mini_magick'
+#require 'mini_magick'
 
 
 class Iobserve < Sinatra::Application
-  $log = Logger.new('./logs/output.log')
+  #$log = Logger.new('./logs/output.log')
 
-  set :environment, :development
-  #set :environment, :production
+  #set :environment, :development
+  set :environment, :production
 
   #set :sessions, true
   #set :session_secret, 'super secret'
@@ -24,7 +24,7 @@ class Iobserve < Sinatra::Application
   configure do
     set :app_file, __FILE__
     Mongoid.load! "#{File.dirname(__FILE__)}/config/mongoid.yml"
-    $log.level = Logger::DEBUG
+    #$log.level = Logger::DEBUG
   end
 
   configure :development do
