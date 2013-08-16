@@ -31,6 +31,39 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  ##### Create a new question for this survey #####
+  post '/survey/:survey_id/question' do
+    request.body.rewind  # in case someone already read it
+    content_type :json
+
+    begin
+      survey = Survey.find(params[:survey_id])
+    end
+
+    unless survey.nil? then
+      data = JSON.parse request.body.read
+
+      unless data.nil? then
+
+        unless data['label'].nil? && data['type'].nil? then
+
+          unless data['options'].nil? then
+            question = Question.create(:created_on => Time.now.to_i, :label => data['label'], :type => data['type'], :options => data['options']);
+          else
+            question = Question.create(:created_on => Time.now.to_i, :label => data['label'], :type => data['type']);
+          end
+
+          survey.questions << question
+          survey.save
+          return question.to_json;
+        end
+
+      end
+    else
+      status 404
+      return {"message" => "Survey not found"}.to_json
+    end
+  end
 
   ### list all surveys
   get '/survey' do
@@ -54,28 +87,24 @@ class Iobserve < Sinatra::Application
     return sessionob.to_json
   end
 
-  ### update survey's properties
-  put '/survey' do
+
+  ### delete a question by id
+  delete '/question/:question_id' do
     request.body.rewind  # in case someone already read it
-    content_type :json;
-    data = JSON.parse request.body.read
+    content_type :json
 
-=begin
-    unless data.nil? or data['_id'].nil? then
-      status 200
+    question = Question.find(params[:question_id])
 
-      sessionob = Sessionob.find(data['_id'])
-
-      unless data['label'].nil?
-        sessionob.update_attributes(:label => data['label'])
-      end
-
-      return sessionob.to_json
-    else
+    if question.nil? then
       status 404
-      return {"message" => "Provide label"}.to_json
+    else
+      if question.destroy then
+        status 200
+        return {"message" => "Question deleted"}.to_json
+      else
+        status 500
+      end
     end
-=end
   end
 
 
@@ -89,47 +118,19 @@ class Iobserve < Sinatra::Application
     if survey.nil? then
       status 404
     else
-=begin
-      unless survey.visitorgroup.nil? then
-        visitorgroup = Visitorgroup.find(sessionob.visitorgroup._id)
-
-        unless visitorgroup.visitors.nil? then
-          visitorgroup.visitors.each do|visitor|
-            visitor = Visitor.find(visitor._id)
-            visitor.destroy
-          end
-        end
-
-        visitorgroup.destroy
-      end
-
-      unless sessionob.storage.nil? then
-        storage = Storage.find(sessionob.storage._id)
-        storage.destroy
-      end
-
-      unless sessionob.eventob_ids.nil? then
-        sessionob.eventob_ids.each do|evt|
-          eventob = Eventob.find(evt)
-
-          unless eventob.interactions.nil? then
-            eventob.interactions.each do|inter|
-              interaction = Interaction.find(inter._id)
-              interaction.destroy
-            end
-          end
-
-          eventob.destroy
+      unless survey.questions.nil? then
+        survey.questions.each do|quest|
+            question = Question.find(quest._id)
+            question.destroy
         end
       end
 
-      if sessionob.destroy then
+      if survey.destroy then
         status 200
-        return {"message" => "Session deleted"}.to_json
+        return {"message" => "Survey deleted"}.to_json
       else
         status 500
       end
-=end
     end
   end
 end

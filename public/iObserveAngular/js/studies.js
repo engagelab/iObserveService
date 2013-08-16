@@ -15,39 +15,6 @@ iObserveApp.directive('poiDraggable', function() {
     };
 });
 
-iObserveApp.controller('SurveyEditor', function ($scope) {
-    $scope.tfQuestion = undefined;
-    $scope.formItemType = "";
-    $scope.showFormTF = true;
-
-    $scope.dropdown = [
-        {text: 'Textfield', click: "addSelectedQuestion('tf')"},
-        {text: 'Textarea', click: "addSelectedQuestion('ta')"},
-        {text: 'RadioButtons', click: "addSelectedQuestion('bb')"},
-        {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
-    ];
-
-    $scope.addSelectedQuestion = function(type) {
-        switch(type) {
-            case 'tf':
-                $scope.formItemType='TextField';
-                $scope.showFormTF = false;
-                break;
-            case 'ta':
-                $scope.formItemType='TextArea';
-                break;
-            case 'bb':
-                $scope.formItemType='RadioButtons';
-                break;
-            case 'cb':
-                $scope.formItemType='Checkboxes';
-                break;
-            default:
-                $scope.formItemType='';
-        }
-    };
-});
-
 iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities, $modal) {
     $scope.isAddStudyCollapsed = true;
     $scope.isAddSurveyCollapsed = true;
@@ -94,11 +61,20 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         reader.readAsDataURL(f);
     };
 
+    function getID() {
+        if ($scope.roomLabel != "") {
+            return $scope.roomLabel;
+        }
+        else {
+            return iObserveUtilities.getRandomUUID();
+        }
+    };
+
     $scope.roomSubmited = function (content, completed) {
         if (completed) {
             $scope.uploadResponse = content;
             if ($scope.uploadResponse._id != "") {
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getRandomUUID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
                     if (resultData._id != "") {
                         $scope.studies = iObserveData.doGetStudies();
                         $scope.isAddRoomCollapsed = true;
@@ -112,34 +88,32 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
     };
 
-    function getRandomUUID() {
-        if ($scope.roomLabel != "") {
-            return $scope.roomLabel;
-        }
-        else {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        }
-    };
-
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    };
-
     iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
 
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
 
+
+    $scope.refreshSurveys = function() {
+        $scope.survey = $scope.surveys[0];
+        if($scope.surveys.length == 0) {
+            (angular.element.find('#surveyEditDiv'))[0].style.visibility = "hidden";
+        }
+        else {
+            (angular.element.find('#surveyEditDiv'))[0].style.visibility = "visible";
+            $scope.editSurvey($scope.survey);
+        }
+    };
+
     $scope.unfoldSessions = function ($study) {
         $scope.currentStudy = $study;
         $scope.isStudyChosen = true;
         $scope.isSpaceActionsEmpty = true;
         $scope.isSpaceResourcesEmpty = true;
-
         $scope.surveys = $scope.currentStudy.surveys;
+
+        $scope.refreshSurveys();
 
         $scope.rooms = $scope.currentStudy.rooms;
 
@@ -219,7 +193,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             data = {study_id: $scope.currentStudy._id,label: $scope.surveyLabel};
         }
         else {
-            data = {study_id: $scope.currentStudy._id,label: getRandomUUID()};
+            data = {study_id: $scope.currentStudy._id,label: getID()};
         }
 
         iObserveData.doNewSurvey(data).then(function (resultData) {
@@ -349,13 +323,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     $scope.addStartPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.start_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
+        $scope.roomToEdit.start_points.push({uuid: getID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
         $scope.openEditRoom($scope.roomToEdit);
     };
 
     $scope.addEndPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.end_points.push({uuid: getRandomUUID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
+        $scope.roomToEdit.end_points.push({uuid: getID(),xpos: 1024/2, ypos: 768/2, rotation: 0});
         $scope.openEditRoom($scope.roomToEdit);
     };
 
@@ -533,21 +507,201 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isAddResourceCollapsed = true;
     };
 
-    $scope.viaService = function($survey) {
-        $scope.currentSurvey = $survey;
+    /*$scope.viaService = function($survey) {
+        var mscope = $scope.$new();
+        mscope.salutation = $survey;
+        mscope.name = 'World';
 
         // do something
-        var modal = $modal({
+        var modalPromise = $modal({
             template: 'partial/survey/surveyEditor.html',
             show: true,
+            persist: false,
             backdrop: 'static',
-            scope: $scope
+            scope: mscope
         });
     };
-
     $scope.parentController = function(dismiss) {
         console.warn(arguments);
         // do something
         dismiss();
+    };*/
+
+    $scope.isSurveySelected = true;
+    $scope.currentSelectedSurvey = undefined;
+
+
+    $scope.editSurvey = function(s) {
+        console.log(s);
+        $scope.isSurveySelected = false;
+        $scope.currentSelectedSurvey = s;
+        $scope.formItemType = "";
+    };
+
+    $scope.getFormattedSurvey = function(s) {
+        return 'Survey '+$scope.surveys.indexOf(s)+': '+$scope.timeConverter(s.created_on);
+    };
+
+    $scope.tfQuestion = undefined;
+    $scope.taQuestion = undefined;
+    $scope.rbQuestion = undefined;
+    $scope.cbQuestion = undefined;
+    $scope.formRadioButtonsList = new Array();
+    $scope.formCheckBoxButtonsList = new Array();
+
+    $scope.radioitem = $scope.formRadioButtonsList[0];
+
+    $scope.formItemType = "";
+
+    $scope.dropdown = [
+        {text: 'Textfield', click: "addSelectedQuestion('tf')"},
+        {text: 'Textarea', click: "addSelectedQuestion('ta')"},
+        {text: 'RadioButtons', click: "addSelectedQuestion('rb')"},
+        {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
+    ];
+
+    $scope.addSelectedQuestion = function(type) {
+        switch(type) {
+            case 'tf':
+                $scope.formItemType='TextField';
+                break;
+            case 'ta':
+                $scope.formItemType='TextArea';
+                break;
+            case 'rb':
+                $scope.formItemType='RadioButtons';
+                $scope.formRadioButtonsList = [];
+                $scope.radioitem = $scope.formRadioButtonsList[0];
+                break;
+            case 'cb':
+                $scope.formItemType='Checkboxes';
+                $scope.formCheckBoxesList = [];
+                break;
+            default:
+                $scope.formItemType='';
+        }
+    };
+
+    $scope.addNewRadioButton = function(radioLabel) {
+        var canAdd = true;
+        for(var i=0;i<$scope.formRadioButtonsList.length;i++) {
+            if(($scope.formRadioButtonsList)[i].label == radioLabel.toLowerCase()) {
+                canAdd = false;
+            }
+        }
+
+        if(radioLabel != "" && canAdd) {
+            $scope.formRadioButtonsList.push({label: radioLabel.toLowerCase()});
+            (angular.element.find('#formRadioButtonInput'))[0].text = "";
+        }
+    };
+
+    $scope.addNewCheckBoxButton = function(checkboxLabel) {
+        var canAdd = true;
+
+        for(var i=0;i<$scope.formCheckBoxButtonsList.length;i++) {
+            if(($scope.formCheckBoxButtonsList)[i].label == checkboxLabel.toLowerCase()) {
+                canAdd = false;
+            }
+        }
+
+        if(checkboxLabel != "" && canAdd) {
+            $scope.formCheckBoxButtonsList.push({label: checkboxLabel.toLowerCase()});
+            (angular.element.find('#formCheckBoxButtonInput'))[0].text = "";
+        }
+    };
+
+    $scope.deleteRadioButton = function (selectedItem) {
+        console.log(selectedItem.label);
+    };
+
+
+    $scope.postFormItem = function(formdata) {
+
+        var data = {
+            survey_id: $scope.currentSelectedSurvey._id,
+            type: $scope.formItemType
+        };
+
+        var valid = false;
+        switch($scope.formItemType) {
+
+            case 'TextField':
+                if(formdata != undefined && formdata != "") {
+                    data.label = formdata;
+                    valid = true;
+                }
+
+                break;
+            case 'TextArea':
+                if(formdata != undefined && formdata != "") {
+                    data.label = formdata;
+                    valid = true;
+                }
+
+                break;
+            case 'RadioButtons':
+                if(formdata != undefined && formdata != "" && $scope.formRadioButtonsList.length > 0) {
+                    data.label = formdata;
+                    data.options = $scope.formRadioButtonsList;
+                    valid = true;
+                }
+
+                break;
+            case 'Checkboxes':
+                if(formdata != undefined && formdata != "" && $scope.formCheckBoxButtonsList.length > 0) {
+                    data.label = formdata;
+                    data.options = $scope.formCheckBoxButtonsList;
+                    valid = true;
+                }
+
+                break;
+        }
+
+        if(valid) {
+            iObserveData.doNewQuestion(data).then(function (args) {
+                var acceptedQuestion = args[0];
+                var statusCode = args[1];
+
+                if(Number(statusCode) == 200) {
+                    $scope.currentSelectedSurvey.questions.push(acceptedQuestion);
+                    $scope.formItemType = "";
+                }
+            });
+        }
+    };
+
+    $scope.deleteQuestion = function(quest_id) {
+
+        iObserveData.doDeleteQuestion(quest_id).then(function (args) {
+            var statusCode = args[1];
+
+            if(Number(statusCode) == 200) {
+                for(var i=0; i < ($scope.currentSelectedSurvey.questions).length; i++) {
+                    if(quest_id == ($scope.currentSelectedSurvey.questions)[i]._id) {
+                        $scope.currentSelectedSurvey.questions.splice(i, 1);
+                    }
+                }
+            }
+        });
+    };
+
+    $scope.deleteSurvey = function(survey_id) {
+
+        iObserveData.doDeleteSurvey(survey_id).then(function (args) {
+            var statusCode = args[1];
+
+            if(Number(statusCode) == 200) {
+                for(var i=0; i < ($scope.surveys).length; i++) {
+                    if(survey_id == ($scope.surveys)[i]._id) {
+                        $scope.surveys.splice(i, 1);
+                    }
+                }
+
+                $scope.currentSelectedSurvey = undefined;
+                $scope.refreshSurveys();
+
+            }
+        });
     };
 });

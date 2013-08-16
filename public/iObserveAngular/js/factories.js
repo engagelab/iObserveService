@@ -74,11 +74,25 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
 
         return obj;
     }
+
+    var getRandomUUID = function() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    };
+
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
+
+
     return {
         timeConverter : timeConverter,
         timeConverterShort : timeConverterShort,
         tDiff : tDiff,
-        loadJSONFile: loadJSONFile
+        loadJSONFile: loadJSONFile,
+        getRandomUUID: getRandomUUID
+
     }
 });
 
@@ -292,6 +306,42 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestNewQuestionObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.post(routePrePath + "/survey/" + data.survey_id + "/question", data, getConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestDeleteQuestionObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.delete(routePrePath + "/question/"+data, deleteConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestDeleteSurveyObject = function(data) {
+        var deferred = $q.defer();
+
+        $http.delete(routePrePath + "/survey/"+data, deleteConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -314,7 +364,10 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         doGetResources: requestListResourcesObject,
         doUpdateSpaceResources: requestUpdateSpaceResourcesObject,
         doNewResource: requestNewResourceObject,
-        doNewSurvey: requestNewSurveyObject
+        doNewSurvey: requestNewSurveyObject,
+        doNewQuestion: requestNewQuestionObject,
+        doDeleteQuestion: requestDeleteQuestionObject,
+        doDeleteSurvey: requestDeleteSurveyObject
     }
 });
 
