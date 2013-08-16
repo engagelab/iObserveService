@@ -13,12 +13,18 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         .attr("top", 45);
 
     var processData = function () {
-        var xPrev = 0, yPrev = 0;
+        //var xPrev = 0, yPrev = 0;
+
+        var xPrev = [ 0, 0, 0, 0];
+        var yPrev = [ 0, 0, 0, 0];
+
         var relativeCreationTime = 0;
         if($scope.chartData.length > 0) {
             firstEventCreationTime = moment.unix($scope.chartData[0].created_on);
-            xPrev = $scope.chartData[0].xpos;
-            yPrev = $scope.chartData[0].ypos;
+            var xPrevStart = $scope.chartData[0].xpos;
+            var yPrevStart = $scope.chartData[0].ypos;
+            xPrev = [xPrevStart,xPrevStart,xPrevStart,xPrevStart];
+            yPrev = [yPrevStart,yPrevStart,yPrevStart,yPrevStart];
         }
         for(var i=0; i<$scope.chartData.length; i++) {
             var event = $scope.chartData[i];
@@ -27,28 +33,35 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                 var interaction = event.interactions[j];
                 for(var k=0;  k<interaction.visitors.length; k++) {
                     var visitor = interaction.visitors[k];
+                    var col = iObserveUtilities.decColor2hex(visitor.color);
+                    var vIndex = interaction.visitors.indexOf(visitor);
                     var eventDataPoint = {
                         eventIndex : i,
-                        visitorIndex : interaction.visitors.indexOf(visitor),
+                        visitorIndex : vIndex,
                         relativeCreationTime : relativeCreationTime,
                         x : event.xpos,
                         y : event.ypos,
                         radius : 5,
-                        color : iObserveUtilities.decColor2hex(visitor.color),
+                        color : col,
                         sex: visitor.sex,
                         age: visitor.age,
                         nationality : visitor.nationality
                     }
+                    var linkDataPoint = {
+                        eventIndex : i,
+                        visitorIndex : vIndex,
+                        relativeCreationTime : relativeCreationTime,
+                        x : event.xpos,
+                        y : event.ypos,
+                        xPrev : xPrev[k],
+                        yPrev : yPrev[k],
+                        color : col
+                    }
                     chartData.push(eventDataPoint);
+                    linkData.push(linkDataPoint);
+                    xPrev[k] = event.xpos;
+                    yPrev[k] = event.ypos;
                 }
-            }
-            var linkDataPoint = {
-                eventIndex : i,
-                relativeCreationTime : relativeCreationTime,
-                x : event.xpos,
-                y : event.ypos,
-                xPrev : xPrev,
-                yPrev : yPrev
             }
             var linkCircleDataPoint = {
                 eventIndex : i,
@@ -56,10 +69,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                 x : event.xpos,
                 y : event.ypos
             }
-            linkData.push(linkDataPoint);
             linkCircleData.push(linkCircleDataPoint);
-            xPrev = event.xpos;
-            yPrev = event.ypos;
         }
         lastEventCreationTime = event.created_on;
     };
@@ -115,11 +125,12 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             .enter()
             .append("svg:line")
             .attr("class", "eventLink")
+            // Exclude drawing a line to the first event point
+            .filter(function(d, i) { return i > 3; })
             .attr("marker-end", "url(#arrowGray)")
-            .filter(function(d, i) { return i != 0; })
-            .attr("x1", function(d) { return d.xPrev})
+            .attr("x1", function(d) { return d.xPrev + d.visitorIndex*2})
             .attr("y1", function(d) { return d.yPrev})
-            .attr("x2", function(d) { return d.x})
+            .attr("x2", function(d) { return d.x + d.visitorIndex*2})
             .attr("y2", function(d) { return d.y})
             .attr("display", function(d) { return d.eventIndex <= 0 ? "inline" : "none"})
             .attr("stroke-width", 2)
@@ -163,7 +174,9 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                     svg.selectAll(".eventCircle")
                         .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"});
                     svg.selectAll(".eventLink")
-                        .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"});
+                        .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"})
+                        .style("stroke", function(d) { return d.color; })
+                        .select("marker").attr("fill", function(d) { return d.color; });
                     svg.selectAll(".linkCircle")
                         .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"})
                 }
