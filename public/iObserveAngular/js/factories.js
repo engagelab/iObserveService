@@ -110,8 +110,7 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         timeConverterShort : timeConverterShort,
         tDiff : tDiff,
         loadJSONFile: loadJSONFile,
-        getRandomUUID: getRandomUUID
-
+        getRandomUUID: getRandomUUID,
         decColor2hex : decColor2hex,
         tDiffMoment: tDiffMoment,
         loadJSONFile: loadJSONFile

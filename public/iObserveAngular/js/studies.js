@@ -532,7 +532,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
 
     $scope.editSurvey = function(s) {
-        console.log(s);
         $scope.isSurveySelected = false;
         $scope.currentSelectedSurvey = s;
         $scope.formItemType = "";
