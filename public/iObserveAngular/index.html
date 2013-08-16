@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8">
 <title>iObserve</title>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/bootstrap.css" media="screen">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/loginStyle.css">
 
+    <!-- Local StyleSheets -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/loginStyle.css">
+    <link rel="stylesheet" href="css/dragdealer.css">
 
     <!-- External live-loaded dependencies-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
@@ -15,9 +17,10 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="http://mgcrea.github.com/angular-strap/js/angular-strap.js"></script>
-    <script src="http://mbostock.github.com/d3/d3.js"></script>
+    <!--script src="http://mbostock.github.com/d3/d3.js"></script-->
 
     <!-- External fixed dependencies -->
+    <script src="js/charts/libs/d3.v3.min.js"></script>
     <script src="js/libs/angular-resource.js"></script>
     <script src="js/libs/angular-sanitize.js"></script>
     <script src="js/libs/ui-bootstrap-tpls-0.5.0.js"></script>
@@ -25,6 +28,7 @@
     <script src="js/libs/showdown.js"></script>
     <script src="js/libs/moment.js"></script>
     <script src="js/libs/ng-upload.js"></script>
+    <script src="js/libs/dragdealer.js"></script>
 
     <!--  External Chart Scripts -->
     <link rel="stylesheet" href="js/charts/libs/d3-parsets-master/d3.parsets.css">
@@ -43,6 +47,7 @@
     <script src="js/charts/demographics.js"></script>
     <script src="js/charts/parallelSets.js"></script>
     <script src="js/charts/positionOverTime.js"></script>
+    <script src="js/charts/frequencyMap.js"></script>
 
 </head>
 <body ng-app="iObserveApp">

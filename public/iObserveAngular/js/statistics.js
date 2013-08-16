@@ -8,6 +8,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.sessionInfoListButton = 0;
     $scope.sessionSequenceRequested = false;
     $scope.sessionSequenceButton = 0;
+    $scope.chartPartialLoaded = false;
 
     $scope.chartRequested = false;
     $scope.showChart = false;
@@ -21,29 +22,33 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.timeConverterShort = iObserveUtilities.timeConverterShort;
     $scope.tDiff = iObserveUtilities.tDiff;
-/*
-    $scope.chartDialogOpts = {
-        backdrop: true,
-        keyboard: true,
-        backdropClick: true,
-        templateUrl:  'default.html',
-        controller: 'TestDialogController',
-        resolve: {
-            chartData: function() {
-                return $scope.chartData;
-            }
-        }
-    };
-*/
+    $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
 
+    $scope.showSessionList = false;
+
+    var activeStudyButton = null;
+    var activeRoomButton = null;
+    var activeSessionButton = null;
+
+    $scope.partialLoaded = function () {
+        $scope.chartPartialLoaded = true;
+    }
 
     $scope.foldRooms = function($study, e) {
+        $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
+        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeStudyButton = $(e.target).closest('button');
+        $scope.sessionSequenceRequested = false;
+        $scope.chartShortName = "";
+        $scope.chartRequested = false;
         if($scope.currentStudy == $study || $scope.roomListRequested == false) {
             if($scope.roomListRequested == true) {
                 $scope.roomListRequested = false;
                 $scope.sessionListRequested = false;
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
+                $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
                 $scope.roomListRequested = true;
@@ -52,48 +57,87 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                     $scope.rooms = resultData;
                 })
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+        }
+        else {
+            $scope.roomListRequested = false;
+            $scope.sessionListRequested = false;
+            $scope.sessionInfoListRequested = false;
+            $scope.foldRooms($study, e);
         }
     };
 
     $scope.foldSessions = function($room, e) {
+        $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
+        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeStudyButton.removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeRoomButton = $(e.target).closest('button');
+        $scope.sessionSequenceRequested = false;
+        $scope.chartShortName = "";
+        $scope.chartRequested = false;
         if($scope.currentRoom == $room || $scope.sessionListRequested == false) {
             if($scope.sessionListRequested == true) {
                 $scope.sessionListRequested = false;
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
+                $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
-                $scope.sessionListRequested = true;
+                $scope.sessionListRequested = false;
                 $scope.currentRoom = $room;
                 iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
                     $scope.sessions = resultData;
+                    $scope.sessionListRequested = true;
+                    if($scope.sessions.length > 0)
+                        $scope.showSessionList = true;
                 })
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+        //    $(angular.element(e.target)).parent().siblings().toggleClass('selected');
+        }
+        else {
+            $scope.sessionListRequested = false;
+            $scope.sessionInfoListRequested = false;
+            //   $scope.roomListButton = 0;
+            $scope.foldSessions($room, e);
         }
     };
 
     $scope.foldSessionInfo = function($session, e) {
+        $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
+        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeStudyButton.removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeRoomButton.removeClass("btn-info").addClass("btn-success").addClass("active");
+        activeSessionButton = $(e.target).closest('button');
+        $scope.sessionSequenceRequested = false;
+        $scope.chartShortName = "";
+        $scope.chartRequested = false;
         if($scope.currentSession == $session || $scope.sessionInfoListRequested == false) {
             if($scope.sessionInfoListRequested == true) {
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
+                $scope.chartPartialLoaded = false;
+                $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
-                $scope.sessionInfoListRequested = true;
+                $scope.sessionInfoListRequested = false;
                 $scope.currentSession = $session;
                 iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
                     $scope.chartData = resultData;
+                    $scope.sessionInfoListRequested = true;
                 });
             }
-            $(angular.element(e.target)).closest("div").toggleClass('selected');
+         //   $(angular.element(e.target)).parent().siblings().toggleClass('selected');
+        }
+        else {
+            $scope.sessionInfoListRequested = false;
+            //   $scope.roomListButton = 0;
+            $scope.foldSessionInfo($session, e);
         }
     };
 
     $scope.displaySessionSequence = function(e) {
         $scope.sessionSequenceRequested = !$scope.sessionSequenceRequested;
-      //  $(angular.element(e.target)).closest("div").toggleClass('selected');
+        $(e.target).closest('button').toggleClass("btn-info").toggleClass("btn-success");
     }
 
     $scope.displayChart = function($chart) {
@@ -103,7 +147,6 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
     //    openDialog();
     };
-
 
 /*
     $scope.$watch('chartData', function(chartData) {

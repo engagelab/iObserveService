@@ -43,6 +43,13 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         return moment.unix($ts).format("h:mm:ss a");
     };
 
+    var tDiffMoment = function ($a,$b) {
+        var a = moment.unix($a);
+        var b = moment.unix($b);
+        var difference = b.diff(a);
+        return moment.duration(difference, "milliseconds").humanize();
+    }
+
     var tDiff = function($a,$b) {
         var a = new Date($a*1000);
         var b = new Date($b*1000);
@@ -86,6 +93,18 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
     };
 
 
+
+    var decColor2hex = function (color){
+        // input:   (String) decimal color (i.e. 16711680)
+        // returns: (String) hex color (i.e. 0xFF0000)
+        var colorNumber = new Number(color);
+        var colArr = colorNumber.toString(16).toUpperCase().split('');
+        var numChars = colArr.length;
+        for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
+        var result = '#' + colArr.join('');
+        return result;
+    }
+
     return {
         timeConverter : timeConverter,
         timeConverterShort : timeConverterShort,
@@ -93,12 +112,28 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         loadJSONFile: loadJSONFile,
         getRandomUUID: getRandomUUID
 
+        decColor2hex : decColor2hex,
+        tDiffMoment: tDiffMoment,
+        loadJSONFile: loadJSONFile
     }
 });
 
 iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
+
+    var requestEventsForSpaceAndRoom = function(space_id, room_id) {
+        var deferred = $q.defer();
+        var route = routePrePath + "/space/" + space_id + "/" + room_id + "/events";
+
+        $http.get(route, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
 
     var requestSessionsForSpaceAndRoom = function(space_id, room_id) {
         var deferred = $q.defer();
@@ -350,6 +385,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
 
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
+        doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,
         doGetStudies: requestStudyListObject,
         doGetRoomsForSpace: requestRoomsForSpace,
         doNewStudy: requestNewStudyObject,

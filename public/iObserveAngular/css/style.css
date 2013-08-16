@@ -96,6 +96,12 @@ a {
     float: right;
 }
 
+#statChartDiv {
+    display: block;
+    clear: both;
+    height: 100%;
+}
+
 .eventListingScrollable {
     height: 200px; overflow-y: scroll;
 }

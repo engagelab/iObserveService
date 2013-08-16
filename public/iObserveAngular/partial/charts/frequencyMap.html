@@ -1,25 +1,18 @@
-<div ng-controller="ChartCtrl-positionOverTime">
+<div ng-controller="ChartCtrl-frequencyMap">
     <div class="modal-header">
-        <h3>Position over Time</h3>
+        <h3>Frequency Map</h3>
     </div>
     <div class="chart">
         <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
         <div id="chart" style="position: absolute; width:1024px; height:723px; top: 80px; z-index: 2;"></div>
-        <div id="eventSlider" class="dragdealer" style="width:1024px; top:10px;">
-            <div id="eventSliderBar" class="red-bar handle"></div>
-        </div>
     </div>
-    <!--div class="layout-slider" style="width:1024px;">
-        <input id="SliderSingle" type="slider" name="events" value="0" />
-    </div-->
-
-    <!--div class="filter_options">
+    <div class="filter_options">
         <form>
-            <b>Event series:</b></br>
+            <b>Session series:</b></br>
             <span ng-repeat="session in sessionDetails">
                 <input class="filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
             </span>
         </form>
         Darker circles represent multiple visitors (up to four). Larger circles indicate multiple interactions at a location.
-    </div-->
+    </div>
 </div>
