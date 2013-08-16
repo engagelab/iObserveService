@@ -11,7 +11,7 @@
 
     <br>
     <ul>
-        <li ng-repeat="study in studies" ng-click="unfoldSessions(study)"><button class="btn" ng-click="openRemoveStudy(study)"><i class="icon-minus"></i></button><a href="">&nbsp;&nbsp;Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Survey(s): {{ study.surveys.length }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
+        <li ng-repeat="study in studies" ng-click="expandStudy(study)"><button class="btn" ng-click="deleteStudy(study)"><i class="icon-minus"></i></button><a href="">&nbsp;&nbsp;Created: {{ timeConverter(study.created_on) }} | {{ study.label }} | Survey(s): {{ study.surveys.length }} | Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</a></li>
     </ul>
     <br>
     <br>
@@ -98,11 +98,9 @@
                                             <input id="formCheckBoxButtonInput" type="text" ng-model="formCheckBoxButtonsLabel" placeholder="Button name" style="margin-bottom: 0; width: 100px">&nbsp;&nbsp;<button class="btn btn-primary" ng-click="addNewCheckBoxButton(formCheckBoxButtonsLabel)">Add</button>
                                         </div>
                                         <div style="margin-top: 10px">
-                                            <select size="2" ng-model="selectedCheckBoxItem" style="height: 200px">
-                                                <option ng-repeat="item in formCheckBoxButtonsList">{{ item.label }}</option>
-                                            </select>
+                                            <select size="2" ng-model="checkboxitem" style="height: 200px" ng-options="checkboxitem.label for checkboxitem in formCheckBoxButtonsList" ></select>
                                             <br />
-                                            <button style="width: 220px">Delete selected</button>
+                                            <button style="width: 220px" ng-click="deleteCheckBoxButton(checkboxitem)">Delete selected</button>
                                         </div>
                                     </div>
                                     <div style="clear: both">

@@ -331,8 +331,8 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
     var requestNewSurveyObject = function(data) {
         var deferred = $q.defer();
 
-        $http.post(routePrePath + "/space/" + data.study_id + "/survey", data, getConfiguration).success(function(data) {
-            deferred.resolve(data);
+        $http.post(routePrePath + "/space/" + data.study_id + "/survey", data, getConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
                 deferred.reject();
