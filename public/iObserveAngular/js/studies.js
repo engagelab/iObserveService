@@ -393,7 +393,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //delete radiobutton option
     $scope.deleteRadioButton = function (selectedItem) {
-        //TODO
+        if(selectedItem != undefined) {
+            for(var i=0; i < $scope.formRadioButtonsList.length; i++) {
+                if(($scope.formRadioButtonsList)[i].label == selectedItem.label) {
+                    $scope.formRadioButtonsList.splice(i, 1);
+                }
+            }
+        }
     };
 
     // add new checkbox button option
@@ -414,7 +420,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //delete radiobutton option
     $scope.deleteCheckBoxButton = function (selectedItem) {
-        //TODO
+        if(selectedItem != undefined) {
+            for(var i=0; i < $scope.formCheckBoxButtonsList.length; i++) {
+                if(($scope.formCheckBoxButtonsList)[i].label == selectedItem.label) {
+                    $scope.formCheckBoxButtonsList.splice(i, 1);
+                }
+            }
+        }
     };
 
     //delete selected question
