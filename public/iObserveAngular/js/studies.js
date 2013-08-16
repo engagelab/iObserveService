@@ -53,6 +53,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.formRadioButtonsList = new Array();
     $scope.formCheckBoxButtonsList = new Array();
     $scope.formItemType = "";
+    var activeStudyButton = null;
+    $scope.expandStudyButton = 0;
 
     iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
@@ -113,6 +115,17 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
      Study
 
      */
+    //toggle add study
+    $scope.toggleAddStudy = function() {
+        if($scope.isAddStudyCollapsed) {
+            $scope.isAddStudyCollapsed = false;
+            $("#addStudyButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+        }
+        else {
+            $scope.isAddStudyCollapsed = true;
+            $("#addStudyButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+        }
+    }
 
     //create study
     $scope.createNewStudy = function () {
@@ -204,7 +217,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     }
 
     //expand study
-    $scope.expandStudy = function ($study) {
+    $scope.expandStudy = function ($study, e) {
+        $(".studynav").addClass("btn-info").removeClass("btn-success").removeClass("active");
+        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
+        //activeStudyButton = $(e.target).closest('button');
+
         $scope.currentStudy = $study;
         $scope.isStudyChosen = true;
         $scope.isSpaceActionsEmpty = true;
@@ -238,12 +255,14 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     //frefresh surveys
     $scope.refreshSurveys = function () {
         $scope.survey = $scope.surveys[0];
-        if ($scope.surveys.length == 0) {
-            (angular.element.find('#surveyEditDiv'))[0].style.visibility = "hidden";
-        }
-        else {
-            (angular.element.find('#surveyEditDiv'))[0].style.visibility = "visible";
-            $scope.editSurvey($scope.survey);
+        if($scope.studyTabs.activeTab == 0) {
+            if ($scope.surveys.length == 0) {
+                (angular.element.find('#surveyEditDiv'))[0].style.visibility = "hidden";
+            }
+            else {
+                (angular.element.find('#surveyEditDiv'))[0].style.visibility = "visible";
+                $scope.editSurvey($scope.survey);
+            }
         }
     };
 

@@ -147,3 +147,7 @@ text {
     background-color: blue;
   }
 */
+
+.studiesListItem {
+    list-style: none;
+}

@@ -14,8 +14,8 @@ require 'logger'
 class Iobserve < Sinatra::Application
   #$log = Logger.new('./logs/output.log')
 
-  #set :environment, :development
-  set :environment, :production
+  set :environment, :development
+  #set :environment, :production
 
   #set :sessions, true
   #set :session_secret, 'super secret'
