@@ -35,7 +35,7 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
     var theChart = d3.parsets()
         .dimensions(["Sex", "Age", "Nationality", "Action", "Resource"]);
 
-    var svg = d3.select("#chart")
+    var svg = d3.select("#chartParallelSets")
         .append("svg")
         .attr("width", theChart.width())
         .attr("height", theChart.height());

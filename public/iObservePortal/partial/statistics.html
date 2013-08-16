@@ -5,8 +5,7 @@
             <ul>
                 <li ng-repeat="study in studies">
                     <div>
-                        <button type="button" class="btn btn-info btn-mini" ng-model="studyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldStudyChart(study)"><i class="icon-signal"></i></button>
-                        <button type="button" class="btn btn-info btn-mini" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="icon-calendar"></i></button>
+                        <button type="button" class="btn btn-info btn-mini" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="icon-folder-open-alt"></i></button>
                         <span><b> {{ study.label }} </b></span></br>
                         <span>Session(s): {{ study.sessionob_ids.length }} | Room(s): {{ study.room_ids.length }}</span>
                         <p>{{ timeConverter(study.created_on) }}</p>
@@ -21,7 +20,7 @@
                 <ul>
                     <li ng-repeat="room in rooms">
                         <div>
-                            <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-calendar"></i></button>
+                            <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-folder-open-alt"></i></button>
                             <span><b> {{ room.label }} </b></span></br>
                             <p>Sessions(s):{{ currentStudy.sessionob_ids.length }}</p>
                         </div>
@@ -34,8 +33,9 @@
                 <h3>Sessions</h3>
                     <h4>Charts</h4>
                     <ul>
-                        <li ng-repeat="chart in chartList.content.roomChartList">
-                            <a ng-click="displayChart(chart)">{{ chart.name }}</a>
+                        <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
+                            <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
+                            <span><b>{{ chart.name }}</b></span></br>
                         </li>
                     </ul>
                     <ul>
@@ -62,11 +62,12 @@
                         <p>Event(s): {{ currentSession.eventob_ids.length }}</p>
                         <h4>Charts for Session {{ sessions.indexOf(currentSession) }}</h4>
                         <ul>
-                            <li ng-repeat="chart in chartList.content.sessionChartList">
-                                <a ng-click="displayChart(chart)">{{ chart.name }}</a>
+                            <li ng-repeat="chart in chartList.content.sessionChartList" style="margin-top: 5px;">
+                                <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
+                                <span><b>{{ chart.name }}</b></span></br>
                             </li>
                         </ul>
-                        <button type="button" class="btn btn-info btn-mini" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-tasks"></i></button>
+                        <button type="button" class="btn btn-info btn-mini" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-th-list"></i></button>
                         <span><b>Events Listing</b></span></br><br/>
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">

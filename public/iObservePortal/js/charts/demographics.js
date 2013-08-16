@@ -181,7 +181,7 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope) {
         chart.yAxis
             .tickFormat(d3.format(',d'));
 
-        d3.select('#chart')
+        d3.select('#chartDemographics')
             .append("svg")
             .datum(chartData)
             .transition().duration(500)

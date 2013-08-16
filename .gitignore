@@ -12,10 +12,6 @@ public/iObserveAngular/js/libs/jquery.slider.min.js
 
 public/iObserveAngular/js/libs/jquery.slider.min.js
 
-public/iObserveAngular/css/bootstrap(old).css
-
-public/iObserveAngular/css/bootstrap(slate).css
-
 public/iObserveAngular/img/chart.png
 
 public/iObserveAngular/img/session.png
@@ -29,17 +25,3 @@ public/iObserveAngular/partial/charts/css/jslider.plastic.css
 public/iObserveAngular/partial/charts/css/jslider.round.css
 
 public/iObserveAngular/partial/charts/css/jslider.round.plastic.css
-
-public/iObserveAngular/partial/charts/js/draggable-0.1.js
-
-public/iObserveAngular/partial/charts/js/jquery-1.7.1.js
-
-public/iObserveAngular/partial/charts/js/jquery.dependClass-0.1.js
-
-public/iObserveAngular/partial/charts/js/jquery.numberformatter-1.2.3.js
-
-public/iObserveAngular/partial/charts/js/jquery.slider.js
-
-public/iObserveAngular/partial/charts/js/jshashtable-2.1_src.js
-
-public/iObserveAngular/partial/charts/js/tmpl.js

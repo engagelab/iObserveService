@@ -6,15 +6,17 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
     var firstEventCreationTime = null;
     var lastEventCreationTime = 0;
 
+    // Set up the basic D3 drawing area
     var svg = d3.select("#chart")
         .append("svg")
         .attr("width", 1024)
         .attr("height", 723)
         .attr("top", 45);
 
+    // Iterate through the server's data response and take what's needed
     var processData = function () {
-        //var xPrev = 0, yPrev = 0;
 
+        // Set up initial values
         var xPrev = [ 0, 0, 0, 0];
         var yPrev = [ 0, 0, 0, 0];
 
@@ -26,18 +28,35 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             xPrev = [xPrevStart,xPrevStart,xPrevStart,xPrevStart];
             yPrev = [yPrevStart,yPrevStart,yPrevStart,yPrevStart];
         }
+
+        // Iterate through Events
         for(var i=0; i<$scope.chartData.length; i++) {
             var event = $scope.chartData[i];
             relativeCreationTime = getRelativeCreationTime(event.created_on);
+            var uniqueVisitorList = [];
+            var storedVisitorsIds = [];
+
+            // Iterate through Interactions and Visitors and collect unique visitors for this event
             for(var j=0; j<event.interactions.length; j++) {
                 var interaction = event.interactions[j];
+
                 for(var k=0;  k<interaction.visitors.length; k++) {
                     var visitor = interaction.visitors[k];
+                    if(storedVisitorsIds.indexOf(visitor._id) == -1) {
+                        uniqueVisitorList.push(visitor);
+                        storedVisitorsIds.push(visitor._id);
+                    }
+                }
+            }
+
+            // Set up the data points and lines, with locations, for each unique visitor
+            for(var v=0; v<uniqueVisitorList.length; v++) {
+                    var visitor = uniqueVisitorList[v];
                     var col = iObserveUtilities.decColor2hex(visitor.color);
-                    var vIndex = interaction.visitors.indexOf(visitor);
+                  //  var vIndex = storedVisitorsIds.indexOf(visitor._id);
                     var eventDataPoint = {
                         eventIndex : i,
-                        visitorIndex : vIndex,
+                        visitorIndex : v,
                         relativeCreationTime : relativeCreationTime,
                         x : event.xpos,
                         y : event.ypos,
@@ -49,19 +68,18 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                     }
                     var linkDataPoint = {
                         eventIndex : i,
-                        visitorIndex : vIndex,
+                        visitorIndex : v,
                         relativeCreationTime : relativeCreationTime,
                         x : event.xpos,
                         y : event.ypos,
-                        xPrev : xPrev[k],
-                        yPrev : yPrev[k],
+                        xPrev : xPrev[v],
+                        yPrev : yPrev[v],
                         color : col
                     }
                     chartData.push(eventDataPoint);
                     linkData.push(linkDataPoint);
-                    xPrev[k] = event.xpos;
-                    yPrev[k] = event.ypos;
-                }
+                    xPrev[v] = event.xpos;
+                    yPrev[v] = event.ypos;
             }
             var linkCircleDataPoint = {
                 eventIndex : i,
@@ -74,26 +92,26 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         lastEventCreationTime = event.created_on;
     };
 
+    // Calculate the time passed in seconds since the first event
     var getRelativeCreationTime = function (time) {
         var b = moment.unix(time);
         var difference = b.diff(firstEventCreationTime, 'seconds');
         return difference;
     }
 
-    var getEventRadius = function (event) {
-        return event.interactions.length * 5;
-    }
-
+    // Due to this chart being loaded via a partial, set up must be initiated after the partial is loaded so that DOM elements are available
     $scope.$watch('chartPartialLoaded', function(newValue) {
         iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
             $scope.sessionDetails = resultData.sessions;
             $scope.eventCollection = resultData.events;
             processData();
+            buildMarkers();
             drawChart();
          //   $timeout(assignCheckBoxes, 0);
         })
     });
 
+    // Offsets for each visitor calculated by unique index (currently up to four)
     var calculateClusterCoordinates = function (x,y,visitorIndex) {
         var newCoords = {x : 0, y : 0};
         switch(visitorIndex) {
@@ -105,20 +123,32 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         return newCoords;
     }
 
-    var drawChart = function () {
+    // Create the D3 arrow markers for different colours
+    var buildMarkers = function () {
+        var linkDataIndex = 0;
+        var eventIndex = linkData[linkDataIndex].eventIndex;
+        while(eventIndex == 0) {
 
-        svg.append("defs").append("svg:marker")
-            .attr("id", "arrowGray")
-            .attr("viewBox","0 0 10 10")
-            .attr("refX","30")
-            .attr("refY","5")
-            .attr("markerUnits","strokeWidth")
-            .attr("markerWidth","9")
-            .attr("markerHeight","5")
-            .attr("orient","auto")
-            .append("svg:path")
-            .attr("d","M 0 0 L 10 5 L 0 10 z")
-            .attr("fill", "black");
+            svg.append("defs").append("svg:marker")
+                .attr("id", "arrow"+linkData[linkDataIndex].color)
+                .attr("viewBox","0 0 10 10")
+                .attr("refX","30")
+                .attr("refY","5")
+                .attr("markerUnits","strokeWidth")
+                .attr("markerWidth","9")
+                .attr("markerHeight","5")
+                .attr("orient","auto")
+                .append("svg:path")
+                .attr("d","M 0 0 L 10 5 L 0 10 z")
+                .attr("fill", linkData[linkDataIndex].color);
+
+            linkDataIndex++;
+            eventIndex = linkData[linkDataIndex].eventIndex;
+        }
+    }
+
+    // Draw the D3 chart objects in the svg (layering over the floorplan graphic)
+    var drawChart = function () {
 
         var eventLink = svg.selectAll(".eventLink")
             .data(linkData)
@@ -126,15 +156,14 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             .append("svg:line")
             .attr("class", "eventLink")
             // Exclude drawing a line to the first event point
-            .filter(function(d, i) { return i > 3; })
-            .attr("marker-end", "url(#arrowGray)")
+            .filter(function(d, i) { return d.eventIndex != 0; })
+            .attr("marker-end", function(d) { return "arrow"+ d.color })
             .attr("x1", function(d) { return d.xPrev + d.visitorIndex*2})
             .attr("y1", function(d) { return d.yPrev})
             .attr("x2", function(d) { return d.x + d.visitorIndex*2})
             .attr("y2", function(d) { return d.y})
             .attr("display", function(d) { return d.eventIndex <= 0 ? "inline" : "none"})
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
+            .attr("stroke-width", 2);
 
         var linkCircle = svg.selectAll(".linkCircle")
             .data(linkCircleData)
@@ -160,7 +189,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             .attr("display", function(d) { return d.eventIndex <= 0 ? "inline" : "none"})
             .attr("fill", function(d) { return d.color; });
 
-        // Works by relative creation time from first event
+        // The slider (dragger) - Works by relative creation time from first event
         // Usage:  http://code.ovidiu.ch/dragdealer/
         new Dragdealer('eventSlider', {
                 horizontal: true,
@@ -170,19 +199,20 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                 animationCallback: function(x, y)
                 {
                     var totalSteps = getRelativeCreationTime(lastEventCreationTime);
-                    $("#eventSliderBar").html("<span>t: "+Math.round(x*totalSteps)+"s</span>");
+                    $("#eventSliderBar").html("<i class='icon-double-angle-left'></i>&nbsp<span>t: "+Math.round(x*totalSteps)+"s</span>&nbsp<i class='icon-double-angle-right'></i>");
                     svg.selectAll(".eventCircle")
                         .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"});
                     svg.selectAll(".eventLink")
                         .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"})
                         .style("stroke", function(d) { return d.color; })
-                        .select("marker").attr("fill", function(d) { return d.color; });
+                        .attr("marker-end", function(d) { return "url(#arrow"+d.color+")" })
+
                     svg.selectAll(".linkCircle")
                         .attr("display", function(d) { return d.relativeCreationTime <= x*totalSteps ? "inline" : "none"})
                 }
         });
 
-        /* Works by equally dividing by number of events
+        /* Alternative slider setup - works by equally dividing by number of events
         new Dragdealer('eventSlider', {
             horizontal: true,
             vertical: false,
