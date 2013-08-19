@@ -484,12 +484,6 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
     }
 
     return {
-        getNavigationState: function() {
-            return navigationState;
-        },
-        setNavigationState: function(divKey) {
-            navigationState = divKey;
-        },
         getLoginState: function() {
             return loginState;
         },

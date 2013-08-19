@@ -54,30 +54,13 @@
 
     <div ng-controller="NavCtrl">
 
-        <div class="navtabs">
-            <tabset>
-                <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" ng-click="activateTab()">{{tab.content}}</tab>
-            </tabset>
-        </div>
+        <tabset>
+            <tab ng-repeat="tab in tabs" select="checkSelectedTab(tab.title)" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
+            </tab>
+        </tabset>
 
-        <div>
-            <div ng-switch on="componentState" >
-                <div ng-switch-when="Register" ng-include="'partial/register.html'"></div>
-                <div ng-switch-when="About" ng-include="'partial/about.html'"></div>
-                <div ng-switch-when="Login" ng-include="'partial/login.html'"></div>
-                <div ng-switch-when="Profile" ng-include="'partial/profile.html'"></div>
-                <div ng-switch-when="Statistics" ng-include="'partial/statistics.html'"></div>
-                <div ng-switch-when="Studies" ng-include="'partial/studies.html'"></div>
-                <div ng-switch-default>Default</div>
-            </div>
-        </div>
-
+        <div ng-include src="activeTab().page"></div>
 
     </div>
-
-
-
-
-
 </body>
 </html>

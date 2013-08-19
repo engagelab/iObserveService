@@ -1,57 +1,42 @@
 iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
-    showHideNavTabs(false);
-
-    function showHideNavTabs(loginState) {
+    $scope.showHideNavTabs = function(loginState) {
         if(loginState) {
             $scope.tabs = [
-                { title:"iObserve", content:"", active: true },
-                { title:"Profile", content:"" },
-                { title:"Studies", content:"" },
-                { title:"Statistics", content:"" },
-                { title:"About", content:"" },
-                { title:"Logout", content:"" }
+                { title:"iObserve", content:"", page: '', active: true },
+                { title:"Profile", content:"", page: 'partial/profile.html' },
+                { title:"Studies", content:"", page: 'partial/studies.html' },
+                { title:"Statistics", content:"", page: 'partial/statistics.html' },
+                { title:"About", content:"", page: '' },
+                { title:"Logout", content:"", page: '' }
             ];
         }
         else {
             $scope.tabs = [
-                { title:"iObserve", content:"", active: true },
-                { title:"About", content:"" },
-                { title:"Login", content:"" },
-                { title:"Register", content:""}
+                { title:"iObserve", content:"", page: '', active: true },
+                { title:"About", content:"", page: 'partial/about.html' },
+                { title:"Login", content:"", page: 'partial/login.html' },
+                { title:"Register", content:"", page: 'partial/register.html'}
             ];
         }
     }
 
-    $scope.activateTab = function() {
-        var navState = $scope.tabs.filter(function(tab){
-            return tab.active;
-        })[0].title;
-        return navState;
-    }
+    $scope.showHideNavTabs(false);
 
-    $scope.loginState = iObserveStates.getLoginState;
-    $scope.$watch('loginState()', function(loginState) {
-        showHideNavTabs(loginState);
-    }, true);
-
-    $scope.$watch('activateTab()', function(navState) {
-        if(navState == "Logout") {
+    $scope.checkSelectedTab = function(title) {
+        if(title == "Logout") {
             iObserveStates.doUserLogout();
-            $scope.componentState = "iObserve";
+            $scope.showHideNavTabs(false);
         }
-        else {
-            iObserveStates.setNavigationState(navState);
-            $scope.componentState = navState;
-        }
-    });
-})
- /*
-    $scope.$on('handleBroadcast', function(event, args) {
-        $scope.message = 'ONE: ' + args.message;
-    });
-  */
-//.$inject = ['$scope'];
+    };
+
+    $scope.activeTab = function() {
+        return $scope.tabs.filter(function(tab){
+            return tab.active;
+        })[0];
+    };
+
+});
 
 
 iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
@@ -69,13 +54,13 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
         return true;
     }
 
-})//.$inject = ['$scope'];
+})
 
 
 iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
 
 
-})//.$inject = ['$scope'];
+})
 
 
 iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
@@ -85,6 +70,8 @@ $scope.logMeIn = function($event) {
         var data = {login_id : $scope.email, password: $scope.password};
         iObserveStates.doUserLogin(data).then(function(resultData) {
             $scope.resultData = resultData;
+            if($scope.resultData.token != null)
+                $scope.showHideNavTabs(true);
         });
     }
 }
@@ -93,7 +80,7 @@ function loginValidated() {
     return true;
 }
 
-})//.$inject = ['$scope'];
+})
 
 iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
@@ -122,7 +109,7 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
         getProfile();
     }
 
-})//.$inject = ['$scope'];
+})
 
 iObserveApp.controller('UserEditorController', function($scope) {
 

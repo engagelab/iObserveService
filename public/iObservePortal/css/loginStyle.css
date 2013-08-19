@@ -124,7 +124,7 @@ form.ng-invalid .btnManual[disabled], .btnManual {
 }
 
 body {
-    padding: 20px 0;
+/*    padding: 20px 0; */
 }
 input {
     width: 166px
