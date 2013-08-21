@@ -252,6 +252,19 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
      Survey
 
      */
+    //toggle add survey
+    $scope.toggleAddSurvey = function() {
+        if($scope.isAddSurveyCollapsed) {
+            $scope.isAddSurveyCollapsed = false;
+            $("#addSurveyButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+        }
+        else {
+            $scope.isAddSurveyCollapsed = true;
+            $("#addSurveyButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+        }
+    }
+
+
     //frefresh surveys
     $scope.refreshSurveys = function () {
         $scope.survey = $scope.surveys[0];
@@ -477,6 +490,18 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
 
      */
+    //toggle add study
+    $scope.toggleAddSpace = function() {
+        if($scope.isAddRoomCollapsed) {
+            $scope.isAddRoomCollapsed = false;
+            $("#addSpaceButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+        }
+        else {
+            $scope.isAddRoomCollapsed = true;
+            $("#addSpaceButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+        }
+    }
+
     // show space actions
     $scope.showActionSelector = function () {
         $scope.showSpaceActions = true;

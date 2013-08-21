@@ -139,7 +139,6 @@ text {
     top: 80px;
     left: 40px;
     z-index: 2;
-    float: left;
 }
 
 #statChartDiv {
@@ -163,4 +162,18 @@ text {
 }
 .visitor-color-15567670 {
     background-color: #ED8B36;
+}
+
+.studiesListItem {
+    list-style: none;
+}
+
+.collapsableStudyDiv {
+    background: #c0c0c0;
+    border:2px solid #33333;
+    border-radius:10px;
+}
+
+.innerCollapsableStudyDiv {
+    margin: 15px 15px 15px 15px;
 }
