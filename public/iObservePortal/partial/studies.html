@@ -2,9 +2,11 @@
     <div id="studyListHeader">
         <h2>Studies <button class="btn btn-info" ng-click="toggleAddStudy()"><i id="addStudyButton" class="icon-chevron-sign-down"></i></button></h2>
 
-        <div collapse="isAddStudyCollapsed">
-            <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
-            <button class="btn btn-primary" ng-click="createNewStudy()">create</button>
+        <div collapse="isAddStudyCollapsed" class="collapsableStudyDiv">
+            <div class="innerCollapsableStudyDiv">
+                <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
+                <button class="btn btn-primary" ng-click="createNewStudy()">create</button>
+            </div>
         </div>
         <hr>
     </div>
@@ -20,8 +22,6 @@
     <br>
     <br>
 
-
-
     <div ng-show="isStudyChosen">
         <div data-fade="1" ng-model="studyTabs.activeTab" bs-tabs>
             <div ng-repeat="tab in studyTabs" data-title="{{tab.title}}"></div>
@@ -29,13 +29,16 @@
 
         <div ng-switch on="studyTabs.activeTab" >
             <div ng-switch-when="0">
-                <h3>Survey  <button class="btn" ng-click="isAddSurveyCollapsed = !isAddSurveyCollapsed"><i class="icon-plus"></i></button></h3>
+                <h3>Survey  <button class="btn btn-info" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="icon-chevron-sign-down"></i></button></h3>
 
-                <div collapse="isAddSurveyCollapsed">
-                    <input type="text" ng-model="surveyLabel" placeholder="Survey label (optional)" style="margin-bottom: 0;">
-                    <button class="btn btn-primary" ng-click="createNewSurvey()">create</button>
+                <div collapse="isAddSurveyCollapsed" class="collapsableStudyDiv">
+                    <div class="innerCollapsableStudyDiv">
+                        <input type="text" ng-model="surveyLabel" placeholder="Survey label (optional)" style="margin-bottom: 0;">
+                        <button class="btn btn-primary" ng-click="createNewSurvey()">create</button>
+
+                    </div>
                 </div>
-                <div style="float: left;display: block">
+                <div style="margin-top: 15px; float: left;display: block">
 
                     <div style="min-height: 300px;float: left">
                         <select id="surveyList" size="2" style="width: 400px; min-height: 300px" ng-options="getFormattedSurvey(survey) for survey in surveys" ng-model="survey" ng-change="editSurvey(survey)"></select>
@@ -134,7 +137,7 @@
                 </div>
             </div>
             <div ng-switch-when="1">
-                <h3>Space  <button class="btn" ng-click="isAddRoomCollapsed = !isAddRoomCollapsed"><i class="icon-plus"></i></button>&nbsp;<button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button>&nbsp;<button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
+                <h3>Space  <button class="btn btn-info" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="icon-chevron-sign-down"></i></button><button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button><button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
 
                 <div modal="showSpaceActions" close="closeSpaceActions()" class="actionPickerDiv">
                     <div class="modal-header">
@@ -207,20 +210,21 @@
                     <div class="alert alert-error">Make sure to pick(create) resources for describing events. Click on "Resources" button to do so.</div>
                 </div>
 
-                <div collapse="isAddRoomCollapsed">
-                    <form action="/image" ng-upload id="imageUploaderForm">
-                        <div class="alert alert-info">Please not that images should be 1024px in width and 723px in height.</div>
-                        <div collapse="isWrongImageSize">
-                            <div class="alert alert-error">The width and height of the image you chose are not compatible.</div>
-                        </div>
-                        <input type="text" ng-model="roomLabel" placeholder="Room label" style="height: 30px"></input>
-                        <input id="imageFileInput" onchange="angular.element(this).scope().file_changed(this)" accept="image/*" type="file" name="file" class="btn"></input>
-                        <input class="btn btn-primary" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)"></input>
-                    </form>
+                <div collapse="isAddRoomCollapsed"  class="collapsableStudyDiv">
+                   <form action="/image" ng-upload id="imageUploaderForm" class="innerCollapsableStudyDiv">
+                            <div class="alert alert-info">Please not that images should be 1024px in width and 723px in height.</div>
+                            <div collapse="isWrongImageSize">
+                                <div class="alert alert-error">The width and height of the image you chose are not compatible.</div>
+                            </div>
+                            <input type="text" ng-model="roomLabel" placeholder="Room label" style="height: 30px"></input>
+                            <input id="imageFileInput" onchange="angular.element(this).scope().file_changed(this)" accept="image/*" type="file" name="file" class="btn"></input>
+                            <input class="btn btn-primary" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)"></input>
+                   </form>
+
                 </div>
 
-                <div>
-                    <div collapse="!isEditRoomCollapsed">
+                <div style="margin-top: 15px">
+                    <div collapse="!isEditRoomCollapsed" style="float: left">
                         <carousel interval="-1" class="studyCarousel">
                             <slide ng-repeat="room in rooms" active="room.active">
                                 <img ng-src="{{room.uri}}" style="margin:auto;" width="300px">
@@ -231,7 +235,17 @@
                                 </div>
                             </slide>
                         </carousel>
-
+                    </div>
+                    <div collapse="!isEditRoomCollapsed" style="float: right">
+                        <accordion close-others="true">
+                            <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
+                                <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
+                                <p>Duration: {{ tDiff(session.created_on, session.finished_on) }}</p>
+                                <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
+                                <p>Event(s): {{ session.eventob_ids.length }}</p>
+                                <img src="{{ session.storage.url }}" width="500px" />
+                            </accordion-group>
+                        </accordion>
                     </div>
                     <div collapse="isEditRoomCollapsed">
                         <button class="btn btn-primary" ng-click="showhideEditMode()">Save</button>
@@ -258,18 +272,7 @@
                          </div>
                     </div>
                 </div>
-                <br>
-                <br>
-                <h3>Sessions</h3>
-                <accordion close-others="true">
-                    <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
-                        <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
-                        <p>Duration: {{ tDiff(session.created_on, session.finished_on) }}</p>
-                        <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
-                        <p>Event(s): {{ session.eventob_ids.length }}</p>
-                        <img src="{{ session.storage.url }}" width="500px" />
-                    </accordion-group>
-                </accordion>
+
             </div>
         </div>
     </div>
