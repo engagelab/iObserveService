@@ -19,8 +19,13 @@
         },
         {
             "id": 5,
-            "name": "Frequency Map",
-            "shortName": "frequencyMap"
+            "name": "Frequency Map - Duration & Quantity",
+            "shortName": "frequencyMapDurationQuantity"
+        },
+        {
+            "id": 6,
+            "name": "Frequency Map - Actions & Resources",
+            "shortName": "frequencyMapActionsResources"
         }
     ]
 }

@@ -19,6 +19,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         // Set up initial values
         var xPrev = [ 0, 0, 0, 0];
         var yPrev = [ 0, 0, 0, 0];
+        var event = null;
 
         var relativeCreationTime = 0;
         if($scope.chartData.length > 0) {
@@ -28,10 +29,11 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             xPrev = [xPrevStart,xPrevStart,xPrevStart,xPrevStart];
             yPrev = [yPrevStart,yPrevStart,yPrevStart,yPrevStart];
         }
+        else return;
 
         // Iterate through Events
         for(var i=0; i<$scope.chartData.length; i++) {
-            var event = $scope.chartData[i];
+            event = $scope.chartData[i];
             relativeCreationTime = getRelativeCreationTime(event.created_on);
             var uniqueVisitorList = [];
             var storedVisitorsIds = [];
@@ -53,7 +55,6 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             for(var v=0; v<uniqueVisitorList.length; v++) {
                     var visitor = uniqueVisitorList[v];
                     var col = iObserveUtilities.decColor2hex(visitor.color);
-                  //  var vIndex = storedVisitorsIds.indexOf(visitor._id);
                     var eventDataPoint = {
                         eventIndex : i,
                         visitorIndex : v,

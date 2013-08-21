@@ -66,13 +66,13 @@ a {
 .colRooms
 {
     float: left;
-    width: 15%;
+    width: 10%;
 }
 
 .colSessions
 {
     float: left;
-    width: 15%;
+    width: 20%;
 }
 
 .last{
@@ -96,28 +96,10 @@ a {
     float: right;
 }
 
-#statChartDiv {
-    display: block;
-    clear: both;
-    height: 100%;
-}
-
 .eventListingScrollable {
     height: 200px; overflow-y: scroll;
 }
 
-.visitor-color-10012411 {
-    background-color: #98C6FB;
-}
-.visitor-color-6013275 {
-    background-color: #5BC15B;
-}
-.visitor-color-13778730 {
-    background-color: #D23F2A;
-}
-.visitor-color-15567670 {
-    background-color: #ED8B36;
-}
 
 
 body {
@@ -127,6 +109,17 @@ body {
 text {
     font: 12px sans-serif;
 }
+
+
+
+.studiesListItem {
+    list-style: none;
+}
+
+
+
+/****** CHARTING *******/
+
 
 .chartHolder {
     margin: 10px;
@@ -146,17 +139,28 @@ text {
     top: 80px;
     left: 40px;
     z-index: 2;
+    float: left;
+}
+
+#statChartDiv {
+    display: block;
+    clear: both;
+    height: 100%;
 }
 
 .chartDemographics svg {
     height: 500px;
 }
-/*
-.btn active {
-    background-color: blue;
-  }
-*/
 
-.studiesListItem {
-    list-style: none;
+.visitor-color-10012411 {
+    background-color: #98C6FB;
+}
+.visitor-color-6013275 {
+    background-color: #5BC15B;
+}
+.visitor-color-13778730 {
+    background-color: #D23F2A;
+}
+.visitor-color-15567670 {
+    background-color: #ED8B36;
 }

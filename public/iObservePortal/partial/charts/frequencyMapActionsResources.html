@@ -1,0 +1,34 @@
+<div ng-controller="ChartCtrl-frequencyMapActionsResources">
+    <div class="modal-header">
+        <h3>Frequency Map - Duration and Visitor Quantity</h3>
+    </div>
+    <div class="chart">
+        <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
+        <div id="chart" style="position: absolute; width:1024px; height:723px; top: 80px; z-index: 2;"></div>
+        <div id="eventSlider" class="dragdealer" style="width:1024px; top:10px; z-index: 3;">
+            <div id="eventSliderBar" class="red-bar handle"></div>
+        </div></br>
+    </div>
+    <span>Darker circles represent longer time durations, including travel from one event to the next.</span></br>
+    <span>Larger circles indicate multiple visitors (up to four).</span>
+    <div class="filter_options">
+        <form>
+            <b>Sessions:</b></br>
+            <span ng-repeat="session in sessionDetails">
+                <input class="session_filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
+            </span>
+        </form>
+        <form>
+            <b>Age Groups:</b></br>
+            <span ng-repeat="age in ageGroups">
+                <input class="age_filter_button" id="button_{{ageGroups.indexOf(age)}}" type="checkbox" value="{{age}}" label="{{ageGroups.indexOf(age)}}">&nbsp{{age}}<br>
+            </span>
+        </form>
+        <form>
+            <b>Nationalities:</b></br>
+            <span ng-repeat="nation in nationalities">
+                <input class="nation_filter_button" id="button_{{nationalities.indexOf(nation)}}" type="checkbox" value="{{nation}}" label="{{nationalities.indexOf(nation)}}">&nbsp{{nation}}<br>
+            </span>
+        </form>
+    </div>
+</div>
