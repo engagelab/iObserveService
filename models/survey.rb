@@ -7,6 +7,7 @@ class Survey
 
   has_many :questions
   field :questions, :type => Array, :default => []
+  field :answers, :type => Array, :default => []
   field :label, :type => String
   field :created_on, :type => Bignum
 end
