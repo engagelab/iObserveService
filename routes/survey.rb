@@ -65,6 +65,33 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  ##### Create a new question for this survey #####
+  post '/survey/:survey_id/answer' do
+    request.body.rewind  # in case someone already read it
+    content_type :json
+
+    begin
+      survey = Survey.find(params[:survey_id])
+    end
+
+    unless survey.nil? then
+      data = JSON.parse request.body.read
+
+      unless data.nil? then
+        unless data['answers'].nil? then
+          survey.answers << data['answers']
+          survey.save
+          status 200
+          return survey.to_json
+        end
+      end
+    else
+      status 404
+      return {"message" => "Survey not found"}.to_json
+    end
+  end
+
+
   ### list all surveys
   get '/survey' do
     content_type :json

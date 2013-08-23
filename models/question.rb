@@ -9,6 +9,5 @@ class Question
   field :type, :type => String
   field :label, :type => String
   field :options, :type => Array, :default => []
-  field :answers, :type => Array, :default => []
 
 end

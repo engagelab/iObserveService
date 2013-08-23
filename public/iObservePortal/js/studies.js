@@ -424,7 +424,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
 
         if (radioLabel != "" && canAdd) {
-            $scope.formRadioButtonsList.push({label: radioLabel.toLowerCase()});
+            $scope.formRadioButtonsList.push({label: radioLabel.toLowerCase(), uid: getID()});
             (angular.element.find('#formRadioButtonInput'))[0].text = "";
         }
     };
@@ -433,7 +433,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.deleteRadioButton = function (selectedItem) {
         if(selectedItem != undefined) {
             for(var i=0; i < $scope.formRadioButtonsList.length; i++) {
-                if(($scope.formRadioButtonsList)[i].label == selectedItem.label) {
+                if(($scope.formRadioButtonsList)[i].uid == selectedItem.uid) {
                     $scope.formRadioButtonsList.splice(i, 1);
                 }
             }
@@ -451,7 +451,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
 
         if (checkboxLabel != "" && canAdd) {
-            $scope.formCheckBoxButtonsList.push({label: checkboxLabel.toLowerCase()});
+            $scope.formCheckBoxButtonsList.push({label: checkboxLabel.toLowerCase(), uid: getID()});
             (angular.element.find('#formCheckBoxButtonInput'))[0].text = "";
         }
     };
@@ -460,7 +460,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.deleteCheckBoxButton = function (selectedItem) {
         if(selectedItem != undefined) {
             for(var i=0; i < $scope.formCheckBoxButtonsList.length; i++) {
-                if(($scope.formCheckBoxButtonsList)[i].label == selectedItem.label) {
+                if(($scope.formCheckBoxButtonsList)[i].uid == selectedItem.uid) {
                     $scope.formCheckBoxButtonsList.splice(i, 1);
                 }
             }
