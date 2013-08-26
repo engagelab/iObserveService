@@ -60,6 +60,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.studies = iObserveData.doGetStudies();
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
+    $scope.studyRefreshInterval = null
 
     $scope.dropdown = [
         {text: 'Textfield', click: "addSelectedQuestion('tf')"},
@@ -293,14 +294,20 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             var statusCode = args[1];
 
             if (Number(statusCode) == 200) {
-                $scope.studies = iObserveData.doGetStudies();
-                $scope.isAddRoomCollapsed = true;
-                $scope.isStudyChosen = false;
+                iObserveData.doGetStudies().then(function(data) {
+                    $scope.studies = data;
+                    $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                });
             }
         });
 
         $scope.surveyLabel = '';
-        $scope.isAddSurveyCollapsed = true;
+        $scope.toggleAddSurvey();
+    };
+
+    $scope.refreshSurvey = function () {
+        clearInterval($scope.studyRefreshInterval);
+        (angular.element.find('#'+$scope.currentStudy._id))[0].click();
     };
 
     //formatted survey name
@@ -481,6 +488,16 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 }
             }
         });
+    };
+
+    $scope.getFormattedQuestionOptions = function(questionOptionsObject) {
+
+        var options = "";
+        for(var i = 0; i<questionOptionsObject.length; i++) {
+            options = options + questionOptionsObject[i].label + ", ";
+        }
+
+        return options.substr(0, options.length-2);
     };
 
 
@@ -665,11 +682,12 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             if ($scope.uploadResponse._id != "") {
                 iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
                     if (resultData._id != "") {
-                        $scope.studies = iObserveData.doGetStudies();
-                        $scope.isAddRoomCollapsed = true;
-                        $scope.isStudyChosen = false;
-                        $scope.roomLabel = "";
-                        (angular.element.find('#imageUploaderForm'))[0].reset();
+                        iObserveData.doGetStudies().then(function(data) {
+                            $scope.studies = data;
+                            $scope.toggleAddSpace()
+                            $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                            (angular.element.find('#imageUploaderForm'))[0].reset();
+                        });
                     }
                 });
             }
@@ -699,10 +717,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $dialog.messageBox(title, msg, btns).open().then(function (result) {
             if (result == "ok") {
                 iObserveData.doDeleteRoom($selectedRoom._id).then(function (resultData) {
-                    console.log(resultData);
-                    $scope.studies = iObserveData.doGetStudies();
-                    $scope.isStudyChosen = false;
-                    $scope.roomToDelete = null;
+                    iObserveData.doGetStudies().then(function(data) {
+                        $scope.studies = data;
+                        $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                        (angular.element.find('#imageUploaderForm'))[0].reset();
+                    });
                 });
             }
             else {
