@@ -177,3 +177,8 @@ text {
 .innerCollapsableStudyDiv {
     margin: 15px 15px 15px 15px;
 }
+
+#studiesWrapper {
+    padding-right: 30px;
+    padding-left: 30px;
+}
