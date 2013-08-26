@@ -296,7 +296,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             if (Number(statusCode) == 200) {
                 iObserveData.doGetStudies().then(function(data) {
                     $scope.studies = data;
-                    $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                    $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                 });
             }
         });
@@ -305,7 +305,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.toggleAddSurvey();
     };
 
-    $scope.refreshSurvey = function () {
+    //activate current survey
+    $scope.activateCurrentSurvey = function () {
         clearInterval($scope.studyRefreshInterval);
         (angular.element.find('#'+$scope.currentStudy._id))[0].click();
     };
@@ -685,7 +686,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                         iObserveData.doGetStudies().then(function(data) {
                             $scope.studies = data;
                             $scope.toggleAddSpace()
-                            $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                            $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                             (angular.element.find('#imageUploaderForm'))[0].reset();
                         });
                     }
@@ -719,7 +720,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 iObserveData.doDeleteRoom($selectedRoom._id).then(function (resultData) {
                     iObserveData.doGetStudies().then(function(data) {
                         $scope.studies = data;
-                        $scope.studyRefreshInterval = setTimeout($scope.refreshSurvey, 1000);
+                        $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                         (angular.element.find('#imageUploaderForm'))[0].reset();
                     });
                 });
