@@ -16,7 +16,6 @@
         <div class="colRooms">
             <div collapse="!roomListRequested">
                 <h3>Rooms</h3>
-                <h4>Charts</h4>
                 <ul>
                     <li ng-repeat="chart in chartList.content.studyChartList" style="margin-top: 5px;">
                         <button type="button" class="btn btn-info btn-mini" ng-model="surveyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
@@ -37,7 +36,6 @@
         <div class="colSessions">
             <div collapse="!sessionListRequested" ng-show="showSessionList">
                 <h3>Sessions</h3>
-                    <h4>Charts</h4>
                     <ul>
                         <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
                             <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
