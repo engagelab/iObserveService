@@ -78,38 +78,26 @@ a {
 {
     float: left;
     width: 20%;
-    height: 100%;
-    display: table-cell;
-    padding: 0.5em;
 }
 
 .colRooms
 {
     float: left;
     width: 10%;
-    height: 100%;
     border-left: dotted;
-    display: table-cell;
-    padding: 0.5em;
 }
 
 .colSessions
 {
     float: left;
     width: 20%;
-    height: 100%;
     border-left: dotted;
-    display: table-cell;
-    padding: 0.5em;
 }
 
 .last{
     float: right;
     width: 45%;
-    height: 100%;
     border-left: dotted;
-    display: table-cell;
-    padding: 0.5em;
 }
 
 .col li {
@@ -123,7 +111,7 @@ a {
 }
 
 .innerColumnRight {
-    width: 39%;
+    width: 35%;
     display: inline-block;
     float: right;
 }
@@ -178,6 +166,7 @@ text {
     clear: both;
     height: 100%;
     border-top: dotted;
+    padding: 0.5em;
 }
 
 #chartSurvey {

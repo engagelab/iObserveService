@@ -1,5 +1,5 @@
 <div ng-controller="StatisticsCtrl">
-    <div style="display: block;">
+    <div>
         <div class="colStudies">
             <h3>Studies</h3>
             <ul>
@@ -15,6 +15,7 @@
         </div>
         <div class="colRooms">
             <div collapse="!roomListRequested">
+                <div style="margin: 0.5em">
                 <h3>Rooms</h3>
                 <ul>
                     <li ng-repeat="chart in chartList.content.studyChartList" style="margin-top: 5px;">
@@ -31,10 +32,12 @@
                         </div>
                     </li>
                 </ul>
+                </div>
             </div>
         </div>
         <div class="colSessions">
             <div collapse="!sessionListRequested" ng-show="showSessionList">
+                <div style="margin: 0.5em">
                 <h3>Sessions</h3>
                     <ul>
                         <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
@@ -51,12 +54,14 @@
                             </div>
                         </li>
                     </ul>
+                </div>
             </div>
         </div>
         <div class="last">
             <div collapse="!sessionInfoListRequested">
+                <div style="margin: 0.5em">
                 <h3>Session Information</h3>
-                    <div class="innerColumnLeft">
+                    <div class="innerColumnLeft" style="margin: 0.5em">
                         <img ng-src="{{ currentSession.storage.url }}" width="500px" />
                     </div>
                     <div class="innerColumnRight">
@@ -97,6 +102,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
