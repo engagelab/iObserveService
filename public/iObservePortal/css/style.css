@@ -77,24 +77,39 @@ a {
 .colStudies
 {
     float: left;
-    width: 15%;
+    width: 20%;
+    height: 100%;
+    display: table-cell;
+    padding: 0.5em;
 }
 
 .colRooms
 {
     float: left;
     width: 10%;
+    height: 100%;
+    border-left: dotted;
+    display: table-cell;
+    padding: 0.5em;
 }
 
 .colSessions
 {
     float: left;
     width: 20%;
+    height: 100%;
+    border-left: dotted;
+    display: table-cell;
+    padding: 0.5em;
 }
 
 .last{
     float: right;
-    width: 55%;
+    width: 45%;
+    height: 100%;
+    border-left: dotted;
+    display: table-cell;
+    padding: 0.5em;
 }
 
 .col li {
@@ -162,6 +177,12 @@ text {
     display: block;
     clear: both;
     height: 100%;
+    border-top: dotted;
+}
+
+#chartSurvey {
+    top: 80px;
+    left: 40px;
 }
 
 .chartDemographics svg {

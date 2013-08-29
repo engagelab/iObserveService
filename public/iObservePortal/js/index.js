@@ -7,7 +7,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
                 { title:"Profile", content:"", page: 'partial/profile.html' },
                 { title:"Studies", content:"", page: 'partial/studies.html' },
                 { title:"Statistics", content:"", page: 'partial/statistics.html' },
-                { title:"About", content:"", page: '' },
+                { title:"About", content:"", page: 'partial/about.html' },
                 { title:"Logout", content:"", page: '' }
             ];
         }

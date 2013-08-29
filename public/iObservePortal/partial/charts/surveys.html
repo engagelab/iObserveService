@@ -1,0 +1,25 @@
+<style>
+
+.surveychart rect {
+    stroke : white;
+    fill : steelblue;
+}
+
+.surveychart text {
+    font-size: 0.7em;
+}
+
+</style>
+<div ng-controller="ChartCtrl-survey">
+    <div class="modal-header">
+        <h3>Combined Survey Results</h3>
+    </div>
+    <div style="margin-left:20px; margin-top: 20px;">
+    <select class="btn btn-info btn-mini" style="height: 10px;" ng-model="selectedSurvey" ng-options="item as item.text for item in dropdown" ng-change="processData()">
+        <option value="">Select Survey</option>
+    </select>
+    </div>
+    <div class="chart">
+        <div id="chartSurvey"></div>
+    </div>
+</div>

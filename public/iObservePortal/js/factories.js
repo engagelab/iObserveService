@@ -121,6 +121,19 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
 
     var currentUserId = null;
 
+    var requestSurveysForSpace = function(space_id) {
+        var deferred = $q.defer();
+        var route = routePrePath + "/space/" + space_id + "/survey";
+
+        $http.get(route, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     var requestEventsForSpaceAndRoom = function(space_id, room_id) {
         var deferred = $q.defer();
         var route = routePrePath + "/space/" + space_id + "/" + room_id + "/events";
@@ -382,6 +395,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             currentUserId = id;
         },
 
+        goGetSurveysForSpace: requestSurveysForSpace,
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
         doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,

@@ -27,5 +27,12 @@
             "name": "Frequency Map - Actions & Resources",
             "shortName": "frequencyMapActionsResources"
         }
+    ],
+    "studyChartList" : [
+        {
+            "id": 7,
+            "name": "Surveys",
+            "shortName": "surveys"
+        }
     ]
 }

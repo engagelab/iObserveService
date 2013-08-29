@@ -5,6 +5,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.sessionListRequested = false;
     $scope.sessionListButton = 0;
     $scope.sessionChartButton = 0;
+    $scope.surveyChartButton = 0;
     $scope.sessionInfoListRequested = false;
     $scope.sessionInfoListButton = 0;
     $scope.sessionSequenceRequested = false;
@@ -145,7 +146,8 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
         $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
         activeStudyButton.removeClass("btn-info").addClass("btn-success").addClass("active");
-        activeRoomButton.removeClass("btn-info").addClass("btn-success").addClass("active");
+        if(activeRoomButton != null)
+            activeRoomButton.removeClass("btn-info").addClass("btn-success").addClass("active");
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
         $scope.chartRequested = true;
