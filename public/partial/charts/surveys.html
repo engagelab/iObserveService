@@ -15,9 +15,15 @@
         <h3>Combined Survey Results</h3>
     </div>
     <div style="margin-left:20px; margin-top: 20px;">
-    <select class="btn btn-info btn-mini" style="height: 10px;" ng-model="selectedSurvey" ng-options="item as item.text for item in dropdown" ng-change="processData()">
+    <select class="btn btn-info btn-mini" style="height: 22px;" ng-model="selectedSurvey" ng-options="item as item.text for item in dropdown" ng-change="processData()">
         <option value="">Select Survey</option>
     </select>
+    </div>
+    <div style="margin-left:20px; margin-top: 20px; min-height: 100px; float: left">
+        <select id="textQuestionList" size="2" style="width: 400px; min-height: 100px" ng-options="textQuestion as textQuestion.label for textQuestion in textAnswers" ng-model="textQuestion" ng-change="showTextAnswers()"></select>
+    </div>
+    <div style="margin-left:20px; margin-top: 20px; min-height: 100px; float: left">
+        <select id="textAnswerList" size="2" style="width: 400px; min-height: 100px" ng-options="textAnswer for textAnswer in textQuestion.answer" ng-model="textAnswer" ></select>
     </div>
     <div class="chart">
         <div id="chartSurvey"></div>

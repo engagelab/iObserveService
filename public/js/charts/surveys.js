@@ -3,8 +3,13 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
     $scope.surveys = [];
     $scope.selectedSurvey = null;
     $scope.dropdown = [];
+    $scope.textQuestion = null;
 
-    var sampleData = [
+    var chartData = [];
+    $scope.textAnswers = [];
+
+/*
+    var sampleChartData = [
         {
             id : 1,
             label : "Radio Chart 1",
@@ -24,113 +29,9 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                     value: 10
                 }
             ]
-        },
-        {
-            id : 2,
-            label : "Radio Chart 2",
-            type : "RadioButtons",
-            maxValue: 33,
-            results : [
-                {
-                    label: "question A",
-                    value: 11
-                },
-                {
-                    label: "q b",
-                    value: 33
-                },
-                {
-                    label: "query X",
-                    value: 21
-                }
-            ]
-        },
-        {
-            id : 3,
-            label : "Check Box Chart 1",
-            type : "Checkboxes",
-            maxValue: 20,
-            results : [
-                {
-                    label: "item 1",
-                    value: 5
-                },
-                {
-                    label: "item 2",
-                    value: 10
-                },
-                {
-                    label: "item 3",
-                    value: 20
-                }
-            ]
-        },
-        {
-            id : 4,
-            label : "Check Box Chart 1",
-            type : "Checkboxes",
-            maxValue: 20,
-            results : [
-                {
-                    label: "item 1",
-                    value: 5
-                },
-                {
-                    label: "item 2",
-                    value: 10
-                },
-                {
-                    label: "item 3",
-                    value: 20
-                }
-            ]
-        },
-        {
-            id : 5,
-            label : "Check Box Chart 1",
-            type : "Checkboxes",
-            maxValue: 20,
-            results : [
-                {
-                    label: "item 1",
-                    value: 5
-                },
-                {
-                    label: "item 2",
-                    value: 5
-                },
-                {
-                    label: "item 3",
-                    value: 5
-                },
-                {
-                    label: "item 4",
-                    value: 10
-                }
-            ]
-        },
-        {
-            id : 6,
-            label : "Check Box Chart 1",
-            type : "Checkboxes",
-            maxValue: 20,
-            results : [
-                {
-                    label: "item 1",
-                    value: 30
-                },
-                {
-                    label: "item 2",
-                    value: 30
-                },
-                {
-                    label: "item 3",
-                    value: 30
-                }
-            ]
         }
-    ];
-
+  ]
+*/
 
     // Convert an array of objects into an array of primitives from the key 'extractItem'
     var extractObjectsFromObjectArray = function (arrayOfObjects, extractItem) {
@@ -147,29 +48,67 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
     // questionLabels : array of strings containing the possible answers
     // answerIndex : where the answer is located within a single person's survey
     var tallyRadioButtonAnswers = function (answerArray, questionLabels, answerIndex) {
-        var scores = [];
-        for(var i=0; i<questionLabels.length; i++) { scores[i] = 0; }
-        for(var j=0; j<answerArray.length; j++) {
-                    var scoreIndex = questionLabels.indexOf(answerArray[j][answerIndex].answer);
-                    if(scoreIndex != -1)
-                        scores[scoreIndex]++;
+        var results = [];
+        for(var i=0; i<questionLabels.length; i++) {
+            var result = {
+                label : questionLabels[i],
+                value : 0
+            }
+            results.push(result);
         }
-        return scores;
+        for(var j=0; j<answerArray.length; j++) {
+            var scoreIndex = questionLabels.indexOf(answerArray[j][answerIndex].answer);
+            if(scoreIndex != -1)
+                results[scoreIndex].value++;
+        }
+        return results;
     }
 
     var tallyCheckBoxAnswers = function (answerArray, questionLabels, answerIndex) {
-        var scores = [];
-        for(var i=0; i<questionLabels.length; i++) { scores[i] = 0; }
+        var results = [];
+        for(var i=0; i<questionLabels.length; i++) {
+            var result = {
+                label : questionLabels[i],
+                value : 0
+            }
+            results.push(result);
+        }
         for(var j=0; j<answerArray.length; j++) {
             var answer = answerArray[j][answerIndex].answer;
             // A checkbox answer is an array and may have zero to many values
             for(var k=0; k<answer.length; k++) {
                 var scoreIndex = questionLabels.indexOf(answer[k]);
                 if( scoreIndex != -1)
-                    scores[scoreIndex]++;
+                    results[scoreIndex].value++;
             }
         }
-        return scores;
+        return results;
+    }
+
+    // TextField answers are in the first array position
+    var getTextFieldAnswers = function (answerArray) {
+        var results = [];
+        for(var i=0; i< answerArray.length; i++) {
+            var result = answerArray[i][0].answer;
+            if(result != "")
+                results.push(result);
+        }
+        return results;
+    }
+
+    // TextArea answers are in the second array position
+    var getTextAreaAnswers = function (answerArray) {
+        var results = [];
+        for(var i=0; i< answerArray.length; i++) {
+            var result = answerArray[i][1].answer;
+            if(result != "")
+                results.push(result);
+        }
+        return results;
+    }
+
+    $scope.showTextAnswers = function () {
+           $scope.selectedQuestion = $scope.textQuestion;
     }
 
     var setupSelectionMenu = function () {
@@ -184,8 +123,11 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
 
     $scope.processData = function () {
 
-        var charts = [];
-        var textAnswers = [];
+        chartData = [];
+        $scope.textAnswers = [];
+
+        if($scope.selectedSurvey == null)
+            return;
 
         // Set up Question structures with Answer tallies
         for(var i=0; i<$scope.surveys[$scope.selectedSurvey.index].questions.length; i++) {
@@ -195,32 +137,36 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                     var newTFObject = {
                         id : currentQuestion._id,
                         label : currentQuestion.label,
-                        type : currentQuestion.type
-                    }; textAnswers.push(newTFObject); break;
+                        type : currentQuestion.type,
+                        answer : getTextFieldAnswers($scope.surveys[$scope.selectedSurvey.index].answers)
+                    }; $scope.textAnswers.push(newTFObject); break;
                 case 'TextArea' :
                     var newTAObject = {
                         id : currentQuestion._id,
                         label : currentQuestion.label,
-                        type : currentQuestion.type
-                    }; textAnswers.push(newTAObject); break;
+                        type : currentQuestion.type,
+                        answer : getTextAreaAnswers($scope.surveys[$scope.selectedSurvey.index].answers)
+                    }; $scope.textAnswers.push(newTAObject); break;
                 case 'RadioButtons' :
                     var labels = extractObjectsFromObjectArray(currentQuestion.options, 'label');
+                    var resultObject = tallyRadioButtonAnswers($scope.surveys[$scope.selectedSurvey.index].answers, labels, i);
                     var newRBChartObject = {
                         id : currentQuestion._id,
                         label : currentQuestion.label,
                         type : currentQuestion.type,
-                        itemLabels : labels,
-                        itemTotals : tallyRadioButtonAnswers($scope.surveys[$scope.selectedSurvey.index].answers, labels, i)
-                    }; charts.push(newRBChartObject); break;
+                        maxValue : d3.max(resultObject, function(d) { return +d.value;} ),
+                        results : resultObject
+                    }; chartData.push(newRBChartObject); break;
                 case 'Checkboxes' :
                     var labels = extractObjectsFromObjectArray(currentQuestion.options, 'label');
+                    var resultObject = tallyCheckBoxAnswers($scope.surveys[$scope.selectedSurvey.index].answers, labels, i);
                     var newCBChartObject = {
                         id : currentQuestion._id,
                         label : currentQuestion.label,
                         type : currentQuestion.type,
-                        itemLabels : labels,
-                        itemTotals : tallyCheckBoxAnswers($scope.surveys[$scope.selectedSurvey.index].answers, labels, i)
-                    }; charts.push(newCBChartObject); break;
+                        maxValue : d3.max(resultObject, function(d) { return +d.value;} ),
+                        results : resultObject
+                    }; chartData.push(newCBChartObject); break;
                 default : break;
             }
         }
@@ -242,23 +188,26 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
 
         var xTranslation = 0, yTranslation = 0, labelpad = 165;
 
-        var margin = {top: 75, right: 75, bottom: 75, left: 75},
+        var outerMargin = {top: 75, right: 150, bottom: 75, left: 150},
+            margin = {top: 75, right: 75, bottom: 75, left: 75},
             width = 250 - margin.left - margin.right,
             height = 250 - margin.top - margin.bottom;
+
+        d3.select("svg").remove("svg");
 
         var svg = d3.select("#chartSurvey").append("svg")
             .attr("class", "surveychart")
             .attr("width", 1024)
             .attr("height", 723)
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + outerMargin.left + "," + outerMargin.top + ")");
 
-        for(var i=0; i<sampleData.length; i++) {
-            var data = sampleData[i].results;
+        for(var i=0; i<chartData.length; i++) {
+            var data = chartData[i].results;
 
             // Two functions to fit raw data into appropriate chart sizing
-            var xFit = d3.scale.linear().domain([0, sampleData[i].maxValue]).range([0, width]);
-            var yFit = d3.scale.ordinal().domain(d3.range(data.length)).rangeBands([0, width], .2);
+            var xFit = d3.scale.linear().domain([0, chartData[i].maxValue]).rangeRound([0, width]);
+            var yFit = d3.scale.ordinal().domain(d3.range(data.length)).rangeBands([0, width]);
 
             // Each chart set up
             var newG = svg.append("g");
@@ -274,7 +223,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 .attr("height", height + margin.top + margin.bottom);
 
             newG.selectAll("line")
-                .data(xFit.ticks(10))
+                .data(xFit.ticks(5).map(xFit.tickFormat(5, "d")))
                 .enter().append("line")
                 .attr("x1", xFit)
                 .attr("x2", xFit)
@@ -299,7 +248,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 .attr("dx", -3) // padding-right
                 .attr("dy", ".35em") // vertical-align: middle
                 .attr("text-anchor", "end") // text-align: right
-                .text(function(d) { return d.value; })
+                .text(function(d) { if(d.value > 0) return d.value; })
 
             var labels = newG.selectAll(".labels")
                 .data(data)
@@ -318,10 +267,10 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 .attr("dy", ".35em") // vertical-align: middle
                 .attr("text-anchor", "middle") // text-align: right
                 .attr("font-size", 14)
-                .text(sampleData[i].label);
+                .text(chartData[i].label);
 
             newG.selectAll(".rule")
-                .data(xFit.ticks(5))
+                .data(xFit.ticks(5).map(xFit.tickFormat(5, "d")))
                 .enter().append("text")
                 .attr("class", "rule")
                 .attr("x", xFit)

@@ -74,30 +74,33 @@ a {
     margin-top: 0;
 }
 
-.colStudies
-{
+.colStudies {
     float: left;
     width: 20%;
 }
 
-.colRooms
-{
+.colRooms {
     float: left;
-    width: 10%;
+    width: 15%;
     border-left: dotted;
+    border-width: 2px;
+    border-color: darkgrey;
 }
 
-.colSessions
-{
+.colSessions {
     float: left;
-    width: 20%;
+    width: 18%;
     border-left: dotted;
+    border-width: 2px;
+    border-color: darkgrey;
 }
 
-.last{
+.last {
     float: right;
-    width: 45%;
+    width: 46%;
     border-left: dotted;
+    border-width: 2px;
+    border-color: darkgrey;
 }
 
 .col li {
@@ -111,7 +114,7 @@ a {
 }
 
 .innerColumnRight {
-    width: 35%;
+    width: 37%;
     display: inline-block;
     float: right;
 }
@@ -119,8 +122,6 @@ a {
 .eventListingScrollable {
     height: 200px; overflow-y: scroll;
 }
-
-
 
 body {
     overflow-y:scroll;
@@ -130,13 +131,16 @@ text {
     font: 12px sans-serif;
 }
 
-
-
 .studiesListItem {
     list-style: none;
 }
 
 
+.eventSublistScrollable li {
+    line-height:0.7em;
+    white-space: nowrap;
+    overflow: hidden;
+}
 
 /****** CHARTING *******/
 
@@ -166,6 +170,8 @@ text {
     clear: both;
     height: 100%;
     border-top: dotted;
+    border-width: 2px;
+    border-color: darkgrey;
     padding: 0.5em;
 }
 
@@ -179,16 +185,17 @@ text {
 }
 
 .visitor-color-10012411 {
-    background-color: #98C6FB;
+    color: #98C6FB;
 }
 .visitor-color-6013275 {
-    background-color: #5BC15B;
+
+    color: #5BC15B;
 }
 .visitor-color-13778730 {
-    background-color: #D23F2A;
+    color: #D23F2A;
 }
 .visitor-color-15567670 {
-    background-color: #ED8B36;
+    color: #ED8B36;
 }
 
 .studiesListItem {

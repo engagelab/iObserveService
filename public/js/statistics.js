@@ -50,6 +50,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
                 $scope.chartPartialLoaded = false;
+                activeStudyButton = null;
                 $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
@@ -82,6 +83,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
                 $scope.chartPartialLoaded = false;
+                activeRoomButton = null;
                 $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
@@ -118,6 +120,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
                 $scope.sessionInfoListRequested = false;
                 $scope.sessionSequenceRequested = false;
                 $scope.chartPartialLoaded = false;
+                activeSessionButton = null;
                 $(e.target).closest('button').removeClass("btn-success").addClass("btn-info").removeClass("active");
             }
             else {
@@ -148,6 +151,8 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         activeStudyButton.removeClass("btn-info").addClass("btn-success").addClass("active");
         if(activeRoomButton != null)
             activeRoomButton.removeClass("btn-info").addClass("btn-success").addClass("active");
+        if(activeSessionButton != null)
+            activeSessionButton.removeClass("btn-info").addClass("btn-success").addClass("active");
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
         $scope.chartRequested = true;

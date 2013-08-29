@@ -62,14 +62,13 @@
         </div>
         <div id="navigation">
             <tabset>
-                <tab ng-repeat="tab in tabs" select="checkSelectedTab(tab.title)" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
+                <tab style="font-size: 1.2em; font-weight: bold" ng-repeat="tab in tabs" select="checkSelectedTab(tab.title)" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
                 </tab>
             </tabset>
         </div>
     </div>
     <div class="clearFloats"></div>
     <div ng-include src="activeTab().page"></div>
-
     </div>
 </body>
 </html>

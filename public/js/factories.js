@@ -434,7 +434,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         loginState = false;
     }
 
-    var userLogin = function(data) {
+    var userLogin = function(data, def) {
         var deferred = $q.defer();
 
         $http.post(routePrePath + '/login', data, postConfiguration).success(function(data) {
@@ -455,7 +455,6 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         var deferred = $q.defer();
 
         $http.post(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            userLogin(data);
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message );
@@ -487,8 +486,8 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         var deferred = $q.defer();
 
         $http.put(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            userLogin(data);
-            deferred.resolve(data);
+            userLogin(data, deferred);
+        //    deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message );
                 deferred.reject();
