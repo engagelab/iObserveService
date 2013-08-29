@@ -39,6 +39,14 @@ class Iobserve < Sinatra::Application
     set :raise_errors, false #false will show nicer error page
     set :show_exceptions, false #true will ignore raise_errors and display backtrace in browser
   end
+
+  get '/' do
+    send_file File.join('public', 'index.html')
+  end
+
+  get '/api' do
+    send_file File.join('public/api', 'index.html')
+  end
 end
 
 
