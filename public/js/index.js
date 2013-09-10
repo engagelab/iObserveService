@@ -3,7 +3,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     $scope.showHideNavTabs = function(loginState) {
         if(loginState) {
             $scope.tabs = [
-                { title:"iObserve", content:"", page: 'partial/splash.html', active: true },
+                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
                 { title:"Profile", content:"", page: 'partial/profile.html' },
                 { title:"Studies", content:"", page: 'partial/studies.html' },
                 { title:"Statistics", content:"", page: 'partial/statistics.html' },
@@ -13,7 +13,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         }
         else {
             $scope.tabs = [
-                { title:"iObserve", content:"", page: 'partial/splash.html', active: true },
+                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
                 { title:"About", content:"", page: 'partial/about.html' },
                 { title:"Login", content:"", page: 'partial/login.html' },
                 { title:"Register", content:"", page: 'partial/register.html'}
