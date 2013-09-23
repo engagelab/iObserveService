@@ -1,7 +1,7 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
 var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
 
-// var routePrePath = "http://observe.uio.im";
+// var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
 
 var postConfiguration = {

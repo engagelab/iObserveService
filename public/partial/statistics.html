@@ -16,19 +16,20 @@
         <div class="colRooms">
             <div collapse="!roomListRequested">
                 <div style="margin: 0.5em">
-                <h3>Rooms</h3>
+                <h3>Visuals</h3>
                 <ul>
                     <li ng-repeat="chart in chartList.content.studyChartList" style="margin-top: 5px;">
                         <button type="button" class="btn btn-info btn-mini" ng-model="surveyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
                         <span><b>{{ chart.name }}</b></span></br>
                     </li>
                 </ul>
+                <h3>Rooms</h3>
                 <ul>
                     <li ng-repeat="room in rooms">
                         <div>
                             <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-folder-open-alt"></i></button>
                             <span><b> {{ room.label }} </b></span></br>
-                            <p>Sessions(s):{{ currentStudy.sessionob_ids.length -1 }}</p>
+                            <p>Sessions(s):{{ currentStudy.sessionob_ids.length }}</p>
                         </div>
                     </li>
                 </ul>
@@ -36,15 +37,16 @@
             </div>
         </div>
         <div class="colSessions">
-            <div collapse="!sessionListRequested" ng-show="showSessionList">
+            <div collapse="!sessionListRequested" ng-show="showSessionList" style="overflow:auto;">
                 <div style="margin: 0.5em">
-                <h3>Sessions</h3>
+                    <h3>Visuals</h3>
                     <ul>
                         <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
                             <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
                             <span><b>{{ chart.name }}</b></span></br>
                         </li>
                     </ul>
+                    <h3>Visitor Sessions</h3>
                     <ul>
                         <li ng-repeat="session in sessions">
                             <div>
@@ -62,7 +64,7 @@
                 <div style="margin: 0.5em">
                 <h3>Session Information</h3>
                     <div class="innerColumnLeft" style="margin: 0.5em">
-                        <img ng-src="{{ currentSession.storage.url }}" width="500px" />
+                        <img ng-src="{{ currentSession.storage.url }}" width="500px" style="margin-bottom: 10px" />
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                                 <ul style="list-style-type: none">

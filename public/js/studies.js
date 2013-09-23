@@ -64,10 +64,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.studyRefreshInterval = null
 
     $scope.dropdown = [
-        {text: 'Textfield', click: "addSelectedQuestion('tf')"},
-        {text: 'Textarea', click: "addSelectedQuestion('ta')"},
-        {text: 'RadioButtons', click: "addSelectedQuestion('rb')"},
-        {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
+        {text: 'Short Text', click: "addSelectedQuestion('tf')"},
+        {text: 'Long Text', click: "addSelectedQuestion('ta')"},
+        {text: 'Single Choice or Ranking', click: "addSelectedQuestion('rb')"},
+        {text: 'Multiple Choice Checkboxes', click: "addSelectedQuestion('cb')"}
     ];
 
     $scope.studyTabs = [
@@ -258,11 +258,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.toggleAddSurvey = function() {
         if($scope.isAddSurveyCollapsed) {
             $scope.isAddSurveyCollapsed = false;
-            $("#addSurveyButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+            $("#addSurveyButton").addClass("icon-chevron-sign-up").removeClass("icon-plus");
         }
         else {
             $scope.isAddSurveyCollapsed = true;
-            $("#addSurveyButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+            $("#addSurveyButton").addClass("icon-plus").removeClass("icon-chevron-sign-up");
         }
     }
 
@@ -513,11 +513,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.toggleAddSpace = function() {
         if($scope.isAddRoomCollapsed) {
             $scope.isAddRoomCollapsed = false;
-            $("#addSpaceButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+            $("#addSpaceButton").addClass("icon-chevron-sign-up").removeClass("icon-plus");
         }
         else {
             $scope.isAddRoomCollapsed = true;
-            $("#addSpaceButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+            $("#addSpaceButton").addClass("icon-plus").removeClass("icon-chevron-sign-up");
         }
     }
 
