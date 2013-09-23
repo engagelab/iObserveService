@@ -538,8 +538,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     // create new action
     $scope.createNewAction = function () {
-        if ($scope.actionLabel != "") {
-            var data = {type: $scope.actionLabel};
+        var actionLabelInput = angular.element.find('#actionLabel');
+
+        if (actionLabelInput[0].value != "") {
+            var data = {type: actionLabelInput[0].value};
 
             iObserveData.doNewAction(data).then(function (args) {
                 var newAction = args[0];
@@ -550,7 +552,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.actions.push(newAction);
                 }
 
-                $scope.actionLabel = '';
+                actionLabelInput[0].value = '';
             });
         }
         $scope.isAddActionCollapsed = true;
@@ -601,8 +603,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //create new resource
     $scope.createNewResource = function () {
-        if ($scope.resourceLabel != "") {
-            var data = {type: $scope.resourceLabel};
+        var resourceLabelInput = angular.element.find('#resourceLabel');
+
+        if (resourceLabelInput[0].value != "") {
+            var data = {type: resourceLabelInput[0].value};
 
             iObserveData.doNewResource(data).then(function (args) {
                 var newResource = args[0];
@@ -613,7 +617,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.resources.push(newResource);
                 }
 
-                $scope.resourceLabel = '';
+                resourceLabelInput[0].value = '';
             });
         }
         $scope.isAddResourceCollapsed = true;

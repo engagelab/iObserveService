@@ -152,7 +152,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
-                                <input type="text" ng-model="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
                             </div>
                             <select id="allActionsList" size="2" style="height: 230px">
@@ -184,7 +184,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
-                                <input type="text" ng-model="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
                             </div>
                             <select id="allResourcesList" size="2" style="height: 230px">
