@@ -60,6 +60,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.studies = iObserveData.doGetStudies();
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
+    $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
     $scope.studyRefreshInterval = null
 
     $scope.dropdown = [
