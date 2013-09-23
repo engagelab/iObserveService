@@ -1,5 +1,5 @@
 <div ng-controller="StatisticsCtrl">
-    <div style="display: block;">
+    <div>
         <div class="colStudies">
             <h3>Studies</h3>
             <ul>
@@ -15,6 +15,7 @@
         </div>
         <div class="colRooms">
             <div collapse="!roomListRequested">
+                <div style="margin: 0.5em">
                 <h3>Rooms</h3>
                 <ul>
                     <li ng-repeat="chart in chartList.content.studyChartList" style="margin-top: 5px;">
@@ -31,10 +32,12 @@
                         </div>
                     </li>
                 </ul>
+                </div>
             </div>
         </div>
         <div class="colSessions">
             <div collapse="!sessionListRequested" ng-show="showSessionList">
+                <div style="margin: 0.5em">
                 <h3>Sessions</h3>
                     <ul>
                         <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
@@ -51,52 +54,59 @@
                             </div>
                         </li>
                     </ul>
+                </div>
             </div>
         </div>
         <div class="last">
             <div collapse="!sessionInfoListRequested">
+                <div style="margin: 0.5em">
                 <h3>Session Information</h3>
-                    <div class="innerColumnLeft">
+                    <div class="innerColumnLeft" style="margin: 0.5em">
                         <img ng-src="{{ currentSession.storage.url }}" width="500px" />
+                        <div collapse="!sessionSequenceRequested">
+                            <div class="eventListingScrollable">
+                                <ul style="list-style-type: none">
+                                    <li ng-repeat="event in chartData">
+                                        <p style="font-weight: bold">Event {{chartData.indexOf(event)}} &nbsp;&nbsp;  {{ timeConverterShort(event.created_on) }} &nbsp;&nbsp; x: {{ event.xpos }} y: {{ event.ypos }}</p>
+                                        <ul style="list-style-type: none" class="eventSublistScrollable">
+                                            <li ng-repeat="interaction in event.interactions">
+                                                <ul style="list-style-type: none">
+                                                    <li ng-repeat="action in interaction.actions">
+                                                        <p style="font-size: 0.8em;">Action & Resource:</p>
+                                                        <p style="font-weight: bold">{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
+                                                    </li>
+                                                </ul>
+                                                <ul style="list-style-type: none">
+                                                    <p style="font-size: 0.8em;">Visitor(s):</p>
+                                                    <li ng-repeat="visitor in interaction.visitors">
+                                                        <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="innerColumnRight">
-                        <p>Finished on: {{ timeConverter(currentSession.finished_on) }}</p>
-                        <p>Duration: {{ tDiffMoment(currentSession.created_on, currentSession.finished_on) }}</p>
-                        <p>Visitor(s): {{ currentSession.visitorgroup.visitors.length }}</p>
-                        <p>Event(s): {{ currentSession.eventob_ids.length }}</p>
-                        <h4>Charts for Session {{ sessions.indexOf(currentSession) }}</h4>
+                        <p>Finished on: {{ timeConverter(currentSession.finished_on) }}<br/>
+                        Duration: {{ tDiffMoment(currentSession.created_on, currentSession.finished_on) }}<br/>
+                        Visitor(s): {{ currentSession.visitorgroup.visitors.length }}<br/>
+                        Event(s): {{ currentSession.eventob_ids.length }}</p>
+                        <br/>
+                        <h5>Charts for this Session</h5>
                         <ul>
                             <li ng-repeat="chart in chartList.content.sessionChartList" style="margin-top: 5px;">
                                 <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
                                 <span><b>{{ chart.name }}</b></span></br>
                             </li>
                         </ul>
+                        <br/>
                         <button type="button" class="btn btn-info btn-mini" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-th-list"></i></button>
                         <span><b>Events Listing</b></span></br><br/>
-                        <div collapse="!sessionSequenceRequested">
-                            <div class="eventListingScrollable">
-                            <ul>
-                                <li ng-repeat="event in chartData">
-                                    <p>x: {{ event.xpos }} y: {{ event.ypos }} &nbsp;&nbsp;  {{ timeConverterShort(event.created_on) }}</p>
-                                    <ul>
-                                        <li ng-repeat="interaction in event.interactions">
-                                            <ul>
-                                                <li ng-repeat="action in interaction.actions">
-                                                    <p>{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
-                                                </li>
-                                            </ul>
-                                            <ul>
-                                                <li ng-repeat="visitor in interaction.visitors" ng-class="setVisitorClass(visitor.color)">
-                                                    <p>{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            </div>
-                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

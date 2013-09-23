@@ -3,7 +3,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     $scope.showHideNavTabs = function(loginState) {
         if(loginState) {
             $scope.tabs = [
-                { title:"iObserve", content:"", page: '', active: true },
+                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
                 { title:"Profile", content:"", page: 'partial/profile.html' },
                 { title:"Studies", content:"", page: 'partial/studies.html' },
                 { title:"Statistics", content:"", page: 'partial/statistics.html' },
@@ -13,7 +13,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         }
         else {
             $scope.tabs = [
-                { title:"iObserve", content:"", page: '', active: true },
+                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
                 { title:"About", content:"", page: 'partial/about.html' },
                 { title:"Login", content:"", page: 'partial/login.html' },
                 { title:"Register", content:"", page: 'partial/register.html'}
@@ -46,6 +46,12 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
             var data = {last_name : $scope.user.lastName, first_name: $scope.user.firstName, email: $scope.user.email, password : $scope.user.password};
             iObserveStates.doUserRegistration(data).then(function(resultData) {
                 $scope.resultData = resultData;
+                var data = {login_id : $scope.resultData.login_id, password: $scope.resultData.password};
+                iObserveStates.doUserLogin(data, null).then(function(resultData) {
+                    $scope.resultData = resultData;
+                    if($scope.resultData.token != null)
+                        $scope.showHideNavTabs(true);
+                });
             });
         }
     }
@@ -65,10 +71,10 @@ iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
 
 iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
 
-$scope.logMeIn = function($event) {
+$scope.logMeIn = function() {
     if(loginValidated()) {
         var data = {login_id : $scope.email, password: $scope.password};
-        iObserveStates.doUserLogin(data).then(function(resultData) {
+        iObserveStates.doUserLogin(data, null).then(function(resultData) {
             $scope.resultData = resultData;
             if($scope.resultData.token != null)
                 $scope.showHideNavTabs(true);
