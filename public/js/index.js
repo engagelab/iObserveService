@@ -1,20 +1,20 @@
 iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
+    $scope.showingSplashScreen = {showing: false};
+
     $scope.showHideNavTabs = function(loginState) {
         if(loginState) {
             $scope.tabs = [
-                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
                 { title:"Profile", content:"", page: 'partial/profile.html' },
                 { title:"Studies", content:"", page: 'partial/studies.html' },
                 { title:"Statistics", content:"", page: 'partial/statistics.html' },
-                { title:"About", content:"", page: 'partial/about.html' },
+                { title:"About", content:"", page: 'partial/about.html', active: true },
                 { title:"Logout", content:"", page: '' }
             ];
         }
         else {
             $scope.tabs = [
-                { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true },
-                { title:"About", content:"", page: 'partial/about.html' },
+                { title:"About", content:"", page: 'partial/about.html', active: true },
                 { title:"Login", content:"", page: 'partial/login.html' },
                 { title:"Register", content:"", page: 'partial/register.html'}
             ];
@@ -24,6 +24,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     $scope.showHideNavTabs(false);
 
     $scope.checkSelectedTab = function(title) {
+        $scope.showingSplashScreen = false;
         if(title == "Logout") {
             iObserveStates.doUserLogout();
             $scope.showHideNavTabs(false);
@@ -31,9 +32,13 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     };
 
     $scope.activeTab = function() {
-        return $scope.tabs.filter(function(tab){
-            return tab.active;
-        })[0];
+        if($scope.showingSplashScreen.showing)
+            return { title:"VisiTracker", content:"", page: 'partial/splash.html', active: true };
+        else {
+            return $scope.tabs.filter(function(tab){
+                return tab.active;
+            })[0];
+        }
     };
 
 });

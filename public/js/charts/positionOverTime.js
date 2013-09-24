@@ -102,16 +102,18 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
 
     // Due to this chart being loaded via a partial, set up must be initiated after the partial is loaded so that DOM elements are available
     $scope.$watch('chartPartialLoaded', function(newValue) {
-        iObserveData.doGetSession($scope.currentSession._id).then(function(resultData1) {
-            $scope.uniqueVisitors = resultData1.visitorgroup.visitors;
-            iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData2) {
-                $scope.eventCollection = resultData2;
-                processData();
-                buildMarkers();
-                drawChart();
-             //   $timeout(assignCheckBoxes, 0);
-            });
-        })
+        if(newValue == true) {
+            iObserveData.doGetSession($scope.currentSession._id).then(function(resultData1) {
+                $scope.uniqueVisitors = resultData1.visitorgroup.visitors;
+                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData2) {
+                    $scope.eventCollection = resultData2;
+                    processData();
+                    buildMarkers();
+                    drawChart();
+                 //   $timeout(assignCheckBoxes, 0);
+                });
+            })
+        }
     });
 
     // Offsets for each visitor calculated by unique index (currently up to four)
