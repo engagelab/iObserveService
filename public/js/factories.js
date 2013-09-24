@@ -185,6 +185,18 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         return deferred.promise;
     };
 
+    var requestSessionObject = function(sessionID) {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/session/" + sessionID, getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     var requestStudyListObject = function() {
         var deferred = $q.defer();
 
@@ -395,6 +407,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             currentUserId = id;
         },
 
+        doGetSession:requestSessionObject,
         goGetSurveysForSpace: requestSurveysForSpace,
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
