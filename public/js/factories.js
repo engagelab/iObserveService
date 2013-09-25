@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
 
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
@@ -433,28 +433,21 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
     }
 });
 
-iObserveApp.factory('iObserveStates', function ($http, $q) {
-
-    var navigationState= "iObserve";
-    var loginState = false;
-    var loginToken = "";
-    var userId = "";
+iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService) {
 
     var userLogout = function() {
-        navigationState= "iObserve";
-        userId = "";
-        loginToken = "";
-        loginState = false;
+        localStorageService.clearAll();
     }
 
     var userLogin = function(data, def) {
         var deferred = $q.defer();
 
         $http.post(routePrePath + '/login', data, postConfiguration).success(function(data) {
-            loginState = true;
-            loginToken = data.token;
-            userId = data.userId;
-            navigationState = "iObserve";
+
+            localStorageService.add('loginState', true);
+            localStorageService.add('loginToken', data.token);
+            localStorageService.add('userId', data.userId);
+
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
@@ -479,10 +472,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
 
     var getProfile = function() {
 
-        if(loginState) {
+        if(localStorageService.get('loginState')) {
             var deferred = $q.defer();
 
-            $http.get(routePrePath + '/user/'+userId, getConfiguration).success(function(data) {
+            $http.get(routePrePath + '/user/'+localStorageService.get('userId'), getConfiguration).success(function(data) {
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message  );
@@ -511,8 +504,9 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
 
     return {
         getLoginState: function() {
-            return loginState;
+            return localStorageService.get('loginState');
         },
+        /*
         setLoginState: function(state) {
             loginState = state;
         },
@@ -528,11 +522,12 @@ iObserveApp.factory('iObserveStates', function ($http, $q) {
         setLoginToken: function(token) {
             loginToken = token;
         },
-        getUserId: function() {
-            return userId;
-        },
         setUserId: function(id) {
             userId = id;
+        },
+        */
+        getUserId: function() {
+            return localStorageService.get('userId');
         },
         doUpdateProfile : updateProfile,
         doGetProfile : getProfile,
