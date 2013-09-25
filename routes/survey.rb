@@ -114,6 +114,28 @@ class Iobserve < Sinatra::Application
     return sessionob.to_json
   end
 
+  ### update survey's properties
+  put '/survey' do
+    request.body.rewind  # in case someone already read it
+    content_type :json;
+    data = JSON.parse request.body.read
+
+    unless data.nil? or data['_id'].nil? then
+      status 200
+
+      survey = Survey.find(data['_id'])
+
+      unless data['label'].nil?
+        survey.update_attributes(:label => data['label'])
+      end
+
+      return survey.to_json
+    else
+      status 404
+      return {"message" => "Provide a new label"}.to_json
+    end
+  end
+
 
   ### delete a question by id
   delete '/question/:question_id' do
