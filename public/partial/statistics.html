@@ -75,7 +75,7 @@
                                                 <ul style="list-style-type: none">
                                                     <li ng-repeat="action in interaction.actions">
                                                         <p style="font-size: 0.8em;">Action & Resource:</p>
-                                                        <p style="font-weight: bold">{{ action.type }} &nbsp; {{ interaction.resources[interaction.actions.indexOf(action)].type }}</p>
+                                                        <p style="font-weight: bold">{{ action.type }} &nbsp; {{ getInteraction(interaction.resources[interaction.actions.indexOf(action)].type) }}</p>
                                                     </li>
                                                 </ul>
                                                 <ul style="list-style-type: none">

@@ -184,6 +184,13 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.getChartControllerName = function () {
         return "ChartCtrl-" + $scope.chartShortName;
     }
+
+    $scope.getInteraction = function(res) {
+        if(res == "NONE") {
+            res = "";
+        }
+        return res;
+    }
 /*
     var openDialog = function(){
         var d = $dialog.dialog($scope.chartDialogOpts);
