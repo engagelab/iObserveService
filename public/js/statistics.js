@@ -27,6 +27,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
 
     $scope.showSessionList = false;
+    $scope.showImageModal = false;
 
     var activeStudyButton = null;
     var activeRoomButton = null;

@@ -141,6 +141,12 @@ text {
     list-style: none;
 }
 
+.modal-huge {
+    width: 1050px;
+    height: 800px;
+    overflow: visible;
+    margin-left: -30%;
+}
 
 .eventSublistScrollable li {
     line-height:0.7em;

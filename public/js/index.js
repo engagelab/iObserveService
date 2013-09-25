@@ -21,8 +21,6 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         }
     }
 
-    $scope.showHideNavTabs(false);
-
     $scope.checkSelectedTab = function(title) {
         $scope.showingSplashScreen = false;
         if(title == "Logout") {
@@ -41,6 +39,16 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
         }
     };
 
+
+    function init() {
+        if(iObserveStates.getLoginState())
+            $scope.showHideNavTabs(true);
+        else
+            $scope.showHideNavTabs(false);
+    }
+
+    init();
+
 });
 
 
@@ -53,9 +61,9 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
                 $scope.resultData = resultData;
                 var data = {login_id : $scope.resultData.login_id, password: $scope.resultData.password};
                 iObserveStates.doUserLogin(data, null).then(function(resultData) {
-                    $scope.resultData = resultData;
-                    if($scope.resultData.token != null)
+                    if(iObserveStates.getLoginState()) {
                         $scope.showHideNavTabs(true);
+                    }
                 });
             });
         }
@@ -74,22 +82,23 @@ iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
 })
 
 
-iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, localStorageService) {
 
-$scope.logMeIn = function() {
-    if(loginValidated()) {
-        var data = {login_id : $scope.email, password: $scope.password};
-        iObserveStates.doUserLogin(data, null).then(function(resultData) {
-            $scope.resultData = resultData;
-            if($scope.resultData.token != null)
-                $scope.showHideNavTabs(true);
-        });
+    $scope.logMeIn = function() {
+
+        if(loginValidated()) {
+            var data = {login_id : $scope.email, password: $scope.password};
+            iObserveStates.doUserLogin(data, null).then(function(resultData) {
+                if(iObserveStates.getLoginState()) {
+                    $scope.showHideNavTabs(true);
+                }
+            });
+        }
     }
-}
 
-function loginValidated() {
-    return true;
-}
+    function loginValidated() {
+        return true;
+    }
 
 })
 
