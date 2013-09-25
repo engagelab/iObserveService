@@ -60,13 +60,14 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.studies = iObserveData.doGetStudies();
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
+    $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
     $scope.studyRefreshInterval = null
 
     $scope.dropdown = [
-        {text: 'Textfield', click: "addSelectedQuestion('tf')"},
-        {text: 'Textarea', click: "addSelectedQuestion('ta')"},
-        {text: 'RadioButtons', click: "addSelectedQuestion('rb')"},
-        {text: 'Checkboxes', click: "addSelectedQuestion('cb')"}
+        {text: 'Short Text', click: "addSelectedQuestion('tf')"},
+        {text: 'Long Text', click: "addSelectedQuestion('ta')"},
+        {text: 'Single Choice or Ranking', click: "addSelectedQuestion('rb')"},
+        {text: 'Multiple Choice Checkboxes', click: "addSelectedQuestion('cb')"}
     ];
 
     $scope.studyTabs = [
@@ -257,11 +258,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.toggleAddSurvey = function() {
         if($scope.isAddSurveyCollapsed) {
             $scope.isAddSurveyCollapsed = false;
-            $("#addSurveyButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+            $("#addSurveyButton").addClass("icon-chevron-sign-up").removeClass("icon-plus");
         }
         else {
             $scope.isAddSurveyCollapsed = true;
-            $("#addSurveyButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+            $("#addSurveyButton").addClass("icon-plus").removeClass("icon-chevron-sign-up");
         }
     }
 
@@ -512,11 +513,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.toggleAddSpace = function() {
         if($scope.isAddRoomCollapsed) {
             $scope.isAddRoomCollapsed = false;
-            $("#addSpaceButton").addClass("icon-chevron-sign-up").removeClass("icon-chevron-sign-down");
+            $("#addSpaceButton").addClass("icon-chevron-sign-up").removeClass("icon-plus");
         }
         else {
             $scope.isAddRoomCollapsed = true;
-            $("#addSpaceButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+            $("#addSpaceButton").addClass("icon-plus").removeClass("icon-chevron-sign-up");
         }
     }
 
@@ -537,8 +538,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     // create new action
     $scope.createNewAction = function () {
-        if ($scope.actionLabel != "") {
-            var data = {type: $scope.actionLabel};
+        var actionLabelInput = angular.element.find('#actionLabel');
+
+        if (actionLabelInput[0].value != "") {
+            var data = {type: actionLabelInput[0].value};
 
             iObserveData.doNewAction(data).then(function (args) {
                 var newAction = args[0];
@@ -549,7 +552,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.actions.push(newAction);
                 }
 
-                $scope.actionLabel = '';
+                actionLabelInput[0].value = '';
             });
         }
         $scope.isAddActionCollapsed = true;
@@ -600,8 +603,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //create new resource
     $scope.createNewResource = function () {
-        if ($scope.resourceLabel != "") {
-            var data = {type: $scope.resourceLabel};
+        var resourceLabelInput = angular.element.find('#resourceLabel');
+
+        if (resourceLabelInput[0].value != "") {
+            var data = {type: resourceLabelInput[0].value};
 
             iObserveData.doNewResource(data).then(function (args) {
                 var newResource = args[0];
@@ -612,7 +617,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.resources.push(newResource);
                 }
 
-                $scope.resourceLabel = '';
+                resourceLabelInput[0].value = '';
             });
         }
         $scope.isAddResourceCollapsed = true;

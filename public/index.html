@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>iObserve</title>
+<title>VisiTracker</title>
 
     <!-- Local StyleSheets -->
     <link rel="stylesheet" href="css/normalize.css">
@@ -58,7 +58,7 @@
 
     <div id="heading">
         <div id="logo">
-            <img src="img/logo64new.png"/>
+            <img src="img/logo2.png" ng-click="showingSplashScreen.showing = true"/><img src="img/logoSpacer.png"/>
         </div>
         <div id="navigation">
             <tabset>
@@ -68,7 +68,7 @@
         </div>
     </div>
     <div class="clearFloats"></div>
-    <div ng-include src="activeTab().page"></div>
+    <div ng-include src="activeTab().page" style="margin-top: 10px;"></div>
     </div>
 </body>
 </html>

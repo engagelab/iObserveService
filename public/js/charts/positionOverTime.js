@@ -16,9 +16,10 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
     // Iterate through the server's data response and take what's needed
     var processData = function () {
 
-        // Set up initial values
-        var xPrev = [ 0, 0, 0, 0];
-        var yPrev = [ 0, 0, 0, 0];
+        // Set up initial positions to match number of visitors
+        var xPrev = [];
+        var yPrev = [];
+
         var event = null;
 
         var relativeCreationTime = 0;
@@ -26,8 +27,10 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             firstEventCreationTime = moment.unix($scope.chartData[0].created_on);
             var xPrevStart = $scope.chartData[0].xpos;
             var yPrevStart = $scope.chartData[0].ypos;
-            xPrev = [xPrevStart,xPrevStart,xPrevStart,xPrevStart];
-            yPrev = [yPrevStart,yPrevStart,yPrevStart,yPrevStart];
+            for(var initIt=0;initIt<$scope.uniqueVisitors.length;initIt++) {
+                xPrev[initIt] = xPrevStart;
+                yPrev[initIt] = yPrevStart;
+            }
         }
         else return;
 
@@ -35,60 +38,57 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         for(var i=0; i<$scope.chartData.length; i++) {
             event = $scope.chartData[i];
             relativeCreationTime = getRelativeCreationTime(event.created_on);
-            var uniqueVisitorList = [];
-            var storedVisitorsIds = [];
+            var bitsChecked = 0; // Bitwise variable to track four visitors
+            var interactionIterator = 0;
 
-            // Iterate through Interactions and Visitors and collect unique visitors for this event
-            for(var j=0; j<event.interactions.length; j++) {
-                var interaction = event.interactions[j];
+            // Iterate through Interactions within the event, check which visitors are present
+            while(interactionIterator<event.interactions.length && bitsChecked != 15) {
+                // The set of visitors in the current interaction
+                var eventVisitorIDs = event.interactions[interactionIterator].visitor_ids;
 
-                for(var k=0;  k<interaction.visitors.length; k++) {
-                    var visitor = interaction.visitors[k];
-                    if(storedVisitorsIds.indexOf(visitor._id) == -1) {
-                        uniqueVisitorList.push(visitor);
-                        storedVisitorsIds.push(visitor._id);
+                // Set up the data points and lines, with locations, for each unique visitor. Process each visitor only once.
+                for(var v=0; v<$scope.uniqueVisitors.length; v++) {
+                    if(eventVisitorIDs.indexOf($scope.uniqueVisitors[v]._id) != -1) {
+                        bitsChecked = bitsChecked | (1 << v);
+                        var visitor = $scope.uniqueVisitors[v];
+                        var col = iObserveUtilities.decColor2hex(visitor.color);
+                        var eventDataPoint = {
+                            eventIndex : i,
+                            visitorIndex : v,
+                            relativeCreationTime : relativeCreationTime,
+                            x : event.xpos,
+                            y : event.ypos,
+                            radius : 5,
+                            color : col,
+                            sex: visitor.sex,
+                            age: visitor.age,
+                            nationality : visitor.nationality
+                        }
+                        var linkDataPoint = {
+                            eventIndex : i,
+                            visitorIndex : v,
+                            relativeCreationTime : relativeCreationTime,
+                            x : event.xpos,
+                            y : event.ypos,
+                            xPrev : xPrev[v],
+                            yPrev : yPrev[v],
+                            color : col
+                        }
+                        chartData.push(eventDataPoint);
+                        linkData.push(linkDataPoint);
+                        xPrev[v] = event.xpos;
+                        yPrev[v] = event.ypos;
                     }
+                    var linkCircleDataPoint = {
+                        eventIndex : i,
+                        relativeCreationTime : relativeCreationTime,
+                        x : event.xpos,
+                        y : event.ypos
+                    }
+                    linkCircleData.push(linkCircleDataPoint);
                 }
+                interactionIterator++;
             }
-
-            // Set up the data points and lines, with locations, for each unique visitor
-            for(var v=0; v<uniqueVisitorList.length; v++) {
-                    var visitor = uniqueVisitorList[v];
-                    var col = iObserveUtilities.decColor2hex(visitor.color);
-                    var eventDataPoint = {
-                        eventIndex : i,
-                        visitorIndex : v,
-                        relativeCreationTime : relativeCreationTime,
-                        x : event.xpos,
-                        y : event.ypos,
-                        radius : 5,
-                        color : col,
-                        sex: visitor.sex,
-                        age: visitor.age,
-                        nationality : visitor.nationality
-                    }
-                    var linkDataPoint = {
-                        eventIndex : i,
-                        visitorIndex : v,
-                        relativeCreationTime : relativeCreationTime,
-                        x : event.xpos,
-                        y : event.ypos,
-                        xPrev : xPrev[v],
-                        yPrev : yPrev[v],
-                        color : col
-                    }
-                    chartData.push(eventDataPoint);
-                    linkData.push(linkDataPoint);
-                    xPrev[v] = event.xpos;
-                    yPrev[v] = event.ypos;
-            }
-            var linkCircleDataPoint = {
-                eventIndex : i,
-                relativeCreationTime : relativeCreationTime,
-                x : event.xpos,
-                y : event.ypos
-            }
-            linkCircleData.push(linkCircleDataPoint);
         }
         lastEventCreationTime = event.created_on;
     };
@@ -102,14 +102,18 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
 
     // Due to this chart being loaded via a partial, set up must be initiated after the partial is loaded so that DOM elements are available
     $scope.$watch('chartPartialLoaded', function(newValue) {
-        iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
-            $scope.sessionDetails = resultData.sessions;
-            $scope.eventCollection = resultData.events;
-            processData();
-            buildMarkers();
-            drawChart();
-         //   $timeout(assignCheckBoxes, 0);
-        })
+        if(newValue == true) {
+            iObserveData.doGetSession($scope.currentSession._id).then(function(resultData1) {
+                $scope.uniqueVisitors = resultData1.visitorgroup.visitors;
+                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData2) {
+                    $scope.eventCollection = resultData2;
+                    processData();
+                    buildMarkers();
+                    drawChart();
+                 //   $timeout(assignCheckBoxes, 0);
+                });
+            })
+        }
     });
 
     // Offsets for each visitor calculated by unique index (currently up to four)

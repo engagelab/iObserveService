@@ -7,7 +7,7 @@ class Iobserve < Sinatra::Application
 
     bdy = request.body.read
 
-    if bdy.length > 2 then
+      if bdy.length > 2 then
       data = JSON.parse bdy
     else
       halt 404

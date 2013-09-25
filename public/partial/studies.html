@@ -29,13 +29,12 @@
 
         <div ng-switch on="studyTabs.activeTab">
             <div ng-switch-when="0">
-                <h3>Survey  <button class="btn btn-info" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="icon-chevron-sign-down"></i></button></h3>
+                <h3>Survey  <button class="btn btn-info" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="icon-plus"></i></button></h3>
 
                 <div collapse="isAddSurveyCollapsed" class="collapsableStudyDiv">
                     <div class="innerCollapsableStudyDiv">
-                        <input type="text" ng-model="surveyLabel" placeholder="Survey label (optional)" style="margin-bottom: 0;">
+                        <input type="text" ng-model="surveyLabel" placeholder="New survey label (optional)" style="margin-bottom: 0;">
                         <button class="btn btn-primary" ng-click="createNewSurvey()">create</button>
-
                     </div>
                 </div>
                 <div style="margin-top: 15px; float: left; position: relative; width: 100%">
@@ -50,17 +49,17 @@
                         <div style="float: left;margin-left: 20px">
                             <div style="min-height: 300px" id="surveyEditDiv">
                                 <div class="btn-group">
-                                    <button type="button" class="btn" bs-dropdown="dropdown">Add question type&nbsp;<b class="caret"></b></button>
+                                    <button type="button" class="btn" bs-dropdown="dropdown">New question&nbsp;<b class="caret"></b></button>
                                 </div>
                                 <div id="quest-group">
                                     <br />
                                     <div ng-switch on="formItemType">
                                         <div ng-switch-when="TextField">
                                             <div style="display: block;float: left;width: 450px">
-                                                <span>Type: {{ formItemType }}</span>
+                                                <span>Short Text</span>
                                                 <br />
-                                                <input type="text" ng-model="tfQuestion" bs-typeahead="typeahead">
-                                                <pre>Question: {{tfQuestion| json}}</pre>
+                                                <input type="text" ng-model="tfQuestion" placeholder="Question?" bs-typeahead="typeahead">
+                                                <pre>{{tfQuestion| json}}</pre>
                                             </div>
                                             <div style="clear: both">
                                                 <button class="btn btn-primary" ng-click="postFormItem(tfQuestion)">Add form item</button>
@@ -68,10 +67,10 @@
                                         </div>
                                         <div ng-switch-when="TextArea">
                                             <div style="display: block;float: left;width: 450px">
-                                                <span>Type: {{ formItemType }}</span>
+                                                <span>Long Text</span>
                                                 <br />
-                                                <input type="text" ng-model="taQuestion" bs-typeahead="typeahead">
-                                                <pre>Question: {{taQuestion| json}}</pre>
+                                                <input type="text" ng-model="taQuestion" placeholder="Question?" bs-typeahead="typeahead">
+                                                <pre>{{taQuestion| json}}</pre>
                                             </div>
                                             <div style="clear: both">
                                                 <button class="btn btn-primary" ng-click="postFormItem(taQuestion)">Add form item</button>
@@ -79,21 +78,21 @@
                                         </div>
                                         <div ng-switch-when="RadioButtons">
                                             <div style="display: block;float: left;width: 450px">
-                                                <span>Type: {{ formItemType }}</span>
+                                                <span>Single Choice or Ranking</span>
                                                 <br />
-                                                <input type="text" ng-model="rbQuestion" bs-typeahead="typeahead">
-                                                <pre>Question: {{rbQuestion| json}}</pre>
+                                                <input type="text" ng-model="rbQuestion" placeholder="Question?" bs-typeahead="typeahead">
+                                                <pre>{{rbQuestion| json}}</pre>
                                             </div>
                                             <div style="float: left;display: block;margin-left: 30px">
                                                 <div>
-                                                    Options:
+                                                    Choices:
                                                     <br />
-                                                    <input id="formRadioButtonInput" type="text" ng-model="formRadioButtonsLabel" placeholder="Button name" style="margin-bottom: 0; width: 100px">&nbsp;&nbsp;<button class="btn btn-primary" ng-click="addNewRadioButton(formRadioButtonsLabel)">Add</button>
+                                                    <input id="formRadioButtonInput" type="text" ng-model="formRadioButtonsLabel" placeholder="Choice name" style="margin-bottom: 0; width: 100px">&nbsp;&nbsp;<button class="btn btn-primary" ng-click="addNewRadioButton(formRadioButtonsLabel)">Add</button>
                                                 </div>
                                                 <div style="margin-top: 10px">
                                                     <select size="2" ng-model="radioitem" style="height: 165px" ng-options="radioitem.label for radioitem in formRadioButtonsList" ></select>
                                                     <br />
-                                                    <button style="width: 220px" ng-click="deleteRadioButton(radioitem)">Delete selected</button>
+                                                    <button style="width: 220px" class="btn btn-danger" ng-click="deleteRadioButton(radioitem)">Delete selected</button>
                                                 </div>
                                             </div>
                                             <div style="clear: both">
@@ -102,21 +101,21 @@
                                         </div>
                                         <div ng-switch-when="Checkboxes">
                                             <div style="display: block;float: left;width: 450px">
-                                                <span>Type: {{ formItemType }}</span>
+                                                <span>Multiple Choice Checkboxes</span>
                                                 <br />
                                                 <input type="text" ng-model="cbQuestion" bs-typeahead="typeahead">
-                                                <pre>Question: {{cbQuestion| json}}</pre>
+                                                <pre>{{cbQuestion| json}}</pre>
                                             </div>
                                             <div style="float: left;display: block;margin-left: 30px">
                                                 <div>
-                                                    Options:
+                                                    Choices:
                                                     <br />
-                                                    <input id="formCheckBoxButtonInput" type="text" ng-model="formCheckBoxButtonsLabel" placeholder="Button name" style="margin-bottom: 0; width: 100px">&nbsp;&nbsp;<button class="btn btn-primary" ng-click="addNewCheckBoxButton(formCheckBoxButtonsLabel)">Add</button>
+                                                    <input id="formCheckBoxButtonInput" type="text" ng-model="formCheckBoxButtonsLabel" placeholder="Choice name" style="margin-bottom: 0; width: 100px">&nbsp;&nbsp;<button class="btn btn-primary" ng-click="addNewCheckBoxButton(formCheckBoxButtonsLabel)">Add</button>
                                                 </div>
                                                 <div style="margin-top: 10px">
                                                     <select size="2" ng-model="checkboxitem" style="height: 165px" ng-options="checkboxitem.label for checkboxitem in formCheckBoxButtonsList" ></select>
                                                     <br />
-                                                    <button style="width: 220px" ng-click="deleteCheckBoxButton(checkboxitem)">Delete selected</button>
+                                                    <button style="width: 220px" class="btn btn-danger" ng-click="deleteCheckBoxButton(checkboxitem)">Delete selected</button>
                                                 </div>
                                             </div>
                                             <div style="clear: both">
@@ -142,7 +141,7 @@
                 </div>
             </div>
             <div ng-switch-when="1">
-                <h3>Space  <button class="btn btn-info" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="icon-chevron-sign-down"></i></button><button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button><button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
+                <h3>Space  <button class="btn btn-info" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="icon-plus"></i></button><button class="btn" ng-click="showActionSelector()"><i class="icon-star"></i> Actions</button><button class="btn" ng-click="showResourceSelector()"><i class="icon-star"></i> Resources</button></h3>
 
                 <div modal="showSpaceActions" close="closeSpaceActions()" class="actionPickerDiv">
                     <div class="modal-header">
@@ -152,7 +151,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
-                                <input type="text" ng-model="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
                             </div>
                             <select id="allActionsList" size="2" style="height: 230px">
@@ -184,7 +183,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
-                                <input type="text" ng-model="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
                             </div>
                             <select id="allResourcesList" size="2" style="height: 230px">
@@ -245,7 +244,7 @@
                         <accordion close-others="true">
                             <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                                 <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
-                                <p>Duration: {{ tDiff(session.created_on, session.finished_on) }}</p>
+                                <p>Duration: {{ tDiffMoment(sessions.created_on, sessions.finished_on) }}</p>
                                 <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
                                 <p>Event(s): {{ session.eventob_ids.length }}</p>
                                 <img src="{{ session.storage.url }}" width="500px" />

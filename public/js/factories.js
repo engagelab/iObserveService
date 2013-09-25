@@ -1,7 +1,7 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
 var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
 
-// var routePrePath = "http://observe.uio.im";
+// var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
 
 var postConfiguration = {
@@ -177,6 +177,18 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
         var deferred = $q.defer();
 
         $http.get(routePrePath + "/session/" + sessionID + "/events", getConfiguration).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var requestSessionObject = function(sessionID) {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + "/session/" + sessionID, getConfiguration).success(function(data) {
             deferred.resolve(data);
         }).error(function(data, status){
                 alert( "Request failed: " + data.message  );
@@ -395,6 +407,7 @@ iObserveApp.factory('iObserveData', function ($http, $q) {
             currentUserId = id;
         },
 
+        doGetSession:requestSessionObject,
         goGetSurveysForSpace: requestSurveysForSpace,
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,

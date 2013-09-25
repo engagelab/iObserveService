@@ -34,6 +34,10 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
 
     $scope.partialLoaded = function () {
         $scope.chartPartialLoaded = true;
+
+        $('html, body').stop().animate({
+            scrollTop: $("#statChartDiv").offset().top
+        }, 1500);
     }
 
     $scope.foldRooms = function($study, e) {
@@ -156,6 +160,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
         $scope.chartRequested = true;
+
     //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
     //    openDialog();
     };
