@@ -22,12 +22,6 @@
             "name": "Duration & Quantity",
             "shortName": "frequencyMapDurationQuantity"
         }
-        /*,
-        {
-            "id": 6,
-            "name": "Actions & Resources",
-            "shortName": "frequencyMapActionsResources"
-        }*/
     ],
     "studyChartList" : [
         {
