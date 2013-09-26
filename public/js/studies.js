@@ -29,8 +29,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.rooms = null;
     $scope.surveys = null;
     $scope.sessions = null;
-    $scope.studyLabel = "";
-    $scope.surveyLabel = "";
     $scope.roomLabel = "";
     $scope.studyToDelete = null;
     $scope.roomToDelete = null;
@@ -71,8 +69,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     ];
 
     $scope.studyTabs = [
-        {title:'Survey'},
-        {title:'Space'}
+        {title:'Surveys'},
+        {title:'Rooms'}
     ];
     $scope.studyTabs.activeTab = 0;
 
@@ -125,19 +123,21 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         }
         else {
             $scope.isAddStudyCollapsed = true;
-            $("#addStudyButton").addClass("icon-chevron-sign-down").removeClass("icon-chevron-sign-up");
+            $("#addStudyButton").addClass("icon-plus").removeClass("icon-chevron-sign-up");
         }
     }
 
     //create study
     $scope.createNewStudy = function () {
-        if ($scope.studyLabel != "") {
-            var data = {label: $scope.studyLabel};
+        var label = (angular.element.find('#studyLabelInput'))[0];
+
+        if (label.value != "") {
+            var data = {label: label.value};
             iObserveData.doNewStudy(data).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
             });
 
-            $scope.studyLabel = '';
+            label.value = '';
         }
         $scope.isAddStudyCollapsed = true;
     };
@@ -220,32 +220,39 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //expand study
     $scope.expandStudy = function ($study, e) {
-        $(".studynav").addClass("btn-info").removeClass("btn-success").removeClass("active");
-        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
-        //activeStudyButton = $(e.target).closest('button');
-
-        $scope.currentStudy = $study;
-        $scope.isStudyChosen = true;
-        $scope.isSpaceActionsEmpty = true;
-        $scope.isSpaceResourcesEmpty = true;
-        $scope.surveys = $scope.currentStudy.surveys;
-
-        $scope.refreshSurveys();
-
-        $scope.rooms = $scope.currentStudy.rooms;
-
-        $scope.sessions = $scope.currentStudy.sessionobs;
-
-        // hide unfinished sessions from the result
-        for (var k = 0; k < $scope.sessions.length; k++) {
-            if ($scope.sessions[k].finished_on == null) {
-                $scope.sessions.splice(k, 1);
-            }
+        if($scope.isStudyChosen) {
+            $scope.isStudyChosen = false;
+            $(e.target).closest('button').addClass("btn-info").removeClass("btn-success").removeClass("active");
         }
+        else {
+            $(".studynav").addClass("btn-info").removeClass("btn-success").removeClass("active");
+            $(e.target).closest('button').removeClass("btn-info").addClass("btn-success");
+            //activeStudyButton = $(e.target).closest('button');
 
-        $scope.getActions();
+            $scope.currentStudy = $study;
+            $scope.isStudyChosen = true;
+            $scope.isSpaceActionsEmpty = true;
+            $scope.isSpaceResourcesEmpty = true;
+            $scope.surveys = $scope.currentStudy.surveys;
+            $scope.isEditRoomCollapsed = true;
 
-        $scope.getResources();
+            $scope.refreshSurveys();
+
+            $scope.rooms = $scope.currentStudy.rooms;
+
+            $scope.sessions = $scope.currentStudy.sessionobs;
+
+            // hide unfinished sessions from the result
+            for (var k = 0; k < $scope.sessions.length; k++) {
+                if ($scope.sessions[k].finished_on == null) {
+                    $scope.sessions.splice(k, 1);
+                }
+            }
+
+            $scope.getActions();
+
+            $scope.getResources();
+        }
     };
 
 
@@ -267,7 +274,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     }
 
 
-    //frefresh surveys
+    //refresh surveys
     $scope.refreshSurveys = function () {
         $scope.survey = $scope.surveys[0];
         if($scope.studyTabs.activeTab == 0) {
@@ -284,8 +291,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     //new survey
     $scope.createNewSurvey = function () {
         var data = null;
-        if ($scope.surveyLabel != "") {
-            data = {study_id: $scope.currentStudy._id, label: $scope.surveyLabel};
+        var label = (angular.element.find('#surveyLabelInput'))[0];
+
+        if (label.value != "") {
+            data = {study_id: $scope.currentStudy._id, label: label.value};
         }
         else {
             data = {study_id: $scope.currentStudy._id, label: getID()};
@@ -302,7 +311,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         });
 
-        $scope.surveyLabel = '';
+        label.value = '';
         $scope.toggleAddSurvey();
     };
 
@@ -315,6 +324,14 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     //formatted survey name
     $scope.getFormattedSurvey = function (s) {
         return 'Survey ' + $scope.surveys.indexOf(s) + ': ' + $scope.timeConverter(s.created_on);
+    };
+
+    // formatted survey type
+    $scope.getFormattedSurveyType = function (t) {
+        if(t == "TextField") return "Short Text";
+        else if(t == "TextArea") return "Long Text";
+        else if(t == "RadioButtons") return "Single Choice or Ranking";
+        else if(t == "Checkboxes") return "Multiple Choice Checkboxes";
     };
 
     //edit survey
@@ -538,10 +555,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     // create new action
     $scope.createNewAction = function () {
-        var actionLabelInput = angular.element.find('#actionLabel');
+        var label = (angular.element.find('#actionLabelInput'))[0];
 
-        if (actionLabelInput[0].value != "") {
-            var data = {type: actionLabelInput[0].value};
+        if (label.value != "") {
+            var data = {type: label.value};
 
             iObserveData.doNewAction(data).then(function (args) {
                 var newAction = args[0];
@@ -552,7 +569,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.actions.push(newAction);
                 }
 
-                actionLabelInput[0].value = '';
+                label.value = '';
             });
         }
         $scope.isAddActionCollapsed = true;
@@ -603,10 +620,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //create new resource
     $scope.createNewResource = function () {
-        var resourceLabelInput = angular.element.find('#resourceLabel');
+        var label = (angular.element.find('#resourceLabelInput'))[0];
 
-        if (resourceLabelInput[0].value != "") {
-            var data = {type: resourceLabelInput[0].value};
+        if (label.value != "") {
+            var data = {type: label.value};
 
             iObserveData.doNewResource(data).then(function (args) {
                 var newResource = args[0];
@@ -617,7 +634,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.resources.push(newResource);
                 }
 
-                resourceLabelInput[0].value = '';
+                label.value = '';
             });
         }
         $scope.isAddResourceCollapsed = true;
@@ -686,7 +703,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         if (completed) {
             $scope.uploadResponse = content;
             if ($scope.uploadResponse._id != "") {
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
+
+                var label = (angular.element.find('#roomLabelInput'))[0];
+                if(label.value == "") {
+                    label.value = getID();
+                }
+
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: label.value, uri: $scope.uploadResponse.url}).then(function (resultData) {
                     if (resultData._id != "") {
                         iObserveData.doGetStudies().then(function(data) {
                             $scope.studies = data;
