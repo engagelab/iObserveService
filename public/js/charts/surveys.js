@@ -8,31 +8,6 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
     var chartData = [];
     $scope.textAnswers = [];
 
-/*
-    var sampleChartData = [
-        {
-            id : 1,
-            label : "Radio Chart 1",
-            type : "RadioButtons",
-            maxValue: 36,
-            results : [
-                {
-                    label: "item 1",
-                    value: 36
-                },
-                {
-                    label: "item 2",
-                    value: 23
-                },
-                {
-                    label: "item 3",
-                    value: 10
-                }
-            ]
-        }
-  ]
-*/
-
     // Convert an array of objects into an array of primitives from the key 'extractItem'
     var extractObjectsFromObjectArray = function (arrayOfObjects, extractItem) {
         var newArray = [];
@@ -85,22 +60,20 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
         return results;
     }
 
-    // TextField answers are in the first array position
-    var getTextFieldAnswers = function (answerArray) {
+    var getTextFieldAnswers = function (answerArray, answerIndex) {
         var results = [];
         for(var i=0; i< answerArray.length; i++) {
-            var result = answerArray[i][0].answer;
+            var result = answerArray[i][answerIndex].answer;
             if(result != "")
                 results.push(result);
         }
         return results;
     }
 
-    // TextArea answers are in the second array position
-    var getTextAreaAnswers = function (answerArray) {
+    var getTextAreaAnswers = function (answerArray, answerIndex) {
         var results = [];
         for(var i=0; i< answerArray.length; i++) {
-            var result = answerArray[i][1].answer;
+            var result = answerArray[i][answerIndex].answer;
             if(result != "")
                 results.push(result);
         }
@@ -125,6 +98,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
 
         chartData = [];
         $scope.textAnswers = [];
+        $scope.textQuestion = null;
 
         if($scope.selectedSurvey == null)
             return;
@@ -138,14 +112,14 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                         id : currentQuestion._id,
                         label : currentQuestion.label,
                         type : currentQuestion.type,
-                        answer : getTextFieldAnswers($scope.surveys[$scope.selectedSurvey.index].answers)
+                        answer : getTextFieldAnswers($scope.surveys[$scope.selectedSurvey.index].answers, i)
                     }; $scope.textAnswers.push(newTFObject); break;
                 case 'TextArea' :
                     var newTAObject = {
                         id : currentQuestion._id,
                         label : currentQuestion.label,
                         type : currentQuestion.type,
-                        answer : getTextAreaAnswers($scope.surveys[$scope.selectedSurvey.index].answers)
+                        answer : getTextAreaAnswers($scope.surveys[$scope.selectedSurvey.index].answers, i)
                     }; $scope.textAnswers.push(newTAObject); break;
                 case 'RadioButtons' :
                     var labels = extractObjectsFromObjectArray(currentQuestion.options, 'label');
@@ -171,6 +145,10 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             }
         }
 
+        if($scope.textAnswers.length > 0) {
+            $scope.textQuestion = $scope.textAnswers[0];
+            $scope.textQuestionAnswer = $scope.textQuestion.answer[0];
+        }
         drawChart();
 
     };
@@ -183,6 +161,18 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             setupSelectionMenu();
         })
     });
+
+    function wordwrap(text, max) {
+        var regex = new RegExp(".{0,"+max+"}(?:\\s|$)","g");
+        var lines = [];
+
+        var line;
+        while ((line = regex.exec(text))!="") {
+            lines.push(line);
+        }
+
+        return lines;
+    }
 
     function drawChart() {
 
@@ -260,14 +250,23 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 .attr("text-anchor", "end") // text-align: right
                 .text(function(d) { return d.label; });
 
+            var vSeparation = 13, textX=50, textY=100, maxLength=20;
+
             var title = newG.append("text")
                 .attr("x", width/2 )
                 .attr("y", height+20)
-                .attr("dx", -3) // padding-right
-                .attr("dy", ".35em") // vertical-align: middle
+             //   .attr("dx", -3) // padding-right
+             //   .attr("dy", ".35em") // vertical-align: middle
                 .attr("text-anchor", "middle") // text-align: right
                 .attr("font-size", 14)
-                .text(chartData[i].label);
+               // .text(chartData[i].label)
+                .each(function (d) {
+                    var lines = wordwrap(chartData[i].label, maxLength);
+
+                    for (var j = 0; j < lines.length; j++) {
+                        d3.select(this).append("tspan").attr("dy",vSeparation).attr("x",textX).text(lines[j]);
+                    }
+                });
 
             newG.selectAll(".rule")
                 .data(xFit.ticks(5).map(xFit.tickFormat(5, "d")))
