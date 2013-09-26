@@ -145,9 +145,10 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             }
         }
 
-        $scope.textQuestion = $scope.textAnswers[0];
-        $scope.textQuestionAnswer = $scope.textQuestion.answer[0];
-
+        if($scope.textAnswers.length > 0) {
+            $scope.textQuestion = $scope.textAnswers[0];
+            $scope.textQuestionAnswer = $scope.textQuestion.answer[0];
+        }
         drawChart();
 
     };
