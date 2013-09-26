@@ -65,7 +65,7 @@ class Iobserve < Sinatra::Application
     end
   end
 
-  ##### Create a new answer for this survey #####
+  ##### Create a new question for this survey #####
   post '/survey/:survey_id/answer' do
     request.body.rewind  # in case someone already read it
     content_type :json
@@ -80,7 +80,6 @@ class Iobserve < Sinatra::Application
       unless data.nil? then
         unless data['answers'].nil? then
           survey.answers << data['answers']
-          survey.update_attributes(:locked => true)
           survey.save
           status 200
           return survey.to_json
@@ -127,11 +126,7 @@ class Iobserve < Sinatra::Application
       survey = Survey.find(data['_id'])
 
       unless data['label'].nil?
-      survey.update_attributes(:label => data['label'])
-      end
-
-      unless data['locked'].nil?
-        survey.update_attributes(:locked => true)
+        survey.update_attributes(:label => data['label'])
       end
 
       return survey.to_json
