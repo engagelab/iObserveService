@@ -65,7 +65,7 @@ class Iobserve < Sinatra::Application
     end
   end
 
-  ##### Create a new question for this survey #####
+  ##### Post an answer for this survey #####
   post '/survey/:survey_id/answer' do
     request.body.rewind  # in case someone already read it
     content_type :json

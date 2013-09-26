@@ -29,8 +29,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     $scope.rooms = null;
     $scope.surveys = null;
     $scope.sessions = null;
-    $scope.studyLabel = "";
-    $scope.surveyLabel = "";
     $scope.roomLabel = "";
     $scope.studyToDelete = null;
     $scope.roomToDelete = null;
@@ -131,13 +129,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //create study
     $scope.createNewStudy = function () {
-        if ($scope.studyLabel != "") {
-            var data = {label: $scope.studyLabel};
+        var label = (angular.element.find('#studyLabelInput'))[0];
+
+        if (label.value != "") {
+            var data = {label: label.value};
             iObserveData.doNewStudy(data).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
             });
 
-            $scope.studyLabel = '';
+            label.value = '';
         }
         $scope.isAddStudyCollapsed = true;
     };
@@ -229,6 +229,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         $scope.isSpaceActionsEmpty = true;
         $scope.isSpaceResourcesEmpty = true;
         $scope.surveys = $scope.currentStudy.surveys;
+        $scope.isEditRoomCollapsed = true;
 
         $scope.refreshSurveys();
 
@@ -284,8 +285,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     //new survey
     $scope.createNewSurvey = function () {
         var data = null;
-        if ($scope.surveyLabel != "") {
-            data = {study_id: $scope.currentStudy._id, label: $scope.surveyLabel};
+        var label = (angular.element.find('#surveyLabelInput'))[0];
+
+        if (label.value != "") {
+            data = {study_id: $scope.currentStudy._id, label: label.value};
         }
         else {
             data = {study_id: $scope.currentStudy._id, label: getID()};
@@ -302,7 +305,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         });
 
-        $scope.surveyLabel = '';
+        label.value = '';
         $scope.toggleAddSurvey();
     };
 
@@ -538,10 +541,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     // create new action
     $scope.createNewAction = function () {
-        var actionLabelInput = angular.element.find('#actionLabel');
+        var label = (angular.element.find('#actionLabelInput'))[0];
 
-        if (actionLabelInput[0].value != "") {
-            var data = {type: actionLabelInput[0].value};
+        if (label.value != "") {
+            var data = {type: label.value};
 
             iObserveData.doNewAction(data).then(function (args) {
                 var newAction = args[0];
@@ -552,7 +555,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.actions.push(newAction);
                 }
 
-                actionLabelInput[0].value = '';
+                label.value = '';
             });
         }
         $scope.isAddActionCollapsed = true;
@@ -603,10 +606,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
 
     //create new resource
     $scope.createNewResource = function () {
-        var resourceLabelInput = angular.element.find('#resourceLabel');
+        var label = (angular.element.find('#resourceLabelInput'))[0];
 
-        if (resourceLabelInput[0].value != "") {
-            var data = {type: resourceLabelInput[0].value};
+        if (label.value != "") {
+            var data = {type: label.value};
 
             iObserveData.doNewResource(data).then(function (args) {
                 var newResource = args[0];
@@ -617,7 +620,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                     $scope.currentStudy.resources.push(newResource);
                 }
 
-                resourceLabelInput[0].value = '';
+                label.value = '';
             });
         }
         $scope.isAddResourceCollapsed = true;
@@ -686,7 +689,13 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
         if (completed) {
             $scope.uploadResponse = content;
             if ($scope.uploadResponse._id != "") {
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: getID(), uri: $scope.uploadResponse.url}).then(function (resultData) {
+
+                var label = (angular.element.find('#roomLabelInput'))[0];
+                if(label.value == "") {
+                    label.value = getID();
+                }
+
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: label.value, uri: $scope.uploadResponse.url}).then(function (resultData) {
                     if (resultData._id != "") {
                         iObserveData.doGetStudies().then(function(data) {
                             $scope.studies = data;

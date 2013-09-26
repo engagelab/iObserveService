@@ -4,7 +4,7 @@
 
         <div collapse="isAddStudyCollapsed" class="collapsableStudyDiv">
             <div class="innerCollapsableStudyDiv">
-                <input type="text" ng-model="studyLabel" placeholder="Study label" style="margin-bottom: 0;">
+                <input type="text" id="studyLabelInput" placeholder="Study label" style="margin-bottom: 0;">
                 <button class="btn btn-primary" ng-click="createNewStudy()">create</button>
             </div>
         </div>
@@ -33,7 +33,7 @@
 
                 <div collapse="isAddSurveyCollapsed" class="collapsableStudyDiv">
                     <div class="innerCollapsableStudyDiv">
-                        <input type="text" ng-model="surveyLabel" placeholder="New survey label (optional)" style="margin-bottom: 0;">
+                        <input type="text" id="surveyLabelInput" placeholder="New survey label (optional)" style="margin-bottom: 0;">
                         <button class="btn btn-primary" ng-click="createNewSurvey()">create</button>
                     </div>
                 </div>
@@ -131,6 +131,7 @@
                     <div style="float: left; position: relative;width: 100%">
                         <br />
                         <div class="alert alert-info">
+                            <p><span style="text-decoration: underline">Survey Label:</span> {{ currentSelectedSurvey.label }}</p>
                             <p><span style="text-decoration: underline">Survey ID:</span> {{ currentSelectedSurvey._id }}</p>
                             <p><span style="text-decoration: underline">Questions:</span></p>
                             <ul style="width: 100%">
@@ -151,7 +152,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
-                                <input type="text" id="actionLabel" placeholder="Action name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="actionLabelInput" placeholder="Action name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
                             </div>
                             <select id="allActionsList" size="2" style="height: 230px">
@@ -183,7 +184,7 @@
                         <div style="float: left; height: 300px;">
                             <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
                             <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
-                                <input type="text" id="resourceLabel" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
+                                <input type="text" id="resourceLabelInput" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
                                 <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
                             </div>
                             <select id="allResourcesList" size="2" style="height: 230px">
@@ -220,7 +221,7 @@
                             <div collapse="isWrongImageSize">
                                 <div class="alert alert-error">The width and height of the image you chose are not compatible.</div>
                             </div>
-                            <input type="text" ng-model="roomLabel" placeholder="Room label" style="height: 30px;margin-top: 8px" />
+                            <input type="text" id="roomLabelInput" placeholder="Room label" style="height: 30px;margin-top: 8px" />
                             <input id="imageFileInput" onchange="angular.element(this).scope().file_changed(this)" accept="image/*" type="file" name="file" class="btn" />
                             <input class="btn btn-primary" style="margin-top: 5px" type="submit" value="Upload" upload-submit="roomSubmited(content, completed)" />
                    </form>
