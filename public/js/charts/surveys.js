@@ -81,7 +81,8 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
     }
 
     $scope.showTextAnswers = function () {
-           $scope.selectedQuestion = $scope.textQuestion;
+        $scope.selectedQuestion = $scope.textQuestion;
+        $scope.textQuestionAnswer = $scope.textQuestion.answer[0];
     }
 
     var setupSelectionMenu = function () {

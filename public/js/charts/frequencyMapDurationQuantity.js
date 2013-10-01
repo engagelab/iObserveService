@@ -30,47 +30,51 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                 var nationalityList = [];
                 var event = eventSubset[j];
 
-                if(j == 0)
-                    firstEventCreationTime = event.created_on;
-                relativeCreationTimeInSeconds = getRelativeCreationTime(event.created_on);
+                // This counters a bug caused when an event is posted with no interactions
+                if(event.interactions.length > 0) {
 
-                // Iterate through Interactions and Visitors and collect unique visitors for this event
-                for(var k=0; k<event.interactions.length; k++) {
-                    var interaction = event.interactions[k];
+                    if(j == 0)
+                        firstEventCreationTime = event.created_on;
+                    relativeCreationTimeInSeconds = getRelativeCreationTime(event.created_on);
 
-                    for(var l=0;  l<interaction.visitors.length; l++) {
-                        var visitor = interaction.visitors[l];
-                        if(storedVisitorsIds.indexOf(visitor._id) == -1) {
-                            storedVisitorsIds.push(visitor._id);
-                            if(ageGroupList.indexOf(visitor.age) == -1) {
-                                ageGroupList.push(visitor.age);
-                            }
-                            if(nationalityList.indexOf(visitor.nationality) == -1) {
-                                nationalityList.push(visitor.nationality);
+                    // Iterate through Interactions and Visitors and collect unique visitors for this event
+                    for(var k=0; k<event.interactions.length; k++) {
+                        var interaction = event.interactions[k];
+
+                        for(var l=0;  l<interaction.visitors.length; l++) {
+                            var visitor = interaction.visitors[l];
+                            if(storedVisitorsIds.indexOf(visitor._id) == -1) {
+                                storedVisitorsIds.push(visitor._id);
+                                if(ageGroupList.indexOf(visitor.age) == -1) {
+                                    ageGroupList.push(visitor.age);
+                                }
+                                if(nationalityList.indexOf(visitor.nationality) == -1) {
+                                    nationalityList.push(visitor.nationality);
+                                }
                             }
                         }
                     }
-                }
 
-                // Create a data point with teh information gathered
-                if(j < eventSubset.length-1)
-                    nextEventTime = eventSubset[j+1].created_on;
-                else if(j == eventSubset.length-1)
-                    nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
-                var dataPoint = {
-                    session : i.toString(),
-                    relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
-                    x : event.xpos,
-                    y : event.ypos,
-                    ageGroups : ageGroupList,
-                    selectable : true,
-                    nationalities : nationalityList,
-                    radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
-                    duration : getTimeDuration(event.created_on, nextEventTime)
+                    // Create a data point with the information gathered
+                    if(j < eventSubset.length-1)
+                        nextEventTime = eventSubset[j+1].created_on;
+                    else if(j == eventSubset.length-1)
+                        nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
+                    var dataPoint = {
+                        session : i.toString(),
+                        relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
+                        x : event.xpos,
+                        y : event.ypos,
+                        ageGroups : ageGroupList,
+                        selectable : true,
+                        nationalities : nationalityList,
+                        radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
+                        duration : getTimeDuration(event.created_on, nextEventTime)
+                    }
+                    chartData.push(dataPoint);
+                    if(lastEventCreationTimeInSeconds < relativeCreationTimeInSeconds)
+                        lastEventCreationTimeInSeconds = relativeCreationTimeInSeconds;
                 }
-                chartData.push(dataPoint);
-                if(lastEventCreationTimeInSeconds < relativeCreationTimeInSeconds)
-                    lastEventCreationTimeInSeconds = relativeCreationTimeInSeconds;
             }
         }
     };

@@ -150,6 +150,15 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveState
         $(e.target).closest('button').toggleClass("btn-info").toggleClass("btn-success");
     }
 
+    $scope.countSessionsForRoom = function(room) {
+        var count = 0;
+        for(var i=0;i<$scope.currentStudy.sessionobs.length;i++) {
+            if($scope.currentStudy.sessionobs[i].room_id == room._id)
+                count++;
+        }
+        return count;
+    }
+
     $scope.displayChart = function($chart, e) {
         $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
         $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");

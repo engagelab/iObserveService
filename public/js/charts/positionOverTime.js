@@ -42,7 +42,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             var interactionIterator = 0;
 
             // Iterate through Interactions within the event, check which visitors are present
-            while(interactionIterator<event.interactions.length && bitsChecked != 15) {
+            while(interactionIterator<event.interactions.length && bitsChecked != Math.pow(2, $scope.uniqueVisitors.length)-1) {
                 // The set of visitors in the current interaction
                 var eventVisitorIDs = event.interactions[interactionIterator].visitor_ids;
 
@@ -132,10 +132,10 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
     var buildMarkers = function () {
         var linkDataIndex = 0;
         var eventIndex = linkData[linkDataIndex].eventIndex;
-        while(eventIndex == 0) {
-
+        for(var i=0; i<iObserveUtilities.colorsUsed.length; i++) {
+    //    while(eventIndex == 0) {
             svg.append("defs").append("svg:marker")
-                .attr("id", "arrow"+linkData[linkDataIndex].color)
+                .attr("id", "arrow"+iObserveUtilities.colorsUsed[i])
                 .attr("viewBox","0 0 10 10")
                 .attr("refX","30")
                 .attr("refY","5")
@@ -145,10 +145,10 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                 .attr("orient","auto")
                 .append("svg:path")
                 .attr("d","M 0 0 L 10 5 L 0 10 z")
-                .attr("fill", linkData[linkDataIndex].color);
+                .attr("fill", iObserveUtilities.colorsUsed[i]);
 
-            linkDataIndex++;
-            eventIndex = linkData[linkDataIndex].eventIndex;
+        //    linkDataIndex++;
+        //    eventIndex = linkData[linkDataIndex].eventIndex;
         }
     }
 
