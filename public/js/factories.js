@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress', '$strap.directives'], null);
 
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";

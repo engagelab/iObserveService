@@ -10,8 +10,10 @@ class Iobserve < Sinatra::Application
   ### list all spaces by user id
   get '/user/:user_id/space' do
     content_type :json
-    user = User.without(:password).find(params[:user_id])
+    user = User.find(params[:user_id])
     return user.spaces.to_json
+    #spaces = Space.without(:sessionobs).in(:user_ids => params[:user_id])
+    #return spaces.to_json
   end
 
   ###  get a space by id

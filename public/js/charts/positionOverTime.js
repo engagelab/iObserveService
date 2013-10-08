@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData, iObserveUtilities) {
+iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData, iObserveUtilities, ngProgress) {
 
     var chartData = [];
     var linkData = [];
@@ -101,6 +101,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
     }
 
     // Due to this chart being loaded via a partial, set up must be initiated after the partial is loaded so that DOM elements are available
+    // Make sure to call ngProgress.complete() once the chart processing in done
     $scope.$watch('chartPartialLoaded', function(newValue) {
         if(newValue == true) {
             iObserveData.doGetSession($scope.currentSession._id).then(function(resultData1) {
@@ -110,6 +111,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                     processData();
                     buildMarkers();
                     drawChart();
+                    ngProgress.complete();
                  //   $timeout(assignCheckBoxes, 0);
                 });
             })
