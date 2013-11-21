@@ -45,7 +45,6 @@ class Iobserve < Sinatra::Application
     end
   end
 
-
   ### list all sessions
   get '/session' do
     content_type :json
@@ -53,38 +52,43 @@ class Iobserve < Sinatra::Application
     return @sessionob.to_json
   end
 
+  ### list all unfinished sessions
+  get '/unfinishedsessions' do
+    content_type :json
+    @sessionob = Sessionob.unscoped.where(:finished_on => nil)
+    return @sessionob.to_json
+  end
+
+  delete '/unfinishedsessions' do
+    counter = 0
+    @sessionob = Sessionob.unscoped.where(:finished_on => nil).each do |session|
+      if (Time.now.to_i - session.created_on.to_i) > 604800
+        call!(env.merge("PATH_INFO" => '/session/' + session._id))
+        counter+=1
+      end
+    end
+    return 'Deleted ' + counter.to_s + ' entries'
+  end
 
   ### list all sessions by space id
+  ### mongoId is retrieving nested relations. 'includes' is used to prevent possible second hit on database
   get '/space/:space_id/session' do
     content_type :json
-    space = Space.find(params[:space_id])
+    space = Space.includes(:sessionobs).find(params[:space_id])
     return space.sessionobs.to_json
   end
 
   ### list all sessions by space id  and room id
   get '/space/:space_id/:room_id/session' do
     content_type :json
-    space = Space.find(params[:space_id])
-
-    unless space.nil? then
-
-      @allSessionsForSpace = [];
-
-      space.sessionobs.each do |session|
-        if String(session.room_id).include?(params[:room_id]) then
-          @allSessionsForSpace.push(session)
-        end
-      end
-    end
-
-
-      return @allSessionsForSpace.to_json
+    sessions = Sessionob.where(:room_id => params[:room_id]).in(:space_ids => params[:space_id])
+    return sessions.to_json
   end
 
   ###  get a session by id
   get '/session/:session_id' do
     content_type :json
-    sessionob = Sessionob.find(params[:session_id])
+    sessionob = Sessionob.unscoped.find(params[:session_id])
     return sessionob.to_json
   end
 
@@ -97,7 +101,7 @@ class Iobserve < Sinatra::Application
     unless data.nil? or data['_id'].nil? then
       status 200
 
-      sessionob = Sessionob.find(data['_id'])
+      sessionob = Sessionob.unscoped.find(data['_id'])
 
       unless data['label'].nil?
         sessionob.update_attributes(:label => data['label'])
@@ -114,7 +118,7 @@ class Iobserve < Sinatra::Application
   ### update session's properties
   put '/session/:session_id/:map_id/close' do
     content_type :json
-    sessionob = Sessionob.find(params[:session_id])
+    sessionob = Sessionob.unscoped.find(params[:session_id])
 
     unless sessionob.nil? then
       status 200
@@ -137,7 +141,7 @@ class Iobserve < Sinatra::Application
     request.body.rewind  # in case someone already read it
     content_type :json
 
-    sessionob = Sessionob.find(params[:session_id])
+    sessionob = Sessionob.unscoped.find(params[:session_id])
 
     if sessionob.nil? then
       status 404

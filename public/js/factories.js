@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress', '$strap.directives'], null);
 
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
@@ -34,6 +34,8 @@ var deleteConfiguration = {
 }
 
 iObserveApp.factory('iObserveUtilities', function ($http) {
+
+    var colorsUsed = [];
 
     var timeConverter = function($ts){
         return moment.unix($ts).format("ddd Do MMM YYYY, h:mm a");
@@ -102,6 +104,8 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         var numChars = colArr.length;
         for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
         var result = '#' + colArr.join('');
+        if(colorsUsed.indexOf(result) == -1)
+            colorsUsed.push(result);
         return result;
     }
 
@@ -113,7 +117,8 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         getRandomUUID: getRandomUUID,
         decColor2hex : decColor2hex,
         tDiffMoment: tDiffMoment,
-        loadJSONFile: loadJSONFile
+        loadJSONFile: loadJSONFile,
+        colorsUsed: colorsUsed
     }
 });
 

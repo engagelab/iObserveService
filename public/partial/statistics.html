@@ -7,7 +7,7 @@
                     <div>
                         <button type="button" class="btn btn-info btn-mini" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="icon-suitcase"></i></button>
                         <span><b> {{ study.label }} </b></span></br>
-                        <span> Room(s): <b>{{ study.room_ids.length }}</b> | Session(s): <b>{{ study.sessionob_ids.length }}</b></span>
+                        <span> Room(s): <b>{{ study.room_ids.length }}</b></span>
                         <p>{{ timeConverter(study.created_on) }}</p>
                     </div>
                 </li>
@@ -29,7 +29,7 @@
                         <div>
                             <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-folder-open-alt"></i></button>
                             <span><b> {{ room.label }} </b></span></br>
-                            <p>Sessions(s): <b>{{ currentStudy.sessionob_ids.length }}</b></p>
+                            <p>Sessions(s): <b>{{ countSessionsForRoom(room) }}</b></p>
                         </div>
                     </li>
                 </ul>
@@ -64,7 +64,7 @@
                 <div style="margin: 0.5em">
                 <h3>Session Information</h3>
                     <div class="innerColumnLeft" style="margin: 0.5em">
-                        <img ng-src="{{ currentSession.storage.url }}" width="500px" style="margin-bottom: 10px" ng-click="showImageModal = true;"/>
+                        <img ng-src="{{ currentSession.storage.url || '' }}" width="500px" style="margin-bottom: 10px" ng-click="showImageModal = true;"/>
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                                 <ul style="list-style-type: none">

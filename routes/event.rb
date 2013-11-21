@@ -4,7 +4,7 @@ class Iobserve < Sinatra::Application
   post '/session/:session_id/event' do
     content_type :json
 
-    sessionob = Sessionob.find(params[:session_id])
+    sessionob = Sessionob.unscoped.find(params[:session_id])
 
     unless sessionob.nil? then
       status 200
@@ -52,8 +52,10 @@ class Iobserve < Sinatra::Application
   ### list all events by session id
   get '/session/:session_id/events' do
     content_type :json
-    sessionob = Sessionob.find(params[:session_id])
-    return sessionob.eventobs.to_json
+    sessionob = Sessionob.unscoped.find(params[:session_id])
+    unless sessionob.nil? then
+      return sessionob.eventobs.to_json
+    end
   end
 
   ### list all events from all sessions by space id and room id
