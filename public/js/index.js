@@ -59,7 +59,7 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
             var data = {last_name : $scope.user.lastName, first_name: $scope.user.firstName, email: $scope.user.email, password : $scope.user.password};
             iObserveStates.doUserRegistration(data).then(function(resultData) {
                 $scope.resultData = resultData;
-                var data = {login_id : $scope.resultData.login_id, password: $scope.resultData.password};
+                var data = {email : $scope.resultData.email, password: $scope.resultData.password};
                 iObserveStates.doUserLogin(data, null).then(function(resultData) {
                     if(iObserveStates.getLoginState()) {
                         $scope.showHideNavTabs(true);
@@ -78,16 +78,19 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
 
 iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
 
+    $scope.getLoginState = function () {
+        return iObserveStates.doGetLoginState();
+    }
 
 })
 
 
-iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, localStorageService) {
+iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
 
     $scope.logMeIn = function() {
 
         if(loginValidated()) {
-            var data = {login_id : $scope.email, password: $scope.password};
+            var data = {email : $scope.email, password: $scope.password};
             iObserveStates.doUserLogin(data, null).then(function(resultData) {
                 if(iObserveStates.getLoginState()) {
                     $scope.showHideNavTabs(true);
@@ -104,7 +107,7 @@ iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, localStorag
 
 iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
-    $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"login_id", name: "Login ID", value:""},{key:"password", name: "Password", value:""}]
+    $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"password", name: "Password", value:""}]
 
     function getProfile() {
         iObserveStates.doGetProfile().then(function(resultData) {
@@ -112,13 +115,12 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
             $scope.userEdit[0].value = $scope.user.first_name;
             $scope.userEdit[1].value = $scope.user.last_name;
             $scope.userEdit[2].value = $scope.user.email;
-            $scope.userEdit[3].value = $scope.user.login_id;
-            $scope.userEdit[4].value = $scope.user.password;
+            $scope.userEdit[3].value = $scope.user.password;
         });
     }
 
     $scope.updateProfile = function($event) {
-            var data = {_id : iObserveStates.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, login_id: $scope.user.login_id, password: $scope.user.password};
+            var data = {_id : iObserveStates.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, password: $scope.user.password};
             iObserveStates.doUpdateProfile(data).then(function(resultData) {
                 $scope.user = resultData.user;
             });
