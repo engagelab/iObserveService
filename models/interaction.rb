@@ -15,4 +15,5 @@ class Interaction
   field :resources, :type => Array, :default => []
 
   field :created_on, :type => Bignum
+  field :finished_on, :type => Bignum
 end
