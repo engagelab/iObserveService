@@ -17,6 +17,7 @@ GEM
       builder
       mime-types
       xml-simple
+    bcrypt-ruby (3.0.1)
     bson (1.8.5)
     bson_ext (1.8.5)
       bson (~> 1.8.5)
@@ -57,6 +58,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-s3
+  bcrypt-ruby (~> 3.0.0)
   bson_ext
   linecache19 (>= 0.5.13)!
   mini_magick (~> 3.5.0)
