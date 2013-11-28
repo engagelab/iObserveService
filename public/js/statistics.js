@@ -1,4 +1,4 @@
-iObserveApp.controller('StatisticsCtrl', function($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities, ngProgress) {
+iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObserveData, iObserveUtilities, ngProgress) {
     $scope.roomListRequested = false;
     $scope.roomListButton = 0;
     $scope.studyChartButton = 0;

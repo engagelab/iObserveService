@@ -41,12 +41,12 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
 
 
     function init() {
-        if(iObserveStates.getLoginState())
+        iObserveStates.setShowHideNavTabsFn($scope.showHideNavTabs);
+        if(iObserveStates.doGetLoginState())
             $scope.showHideNavTabs(true);
         else
             $scope.showHideNavTabs(false);
     }
-
     init();
 
 });
@@ -73,7 +73,7 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
         return true;
     }
 
-})
+});
 
 
 iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
@@ -82,10 +82,10 @@ iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
         return iObserveStates.doGetLoginState();
     }
 
-})
+});
 
 
-iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, iObserveUtilities) {
 
     $scope.logMeIn = function() {
 
@@ -103,7 +103,7 @@ iObserveApp.controller('LoginCtrl', function($scope, iObserveStates) {
         return true;
     }
 
-})
+});
 
 iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
@@ -131,7 +131,67 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
         getProfile();
     }
 
-})
+});
+
+iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveStates) {
+
+    $scope.items = ['item1', 'item2', 'item3'];
+
+    $scope.open = function() {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'myModalContent.html',
+            controller: 'ModalInstanceCtrl',
+            resolve: {
+                items: function() {
+                    return $scope.items;
+                }
+            }
+        });
+
+        modalInstance.result.then(function(selectedItem) {
+            $scope.selected = selectedItem;
+        }, function() {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    iObserveStates.setShowTimerModal($scope.open);
+});
+
+iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, items) {
+
+    $scope.items = items;
+    $scope.selected = {
+        item: $scope.items[0]
+    };
+
+    $scope.ok = function() {
+        $modalInstance.close($scope.selected.item);
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+
+    var timeCounter = 180;
+    function onCDTimeout() {
+        timeCounter--;
+        $scope.items[0] = "fruity " + timeCounter.toString();
+        startCDTimer();
+    }
+
+    function stopCDTimer() {
+        $timeout.cancel(countDownTimer);
+    }
+
+    function startCDTimer() {
+        countDownTimer = $timeout(onCDTimeout, 1000);
+    }
+
+    startCDTimer();
+
+});
 
 iObserveApp.controller('UserEditorController', function($scope) {
 

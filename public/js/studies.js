@@ -17,7 +17,7 @@ iObserveApp.directive('poiDraggable', function () {
     };
 });
 
-iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities, $modal) {
+iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
 
     //$scope variable definition
     $scope.isAddStudyCollapsed = true;

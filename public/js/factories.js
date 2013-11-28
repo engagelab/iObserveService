@@ -1,5 +1,5 @@
 //var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress', '$strap.directives'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress'], null);
 
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
@@ -54,95 +54,6 @@ iObserveApp.factory('iObserveConfig', function ($http, localStorageService) {
         deleteConfiguration:deleteConfiguration
     }
 
-});
-
-iObserveApp.factory('iObserveUtilities', function ($http) {
-
-    var colorsUsed = [];
-
-    var timeConverter = function($ts){
-        return moment.unix($ts).format("ddd Do MMM YYYY, h:mm a");
-    };
-
-    var timeConverterShort = function($ts) {
-        return moment.unix($ts).format("h:mm:ss a");
-    };
-
-    var tDiffMoment = function ($a,$b) {
-        var a = moment.unix($a);
-        var b = moment.unix($b);
-        var difference = b.diff(a);
-        return moment.duration(difference, "milliseconds").humanize();
-    }
-
-    var tDiff = function($a,$b) {
-        var a = new Date($a*1000);
-        var b = new Date($b*1000);
-
-        var nTotalDiff = b.getTime() - a.getTime();
-        var oDiff = new Object();
-
-        oDiff.days = Math.floor(nTotalDiff/1000/60/60/24);
-        nTotalDiff -= oDiff.days*1000*60*60*24;
-
-        oDiff.hours = Math.floor(nTotalDiff/1000/60/60);
-        nTotalDiff -= oDiff.hours*1000*60*60;
-
-        oDiff.minutes = Math.floor(nTotalDiff/1000/60);
-        nTotalDiff -= oDiff.minutes*1000*60;
-
-        oDiff.seconds = Math.floor(nTotalDiff/1000);
-
-        return oDiff;
-    };
-
-    var loadJSONFile =  function(fileName) {
-
-        var obj = {content:null};
-
-        $http.get(fileName).success(function(data) {
-            obj.content = data;
-        });
-
-        return obj;
-    }
-
-    var getRandomUUID = function() {
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-    };
-
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    };
-
-
-
-    var decColor2hex = function (color){
-        // input:   (String) decimal color (i.e. 16711680)
-        // returns: (String) hex color (i.e. 0xFF0000)
-        var colorNumber = new Number(color);
-        var colArr = colorNumber.toString(16).toUpperCase().split('');
-        var numChars = colArr.length;
-        for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
-        var result = '#' + colArr.join('');
-        if(colorsUsed.indexOf(result) == -1)
-            colorsUsed.push(result);
-        return result;
-    }
-
-    return {
-        timeConverter : timeConverter,
-        timeConverterShort : timeConverterShort,
-        tDiff : tDiff,
-        loadJSONFile: loadJSONFile,
-        getRandomUUID: getRandomUUID,
-        decColor2hex : decColor2hex,
-        tDiffMoment: tDiffMoment,
-        loadJSONFile: loadJSONFile,
-        colorsUsed: colorsUsed
-    }
 });
 
 iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
@@ -461,7 +372,10 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
     }
 });
 
-iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, iObserveConfig) {
+iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorageService, iObserveConfig) {
+
+    var showHideNavTabs;
+    var showTimerModal;
 
     var userLoginState = function() {
         if (localStorageService.get('loginState'))
@@ -471,17 +385,21 @@ iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, 
     }
 
     var userLogout = function() {
+        if(localStorageService.get('loginState')) {
+            var deferred = $q.defer();
 
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + '/logout', iObserveConfig.postConfiguration).success(function(data) {
-            localStorageService.clearAll();
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message );
-                deferred.reject();
-            });
-        return deferred.promise;
+            $http.get(routePrePath + '/logout', iObserveConfig.postConfiguration).success(function(data) {
+                localStorageService.clearAll();
+                stopLogoutTimer();
+                deferred.resolve(data);
+            }).error(function(data, status){
+                    alert( "Request failed: " + data.message );
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+        else
+            return null;
     }
 
     var userLogin = function(data, def) {
@@ -489,7 +407,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, 
 
         $http.post(routePrePath + '/login', data, iObserveConfig.postConfiguration)
             .success(function(data) {
-
+                startLogoutTimer();
                 localStorageService.add('loginState', true);
                 localStorageService.add('token', data.token);
                 localStorageService.add('userId', data.userId);
@@ -549,6 +467,26 @@ iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, 
         return deferred.promise;
     }
 
+    var mytimeout;
+    var startLogoutTimer = function () {
+        mytimeout = $timeout(onTimeout,10000);
+    }
+
+    var onTimeout = function () {
+        showTimerModal();
+    }
+
+    var stopLogoutTimer = function() {
+        $timeout.cancel(mytimeout);
+    }
+
+    function setShowHideNavTabsFn (shFunction) {
+        showHideNavTabs = shFunction;
+    }
+    function setShowTimerModal (tmFunction) {
+        showTimerModal = tmFunction;
+    }
+
     return {
         getLoginState: function() {
             if(localStorageService.get('loginState'))
@@ -579,6 +517,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, 
         getToken: function() {
             return localStorageService.get('token');
         },
+        setShowHideNavTabsFn : setShowHideNavTabsFn,
+        setShowTimerModal : setShowTimerModal,
+        startLogoutTimer : startLogoutTimer,
+        stopLogoutTimer : stopLogoutTimer,
         doUpdateProfile : updateProfile,
         doGetProfile : getProfile,
         doGetLoginState : userLoginState,
@@ -589,6 +531,91 @@ iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService, 
 });
 
 
+iObserveApp.factory('iObserveUtilities', function ($http) {
+
+    var colorsUsed = [];
+
+    var timeConverter = function($ts){
+        return moment.unix($ts).format("ddd Do MMM YYYY, h:mm a");
+    };
+
+    var timeConverterShort = function($ts) {
+        return moment.unix($ts).format("h:mm:ss a");
+    };
+
+    var tDiffMoment = function ($a,$b) {
+        var a = moment.unix($a);
+        var b = moment.unix($b);
+        var difference = b.diff(a);
+        return moment.duration(difference, "milliseconds").humanize();
+    }
+
+
+    var tDiff = function($a,$b) {
+        var a = new Date($a*1000);
+        var b = new Date($b*1000);
+
+        var nTotalDiff = b.getTime() - a.getTime();
+        var oDiff = new Object();
+
+        oDiff.days = Math.floor(nTotalDiff/1000/60/60/24);
+        nTotalDiff -= oDiff.days*1000*60*60*24;
+
+        oDiff.hours = Math.floor(nTotalDiff/1000/60/60);
+        nTotalDiff -= oDiff.hours*1000*60*60;
+
+        oDiff.minutes = Math.floor(nTotalDiff/1000/60);
+        nTotalDiff -= oDiff.minutes*1000*60;
+
+        oDiff.seconds = Math.floor(nTotalDiff/1000);
+
+        return oDiff;
+    };
+
+    var loadJSONFile =  function(fileName) {
+        var obj = {content:null};
+        $http.get(fileName).success(function(data) {
+            obj.content = data;
+        });
+
+        return obj;
+    }
+
+    var getRandomUUID = function() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    };
+
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
+
+    var decColor2hex = function (color){
+        // input:   (String) decimal color (i.e. 16711680)
+        // returns: (String) hex color (i.e. 0xFF0000)
+        var colorNumber = new Number(color);
+        var colArr = colorNumber.toString(16).toUpperCase().split('');
+        var numChars = colArr.length;
+        for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
+        var result = '#' + colArr.join('');
+        if(colorsUsed.indexOf(result) == -1)
+            colorsUsed.push(result);
+        return result;
+    }
+
+    return {
+        timeConverter : timeConverter,
+        timeConverterShort : timeConverterShort,
+        tDiff : tDiff,
+        loadJSONFile: loadJSONFile,
+        getRandomUUID: getRandomUUID,
+        decColor2hex : decColor2hex,
+        tDiffMoment: tDiffMoment,
+        loadJSONFile: loadJSONFile,
+        colorsUsed: colorsUsed
+    }
+});
 
 
 //  Place a tag called <markdown></markdown> in a html file and this directive will convert any contained plain text to markup.
