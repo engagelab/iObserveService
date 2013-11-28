@@ -148,6 +148,7 @@ class Iobserve < Sinatra::Application
             end
         end
 
+        eventob.save
         return eventob.to_json
       else
         status 404
@@ -176,6 +177,9 @@ class Iobserve < Sinatra::Application
             interaction.destroy
           end
         end
+
+        sessionob = Sessionob.unscoped.find(eventob.sessionob_id)
+        sessionob.eventobs.delete(eventob)
 
         if eventob.destroy then
           status 200

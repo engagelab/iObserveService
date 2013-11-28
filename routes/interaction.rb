@@ -22,7 +22,7 @@ class Iobserve < Sinatra::Application
           if visitorArray.kind_of?(Array)
             visitorArray.each do |visitor_id|
               begin
-                visitor = Visitor.find(visitor_id)
+                visitor = Visitor.without(:interaction_ids).find(visitor_id)
               rescue
                 return {"message" => "Error: the visitor id provided does not exist"}.to_json
                 halt 404
@@ -35,7 +35,7 @@ class Iobserve < Sinatra::Application
 
             unless data['action'].nil? then
               begin
-                action = Action.find(data['action'])
+                action = Action.without(:interaction_ids).find(data['action'])
               rescue
                 return {"message" => "Error: the action id provided does not exist"}.to_json
                 halt 404
@@ -49,7 +49,7 @@ class Iobserve < Sinatra::Application
 
             unless data['resource'].nil? then
               begin
-                resource = Resource.find(data['resource'])
+                resource = Resource.without(:interaction_ids).find(data['resource'])
               rescue
                 return {"message" => "Error: the resource id provided does not exist"}.to_json
                 halt 404
@@ -212,6 +212,9 @@ class Iobserve < Sinatra::Application
       content_type :json
 
       interaction = Interaction.find(params[:interaction_id])
+
+      eventob = Eventob.find(interaction.eventob_id)
+      eventob.interactions.delete(interaction)
 
       if interaction.nil? then
         status 404

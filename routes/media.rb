@@ -109,6 +109,10 @@ class Iobserve < Sinatra::Application
 
       media = Media.find(params[:media_id])
 
+      eventob = Eventob.find(media.eventob_id)
+      eventob.medias.delete(media)
+
+
       if media.nil? then
         status 404
       else
