@@ -21,6 +21,21 @@
         <p>{{ timeConverter(study.created_on)}}</p>
     </li>
 </ul>
+<div>
+    <script type="text/ng-template" id="StudiesDeleteStudyModalCtrl.html">
+        <div class="modal-header">
+            <h3>Delete study?</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure to delete this study?</p>
+            <p>Please note that all session data for this study will be also deleted.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="okDeleteStudy()">Save</button>
+            <button class="btn btn-danger" ng-click="cancelDeleteStudy()">Cancel</button>
+        </div>
+    </script>
+</div>
 <br/>
 <div ng-show="isStudyChosen">
 <tabset>

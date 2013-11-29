@@ -138,29 +138,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         $scope.isAddStudyCollapsed = true;
     };
 
-    //delete study
-    $scope.deleteStudy = function ($selectedStudy) {
-        $scope.studyToDelete = $selectedStudy;
-
-        var title = 'Are you sure to delete this study?';
-        var msg = 'Please note that all session data for this study will be also deleted.';
-        var btns = [
-            {result: 'cancel', label: 'Cancel'},
-            {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
-        ];
-
-        /*$dialog.messageBox(title, msg, btns).open().then(function (result) {
-            if (result == "ok") {
-                iObserveData.doDeleteStudy($selectedStudy._id).then(function (resultData) {
-                    $scope.studies = iObserveData.doGetStudies();
-                    $scope.isStudyChosen = false;
-                });
-            }
-            else {
-                //operation cancelled
-            }
-        });    */
-    };
 
     $scope.getActions = function () {
         iObserveData.doGetActions().then(function (resultData) {
@@ -794,6 +771,42 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         }, function () {
             $scope.roomToDelete = null;
         });
+    };
+
+    //delete study
+    $scope.deleteStudy = function (selectedStudy) {
+        $scope.studyToDelete = selectedStudy;
+
+        var modalInstance = $modal.open({
+            templateUrl: 'StudiesDeleteStudyModalCtrl.html',
+            controller: 'StudiesDeleteStudyModalInstanceCtrl',
+            resolve: {
+                'studyToDelete': function() {
+                    return $scope.studyToDelete;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedStudy) {
+            iObserveData.doDeleteStudy(selectedStudy._id).then(function (resultData) {
+                $scope.studies = iObserveData.doGetStudies();
+            });
+
+        }, function () {
+            $scope.studyToDelete = null;
+        });
+    };
+});
+
+iObserveApp.controller('StudiesDeleteStudyModalInstanceCtrl', function($scope, iObserveData, $modalInstance, studyToDelete) {
+    $scope.studyToDelete = studyToDelete;
+
+    $scope.okDeleteStudy = function () {
+        $modalInstance.close($scope.studyToDelete);
+    };
+
+    $scope.cancelDeleteStudy = function () {
+        $modalInstance.dismiss();
     };
 });
 
