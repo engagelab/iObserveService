@@ -18,7 +18,7 @@ iObserveApp.directive('poiDraggable', function () {
 });
 
 //iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
-iObserveApp.controller('StudiesCtrl', function ($scope, iObserveStates, iObserveData, iObserveUtilities) {
+iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, iObserveData, iObserveUtilities) {
 
     //$scope variable definition
     $scope.isAddStudyCollapsed = true;
@@ -38,9 +38,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, iObserveStates, iObserve
     $scope.roomToEdit = null;
     $scope.roomStartPoints = null;
     $scope.roomEndPoints = null;
-    $scope.isAddActionCollapsed = true;
     $scope.actionLabel = "";
-    $scope.isAddResourceCollapsed = true;
     $scope.resourceLabel = "";
     $scope.isWrongImageSize = true;
     $scope.isSurveySelected = true;
@@ -543,136 +541,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, iObserveStates, iObserve
         $scope.showSpaceResources = true;
     };
 
-    // close space actions
-    $scope.closeSpaceActions = function () {
-        $scope.showSpaceActions = false;
-    };
-
-    // create new action
-    $scope.createNewAction = function () {
-        var label = (angular.element.find('#actionLabelInput'))[0];
-
-        if (label.value != "") {
-            var data = {type: label.value};
-
-            iObserveData.doNewAction(data).then(function (args) {
-                var newAction = args[0];
-                var statusCode = args[1];
-
-                if (Number(statusCode) == 200) {
-                    $scope.allActions.push(newAction);
-                    $scope.currentStudy.actions.push(newAction);
-                }
-
-                label.value = '';
-            });
-        }
-        $scope.isAddActionCollapsed = true;
-    };
-
-    //remove action from space
-    $scope.removeActionFromSpace = function () {
-        var selectBoxSpaceActions = angular.element.find('#spaceActionsList option:selected');
-
-        for (var i = 0; i < selectBoxSpaceActions.length; i++) {
-            if (selectBoxSpaceActions[i].text != "START" && selectBoxSpaceActions[i].text != "STOP") {
-                $scope.allActions.push($scope.spaceActions[selectBoxSpaceActions[i].index]);
-                $scope.spaceActions.splice(selectBoxSpaceActions[i].index, 1);
-            }
-        }
-    };
-
-    //add action to space
-    $scope.addActionToSpace = function () {
-        var selectBoxAllActions = angular.element.find('#allActionsList option:selected');
-
-        for (var i = 0; i < selectBoxAllActions.length; i++) {
-            $scope.spaceActions.push($scope.allActions[selectBoxAllActions[i].index]);
-            $scope.allActions.splice(selectBoxAllActions[i].index, 1);
-        }
-    };
-
-    // close and save space actions
-    $scope.closeAndSaveSpaceActions = function () {
-        var data = {_id: $scope.currentStudy._id, actions: $scope.spaceActions};
-        iObserveData.doUpdateSpaceActions(data).then(function (resultData) {
-            $scope.currentStudy.actions = $scope.spaceActions;
-            $scope.showSpaceActions = false;
-
-            if ($scope.currentStudy.actions.length > 2) {
-                $scope.isSpaceActionsEmpty = true;
-            }
-            else {
-                $scope.isSpaceActionsEmpty = false;
-            }
-        });
-    };
-
-    //close space resources
-    $scope.closeSpaceResources = function () {
-        $scope.showSpaceResources = false;
-    };
-
-    //create new resource
-    $scope.createNewResource = function () {
-        var label = (angular.element.find('#resourceLabelInput'))[0];
-
-        if (label.value != "") {
-            var data = {type: label.value};
-
-            iObserveData.doNewResource(data).then(function (args) {
-                var newResource = args[0];
-                var statusCode = args[1];
-
-                if (Number(statusCode) == 200) {
-                    $scope.allResources.push(newResource);
-                    $scope.currentStudy.resources.push(newResource);
-                }
-
-                label.value = '';
-            });
-        }
-        $scope.isAddResourceCollapsed = true;
-    };
-
-    //remove resource from space
-    $scope.removeResourceFromSpace = function () {
-        var selectBoxSpaceResources = angular.element.find('#spaceResourcesList option:selected');
-
-        for (var i = 0; i < selectBoxSpaceResources.length; i++) {
-            if (selectBoxSpaceResources[i].text != "NONE") {
-                $scope.allResources.push($scope.spaceResources[selectBoxSpaceResources[i].index]);
-                $scope.spaceResources.splice(selectBoxSpaceResources[i].index, 1);
-            }
-        }
-    };
-
-    //add resource to space
-    $scope.addResourceToSpace = function () {
-        var selectBoxAllResources = angular.element.find('#allResourcesList option:selected');
-
-        for (var i = 0; i < selectBoxAllResources.length; i++) {
-            $scope.spaceResources.push($scope.allResources[selectBoxAllResources[i].index]);
-            $scope.allResources.splice(selectBoxAllResources[i].index, 1);
-        }
-    };
-
-    //close and save space resources
-    $scope.closeAndSaveSpaceResources = function () {
-        var data = {_id: $scope.currentStudy._id, resources: $scope.spaceResources};
-        iObserveData.doUpdateSpaceResources(data).then(function (resultData) {
-            $scope.currentStudy.resources = $scope.spaceResources;
-            $scope.showSpaceResources = false;
-
-            if ($scope.currentStudy.resources.length > 1) {
-                $scope.isSpaceResourcesEmpty = true;
-            }
-            else {
-                $scope.isSpaceResourcesEmpty = false;
-            }
-        });
-    };
-
     //file submit changed
     $scope.file_changed = function (element, $scope) {
         var f = element.files[0];
@@ -863,24 +731,204 @@ iObserveApp.controller('StudiesCtrl', function ($scope, iObserveStates, iObserve
         $scope.openEditRoom($scope.roomToEdit);
     };
 
+    $scope.openActionModal = function() {
 
-    /*$scope.viaService = function($survey) {
-     var mscope = $scope.$new();
-     mscope.salutation = $survey;
-     mscope.name = 'World';
+        var modalInstance = $modal.open({
+            templateUrl: 'StudiesActionsModalCtrl.html',
+            controller: 'StudiesActionsModalInstanceCtrl',
+            resolve: {
+                'allActions': function() {
+                    return $scope.allActions;
+                },
+                'spaceActions': function() {
+                    return $scope.spaceActions;
+                },
+                'currentStudy': function() {
+                    return $scope.currentStudy;
+                }
+            }
+        });
 
-     // do something
-     var modalPromise = $modal({
-     template: 'partial/survey/surveyEditor.html',
-     show: true,
-     persist: false,
-     backdrop: 'static',
-     scope: mscope
-     });
-     };
-     $scope.parentController = function(dismiss) {
-     console.warn(arguments);
-     // do something
-     dismiss();
-     };*/
+        modalInstance.result.then(function (currentStudy) {
+            $scope.currentStudy = currentStudy;
+
+            if ($scope.currentStudy.actions.length > 2) {
+                $scope.isSpaceActionsEmpty = true;
+            }
+            else {
+                $scope.isSpaceActionsEmpty = false;
+            }
+
+        }, function () {
+            console.log("action panel dismissed");
+        });
+
+    };
+
+    $scope.openResourceModal = function() {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'StudiesResourcesModalCtrl.html',
+            controller: 'StudiesResourcesModalInstanceCtrl',
+            resolve: {
+                'allResources': function() {
+                    return $scope.allResources;
+                },
+                'spaceResources': function() {
+                    return $scope.spaceResources;
+                },
+                'currentStudy': function() {
+                    return $scope.currentStudy;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (currentStudy) {
+            $scope.currentStudy = currentStudy;
+
+            if ($scope.currentStudy.resources.length > 1) {
+                $scope.isSpaceResourcesEmpty = true;
+            }
+            else {
+                $scope.isSpaceResourcesEmpty = false;
+            }
+
+        }, function () {
+            console.log("resource panel dismissed");
+        });
+    };
+});
+
+
+iObserveApp.controller('StudiesActionsModalInstanceCtrl', function($scope, iObserveData, $modalInstance, allActions, spaceActions, currentStudy) {
+    $scope.isAddActionCollapsed = true;
+    $scope.allActions = allActions;
+    $scope.spaceActions = spaceActions;
+    $scope.currentStudy = currentStudy;
+
+    // create new action
+    $scope.createNewAction = function () {
+        var label = (angular.element.find('#actionLabelInput'))[0];
+
+        if (label.value != "") {
+            var data = {type: label.value};
+
+            iObserveData.doNewAction(data).then(function (args) {
+                var newAction = args[0];
+                var statusCode = args[1];
+
+                if (Number(statusCode) == 200) {
+                    $scope.allActions.push(newAction);
+                    $scope.currentStudy.actions.push(newAction);
+                }
+
+                label.value = '';
+            });
+        }
+        $scope.isAddActionCollapsed = true;
+    };
+
+    //remove action from space
+    $scope.removeActionFromSpace = function () {
+        var selectBoxSpaceActions = angular.element.find('#spaceActionsList option:selected');
+
+        for (var i = 0; i < selectBoxSpaceActions.length; i++) {
+            if (selectBoxSpaceActions[i].text != "START" && selectBoxSpaceActions[i].text != "STOP") {
+                $scope.allActions.push($scope.spaceActions[selectBoxSpaceActions[i].index]);
+                $scope.spaceActions.splice(selectBoxSpaceActions[i].index, 1);
+            }
+        }
+    };
+
+    //add action to space
+    $scope.addActionToSpace = function () {
+        var selectBoxAllActions = angular.element.find('#allActionsList option:selected');
+
+        for (var i = 0; i < selectBoxAllActions.length; i++) {
+            $scope.spaceActions.push($scope.allActions[selectBoxAllActions[i].index]);
+            $scope.allActions.splice(selectBoxAllActions[i].index, 1);
+        }
+    };
+
+    // close and save space actions
+    $scope.closeAndSaveSpaceActions = function () {
+        var data = {_id: $scope.currentStudy._id, actions: $scope.spaceActions};
+        iObserveData.doUpdateSpaceActions(data).then(function (resultData) {
+            $scope.currentStudy.actions = $scope.spaceActions;
+            $modalInstance.close($scope.currentStudy);
+        });
+    };
+
+    // close space actions
+    $scope.closeSpaceActions = function () {
+        $modalInstance.dismiss();
+    };
+
+});
+
+
+iObserveApp.controller('StudiesResourcesModalInstanceCtrl', function($scope, iObserveData, $modalInstance, allResources, spaceResources, currentStudy) {
+    $scope.isAddResourceCollapsed = true;
+    $scope.allResources = allResources;
+    $scope.spaceResources = spaceResources;
+    $scope.currentStudy = currentStudy;
+
+    //create new resource
+    $scope.createNewResource = function () {
+        var label = (angular.element.find('#resourceLabelInput'))[0];
+
+        if (label.value != "") {
+            var data = {type: label.value};
+
+            iObserveData.doNewResource(data).then(function (args) {
+                var newResource = args[0];
+                var statusCode = args[1];
+
+                if (Number(statusCode) == 200) {
+                    $scope.allResources.push(newResource);
+                    $scope.currentStudy.resources.push(newResource);
+                }
+
+                label.value = '';
+            });
+        }
+        $scope.isAddResourceCollapsed = true;
+    };
+
+    //remove resource from space
+    $scope.removeResourceFromSpace = function () {
+        var selectBoxSpaceResources = angular.element.find('#spaceResourcesList option:selected');
+
+        for (var i = 0; i < selectBoxSpaceResources.length; i++) {
+            if (selectBoxSpaceResources[i].text != "NONE") {
+                $scope.allResources.push($scope.spaceResources[selectBoxSpaceResources[i].index]);
+                $scope.spaceResources.splice(selectBoxSpaceResources[i].index, 1);
+            }
+        }
+    };
+
+    //add resource to space
+    $scope.addResourceToSpace = function () {
+        var selectBoxAllResources = angular.element.find('#allResourcesList option:selected');
+
+        for (var i = 0; i < selectBoxAllResources.length; i++) {
+            $scope.spaceResources.push($scope.allResources[selectBoxAllResources[i].index]);
+            $scope.allResources.splice(selectBoxAllResources[i].index, 1);
+        }
+    };
+
+    //close and save space resources
+    $scope.closeAndSaveSpaceResources = function () {
+        var data = {_id: $scope.currentStudy._id, resources: $scope.spaceResources};
+        iObserveData.doUpdateSpaceResources(data).then(function (resultData) {
+            $scope.currentStudy.resources = $scope.spaceResources;
+            $modalInstance.close($scope.currentStudy);
+        });
+    };
+
+    // close space resources
+    $scope.closeSpaceResources = function () {
+        $modalInstance.dismiss();
+    };
+
 });
