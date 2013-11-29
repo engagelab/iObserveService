@@ -1,10 +1,12 @@
-//var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress'], null);
+//angular.module('LocalStorageModule').value('prefix', 'visitracker');
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress'], null);
 
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
 
-iObserveApp.factory('iObserveConfig', function ($http, localStorageService) {
+var logoutTime = 20000; // This timer should be set to match the desired logout notification time
+
+iObserveApp.factory('iObserveConfig', function ($storage) {
     var postConfiguration = {
         type: "POST",
         contentType: 'application/json',
@@ -41,13 +43,22 @@ iObserveApp.factory('iObserveConfig', function ($http, localStorageService) {
         params: {token:""}
     }
 
+    var vtStorage = $storage('visiTrackerStorage');
+
     return {
         updateToken: function() {
-            postConfiguration.params.token = localStorageService.get('token');
-            getConfiguration.params.token = localStorageService.get('token');
-            putConfiguration.params.token = localStorageService.get('token');
-            deleteConfiguration.params.token = localStorageService.get('token');
+            postConfiguration.params.token = vtStorage.getItem('token');
+            getConfiguration.params.token = vtStorage.getItem('token');
+            putConfiguration.params.token = vtStorage.getItem('token');
+            deleteConfiguration.params.token = vtStorage.getItem('token');
         },
+        removeToken: function() {
+            postConfiguration.params.token = "";
+            getConfiguration.params.token = "";
+            putConfiguration.params.token = "";
+            deleteConfiguration.params.token = "";
+        },
+        vtStorage:vtStorage,
         postConfiguration:postConfiguration,
         getConfiguration:getConfiguration,
         putConfiguration:putConfiguration,
@@ -340,6 +351,18 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
         return deferred.promise;
     };
 
+    var requestLoginRenewal = function(data) {
+        var deferred = $q.defer();
+
+        $http.delete(routePrePath + "/renewlogin", iObserveConfig.getConfiguration).success(function(data, textStatus, jqXHR) {
+            deferred.resolve([data, textStatus, jqXHR]);
+        }).error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
     return {
 
         setUserId: function(id) {
@@ -372,25 +395,29 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
     }
 });
 
-iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorageService, iObserveConfig) {
+iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveConfig) {
 
     var showHideNavTabs;
     var showTimerModal;
 
     var userLoginState = function() {
-        if (localStorageService.get('loginState'))
+        if (iObserveConfig.vtStorage.getItem('loginState') == true)
             return true;
         else
             return false;
     }
 
     var userLogout = function() {
-        if(localStorageService.get('loginState')) {
+        if(iObserveConfig.vtStorage.getItem('loginState')) {
             var deferred = $q.defer();
+            stopLogoutTimer();
 
             $http.get(routePrePath + '/logout', iObserveConfig.postConfiguration).success(function(data) {
-                localStorageService.clearAll();
-                stopLogoutTimer();
+                iObserveConfig.removeToken();
+                iObserveConfig.vtStorage.removeItem('token');
+                iObserveConfig.vtStorage.setItem('loginState', false);
+                iObserveConfig.vtStorage.setItem('token', '');
+                iObserveConfig.vtStorage.setItem('userId', '');
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message );
@@ -402,16 +429,32 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
             return null;
     }
 
-    var userLogin = function(data, def) {
+    var userLogin = function(data) {
         var deferred = $q.defer();
 
         $http.post(routePrePath + '/login', data, iObserveConfig.postConfiguration)
             .success(function(data) {
                 startLogoutTimer();
-                localStorageService.add('loginState', true);
-                localStorageService.add('token', data.token);
-                localStorageService.add('userId', data.userId);
+                iObserveConfig.vtStorage.setItem('loginState', true);
+                iObserveConfig.vtStorage.setItem('token', data.token);
+                iObserveConfig.vtStorage.setItem('userId', data.userId);
                 iObserveConfig.updateToken();
+                deferred.resolve(data);
+            })
+            .error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+
+        return deferred.promise;
+    }
+
+    var userRenewLogin = function() {
+        var deferred = $q.defer();
+
+        $http.get(routePrePath + '/renewlogin', iObserveConfig.postConfiguration)
+            .success(function(data) {
+                startLogoutTimer();
                 deferred.resolve(data);
             })
             .error(function(data, status){
@@ -437,10 +480,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
 
     var getProfile = function() {
 
-        if(localStorageService.get('loginState')) {
+        if(iObserveConfig.vtStorage.getItem('loginState') == true) {
             var deferred = $q.defer();
 
-            $http.get(routePrePath + '/user/'+localStorageService.get('userId'), iObserveConfig.getConfiguration).success(function(data) {
+            $http.get(routePrePath + '/user/'+iObserveConfig.vtStorage.getItem('userId'), iObserveConfig.getConfiguration).success(function(data) {
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message  );
@@ -469,7 +512,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
 
     var mytimeout;
     var startLogoutTimer = function () {
-        mytimeout = $timeout(onTimeout,10000);
+        mytimeout = $timeout(onTimeout,logoutTime - 10000);
     }
 
     var onTimeout = function () {
@@ -489,7 +532,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
 
     return {
         getLoginState: function() {
-            if(localStorageService.get('loginState'))
+            if(iObserveConfig.vtStorage.getItem('loginState') == true)
                 return "logged in";
             else
                 return "not logged in";
@@ -512,10 +555,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
         },
         */
         getUserId: function() {
-            return localStorageService.get('userId');
+            return iObserveConfig.vtStorage.getItem('userId');
         },
         getToken: function() {
-            return localStorageService.get('token');
+            return iObserveConfig.vtStorage.getItem('token');
         },
         setShowHideNavTabsFn : setShowHideNavTabsFn,
         setShowTimerModal : setShowTimerModal,
@@ -526,7 +569,8 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, localStorag
         doGetLoginState : userLoginState,
         doUserRegistration: userRegistration,
         doUserLogin: userLogin,
-        doUserLogout: userLogout
+        doUserLogout: userLogout,
+        doUserRenewLogin : userRenewLogin
     };
 });
 

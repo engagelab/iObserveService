@@ -27,13 +27,14 @@
 
     <!-- External fixed dependencies -->
     <script src="js/libs/angular-resource.js"></script>
+    <script src="js/libs/storageprovider.js"></script>
     <script src="js/libs/angular-sanitize.js"></script>
-    <script src="js/libs/angular-local-storage.js"></script>
     <script src="js/libs/ng-upload.js"></script>
     <script src="js/libs/ngProgress.min.js"></script>
     <script src="js/libs/moment.js"></script>
     <!--script src="js/libs/handlebars-1.0.0-rc.4.js"></script>
     <script src="js/libs/showdown.js"></script>
+    <!--script src="js/libs/angular-local-storage.js"></script-->
 
     <script src="js/libs/dragdealer.js"></script-->
 
@@ -62,31 +63,22 @@
 </head>
 <body ng-app="iObserveApp">
 
-    <div ng-controller="ModalCtrl">
-        <script type="text/ng-template" id="myModalContent.html">
-            <div class="modal-header">
-                <h3>I'm a modal!</h3>
-            </div>
-            <div class="modal-body">
-                <ul>
-                    <li ng-repeat="item in items">
-                        <a ng-click="selected.item = item">{{ item }}</a>
-                    </li>
-                </ul>
-                Selected: <b>{{ selected.item }}</b>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ok()">OK</button>
-                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-            </div>
-        </script>
-
-        <button class="btn" ng-click="open()">Open me!</button>
-        <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-    </div>
-
-
     <div ng-controller="NavCtrl">
+
+        <div ng-controller="ModalCtrl">
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <h3>Session expiry imminent!</h3>
+                </div>
+                <div class="modal-body">
+                    <span>Your session will expire in {{counter}} seconds. Do you want to extend or log out?</span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="logout()">Log Out</button>
+                    <button class="btn btn-warning" ng-click="extend()">Extend</button>
+                </div>
+            </script>
+        </div>
 
     <div id="heading">
         <div id="logo">

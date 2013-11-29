@@ -1,4 +1,4 @@
-iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfig) {
 
     $scope.showingSplashScreen = {showing: false};
 
@@ -24,8 +24,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
     $scope.checkSelectedTab = function(title) {
         $scope.showingSplashScreen = false;
         if(title == "Logout") {
-            iObserveStates.doUserLogout();
-            $scope.showHideNavTabs(false);
+            $scope.logout();
         }
     };
 
@@ -38,9 +37,13 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates) {
             })[0];
         }
     };
-
+    $scope.logout = function() {
+        iObserveStates.doUserLogout();
+        $scope.showHideNavTabs(false);
+    }
 
     function init() {
+        iObserveConfig.updateToken();
         iObserveStates.setShowHideNavTabsFn($scope.showHideNavTabs);
         if(iObserveStates.doGetLoginState())
             $scope.showHideNavTabs(true);
@@ -135,7 +138,7 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
 iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveStates) {
 
-    $scope.items = ['item1', 'item2', 'item3'];
+    $scope.counter = "";
 
     $scope.open = function() {
 
@@ -143,54 +146,53 @@ iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveState
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
-                items: function() {
-                    return $scope.items;
+                'counter': function() {
+                    return $scope.counter;
                 }
             }
         });
 
-        modalInstance.result.then(function(selectedItem) {
-            $scope.selected = selectedItem;
-        }, function() {
-            $log.info('Modal dismissed at: ' + new Date());
+        modalInstance.result.then(function(command) {  // Run on close:
+            }, function(command) {  // Run on dismissal:
+            if(command == "logout")
+                $scope.logout();
+            else if(command == "extend")
+                iObserveStates.doUserRenewLogin();
         });
     };
 
     iObserveStates.setShowTimerModal($scope.open);
 });
 
-iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, items) {
+iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, counter) {
 
-    $scope.items = items;
-    $scope.selected = {
-        item: $scope.items[0]
+    var timeCounter = 10;
+    $scope.counter = counter;
+    var countDownTimer;
+
+    $scope.logout = function() {
+        $modalInstance.dismiss('logout');
     };
 
-    $scope.ok = function() {
-        $modalInstance.close($scope.selected.item);
+    $scope.extend = function() {
+        $modalInstance.dismiss('extend');
     };
 
-    $scope.cancel = function() {
-        $modalInstance.dismiss('cancel');
-    };
-
-    var timeCounter = 180;
     function onCDTimeout() {
         timeCounter--;
-        $scope.items[0] = "fruity " + timeCounter.toString();
-        startCDTimer();
-    }
-
-    function stopCDTimer() {
-        $timeout.cancel(countDownTimer);
+        $scope.counter = timeCounter.toString();
+        if(timeCounter == 0) {
+            $timeout.cancel(countDownTimer);
+            $modalInstance.close('logout');
+        }
+        else
+            startCDTimer();
     }
 
     function startCDTimer() {
         countDownTimer = $timeout(onCDTimeout, 1000);
     }
-
     startCDTimer();
-
 });
 
 iObserveApp.controller('UserEditorController', function($scope) {

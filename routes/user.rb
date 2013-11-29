@@ -168,6 +168,17 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  get '/renewlogin' do
+    if authorized?
+      tokenparam = params[:token]
+      token = Token.find_by(token: tokenparam)
+      token.update_attributes(:expire_on => Time.now.to_i + 86400)
+      status 200
+    else
+      status 401
+    end
+  end
+
   post '/login' do
     request.body.rewind  # in case someone already read it
     content_type :json
