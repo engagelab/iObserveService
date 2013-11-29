@@ -68,7 +68,7 @@ class Iobserve < Sinatra::Application
     if authorized?
       content_type :json
 
-      user = User.without(:password).find(params[:user_id])
+      user = User.without(:password_hash, :password_salt).find(params[:user_id])
       space = Space.find(params[:space_id])
 
       unless user.nil? or space.nil? then

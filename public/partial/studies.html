@@ -23,10 +23,9 @@
 </ul>
 <br/>
 <div ng-show="isStudyChosen">
-<div data-fade="1" ng-model="studyTabs.activeTab" bs-tabs>
-    <div ng-repeat="tab in studyTabs" data-title="{{tab.title}}"></div>
-</div>
-
+<tabset>
+    <tab ng-repeat="tab in studyTabs" heading="{{tab.title}}" active="tab.active" select="studyTabs.activeTab = tab.tabindex" disabled="tab.disabled"></tab>
+</tabset>
 <div ng-switch on="studyTabs.activeTab">
 <div ng-switch-when="0">
     <button class="btn btn-info btn-mini" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="icon-plus"></i></button> New &nbsp;

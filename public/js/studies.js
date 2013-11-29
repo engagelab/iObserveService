@@ -17,7 +17,8 @@ iObserveApp.directive('poiDraggable', function () {
     };
 });
 
-iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
+//iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
+iObserveApp.controller('StudiesCtrl', function ($scope, iObserveStates, iObserveData, iObserveUtilities) {
 
     //$scope variable definition
     $scope.isAddStudyCollapsed = true;
@@ -69,11 +70,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
     ];
 
     $scope.studyTabs = [
-        {title:'Surveys'},
-        {title:'Rooms'}
+        {title:'Surveys', active: true, tabindex: 0},
+        {title:'Rooms', tabindex: 1}
     ];
     $scope.studyTabs.activeTab = 0;
-
 
     /*
 
@@ -108,8 +108,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             }
         }
     };
-
-
     /*
 
      Study
@@ -153,7 +151,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
         ];
 
-        $dialog.messageBox(title, msg, btns).open().then(function (result) {
+        /*$dialog.messageBox(title, msg, btns).open().then(function (result) {
             if (result == "ok") {
                 iObserveData.doDeleteStudy($selectedStudy._id).then(function (resultData) {
                     $scope.studies = iObserveData.doGetStudies();
@@ -163,7 +161,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             else {
                 //operation cancelled
             }
-        });
+        });    */
     };
 
     $scope.getActions = function () {
@@ -224,35 +222,32 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             $scope.isStudyChosen = false;
             $(e.target).closest('button').addClass("btn-info").removeClass("btn-success").removeClass("active");
         }
-        else {
-            $(".studynav").addClass("btn-info").removeClass("btn-success").removeClass("active");
-            $(e.target).closest('button').removeClass("btn-info").addClass("btn-success");
-            //activeStudyButton = $(e.target).closest('button');
 
-            $scope.currentStudy = $study;
-            $scope.isStudyChosen = true;
-            $scope.isSpaceActionsEmpty = true;
-            $scope.isSpaceResourcesEmpty = true;
-            $scope.surveys = $scope.currentStudy.surveys;
-            $scope.isEditRoomCollapsed = true;
 
-            $scope.refreshSurveys();
+        $(".studynav").addClass("btn-info").removeClass("btn-success").removeClass("active");
+        $(e.target).closest('button').removeClass("btn-info").addClass("btn-success");
+        //activeStudyButton = $(e.target).closest('button');
 
-            $scope.rooms = $scope.currentStudy.rooms;
+        $scope.currentStudy = $study;
+        $scope.isStudyChosen = true;
+        $scope.isSpaceActionsEmpty = true;
+        $scope.isSpaceResourcesEmpty = true;
+        $scope.surveys = $scope.currentStudy.surveys;
+        $scope.isEditRoomCollapsed = true;
+        $scope.refreshSurveys();
+        $scope.rooms = $scope.currentStudy.rooms;
+        $scope.sessions = $scope.currentStudy.sessionobs;
 
-            $scope.sessions = $scope.currentStudy.sessionobs;
-
-            // hide unfinished sessions from the result
-            for (var k = 0; k < $scope.sessions.length; k++) {
-                if ($scope.sessions[k].finished_on == null) {
-                    $scope.sessions.splice(k, 1);
-                }
+        // hide unfinished sessions from the result
+        for (var k = 0; k < $scope.sessions.length; k++) {
+            if ($scope.sessions[k].finished_on == null) {
+                $scope.sessions.splice(k, 1);
             }
-
-            $scope.getActions();
-
-            $scope.getResources();
         }
+
+        $scope.getActions();
+        $scope.getResources();
+
     };
 
 
@@ -743,7 +738,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
         ];
 
-        $dialog.messageBox(title, msg, btns).open().then(function (result) {
+        /*$dialog.messageBox(title, msg, btns).open().then(function (result) {
             if (result == "ok") {
                 iObserveData.doDeleteRoom($selectedRoom._id).then(function (resultData) {
                     iObserveData.doGetStudies().then(function(data) {
@@ -756,7 +751,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
             else {
                 $scope.roomToDelete = null;
             }
-        });
+        });      */
     };
 
     //toggle show/hide room edit mode
@@ -796,7 +791,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates,
                 {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
             ];
 
-            $dialog.messageBox(title, msg, btns).open();
+           /* $dialog.messageBox(title, msg, btns).open();       */
         }
     }
 

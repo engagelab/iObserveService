@@ -136,7 +136,7 @@ class Iobserve < Sinatra::Application
           user.update_attributes(:password_salt => password_salt)
         end
 
-        user.to_json.(:except => :password_hash).(:except => :password_salt)
+        {'_id' => user._id}.to_json
       else
         status 404
       end
