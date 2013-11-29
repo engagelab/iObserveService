@@ -247,7 +247,7 @@
                 </slide>
             </carousel>
         </div>
-        <div collapse="!isEditRoomCollapsed" style="float: right">
+        <!--div collapse="!isEditRoomCollapsed" style="float: right">
             <accordion close-others="true">
                 <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                     <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
@@ -257,7 +257,7 @@
                     <img src="{{ session.storage.url }}" width="500px" />
                 </accordion-group>
             </accordion>
-        </div>
+        </div-->
         <div collapse="isEditRoomCollapsed">
             <button class="btn btn-primary" ng-click="showhideEditMode()">Save</button>
 
