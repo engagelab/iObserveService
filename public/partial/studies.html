@@ -144,7 +144,7 @@
     <div style="margin-left: 60px">
         <button class="btn btn-mini" ng-click="openActionModal()"><i class="icon-star"></i></button> Actions &nbsp;
         <button class="btn btn-mini" ng-click="openResourceModal()"><i class="icon-star"></i></button> Resources &nbsp;
-        <button class="btn btn-danger btn-mini" ng-click="openRemoveRoom(room)"><i class="icon-minus"></i></button> Delete
+        <button class="btn btn-danger btn-mini" ng-click="roomToDelete=room;openDeleteRoomModal()"><i class="icon-minus"></i></button> Delete
     </div>
 
     <div>
@@ -215,6 +215,22 @@
         </script>
     </div>
 
+    <div>
+        <script type="text/ng-template" id="StudiesDeleteRoomModalCtrl.html">
+            <div class="modal-header">
+                <h3>Delete room?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to delete this room?</p>
+                <p>Please note that sessions will not be using this room to map anymore.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="okDeleteRoom()">Save</button>
+                <button class="btn btn-danger" ng-click="cancelDeleteRoom()">Cancel</button>
+            </div>
+        </script>
+    </div>
+
     <div collapse="isSpaceActionsEmpty">
         <div class="alert alert-error">Make sure to pick(create) actions for describing events. Click on "Actions" button to do so.</div>
     </div>
@@ -252,7 +268,7 @@
         </div>
         <div collapse="!isEditRoomCollapsed" style="float: right">
             <accordion close-others="true">
-                <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
+                <accordion-group ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                     <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
                     <p>Duration: {{ tDiffMoment(sessions.created_on, sessions.finished_on) }}</p>
                     <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>

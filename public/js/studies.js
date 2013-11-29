@@ -531,16 +531,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         }
     }
 
-    // show space actions
-    $scope.showActionSelector = function () {
-        $scope.showSpaceActions = true;
-    };
-
-    // show space resources
-    $scope.showResourceSelector = function () {
-        $scope.showSpaceResources = true;
-    };
-
     //file submit changed
     $scope.file_changed = function (element, $scope) {
         var f = element.files[0];
@@ -593,33 +583,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         $scope.roomToEdit = $selectedRoom;
         $scope.roomStartPoints = $scope.roomToEdit.start_points;
         $scope.roomEndPoints = $scope.roomToEdit.end_points;
-    };
-
-    //remove room
-    $scope.openRemoveRoom = function ($selectedRoom) {
-        $scope.roomToDelete = $selectedRoom;
-
-        var title = 'Are you sure to delete this room?';
-        var msg = 'Please note that sessions will not be using this room to map anymore.';
-        var btns = [
-            {result: 'cancel', label: 'Cancel'},
-            {result: 'ok', label: 'OK', cssClass: 'btn-primary'}
-        ];
-
-        /*$dialog.messageBox(title, msg, btns).open().then(function (result) {
-            if (result == "ok") {
-                iObserveData.doDeleteRoom($selectedRoom._id).then(function (resultData) {
-                    iObserveData.doGetStudies().then(function(data) {
-                        $scope.studies = data;
-                        $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
-                        (angular.element.find('#imageUploaderForm'))[0].reset();
-                    });
-                });
-            }
-            else {
-                $scope.roomToDelete = null;
-            }
-        });      */
     };
 
     //toggle show/hide room edit mode
@@ -797,8 +760,54 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
             console.log("resource panel dismissed");
         });
     };
+
+
+    $scope.openDeleteRoomModal = function() {
+
+        $scope.rooms.forEach(function(room){
+           if(room.active) {
+           $scope.roomToDelete = room;
+           }
+        });
+
+
+        var modalInstance = $modal.open({
+            templateUrl: 'StudiesDeleteRoomModalCtrl.html',
+            controller: 'StudiesDeleteRoomModalInstanceCtrl',
+            resolve: {
+                'roomToDelete': function() {
+                    return $scope.roomToDelete;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedRoom) {
+            iObserveData.doDeleteRoom(selectedRoom._id).then(function (resultData) {
+                iObserveData.doGetStudies().then(function(data) {
+                    $scope.studies = data;
+                    $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
+                    (angular.element.find('#imageUploaderForm'))[0].reset();
+                    $scope.roomToDelete = null;
+                });
+            });
+
+        }, function () {
+            $scope.roomToDelete = null;
+        });
+    };
 });
 
+iObserveApp.controller('StudiesDeleteRoomModalInstanceCtrl', function($scope, iObserveData, $modalInstance, roomToDelete) {
+    $scope.roomToDelete = roomToDelete;
+
+    $scope.okDeleteRoom = function () {
+        $modalInstance.close($scope.roomToDelete);
+    };
+
+    $scope.cancelDeleteRoom = function () {
+        $modalInstance.dismiss();
+    };
+});
 
 iObserveApp.controller('StudiesActionsModalInstanceCtrl', function($scope, iObserveData, $modalInstance, allActions, spaceActions, currentStudy) {
     $scope.isAddActionCollapsed = true;
