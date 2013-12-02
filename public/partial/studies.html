@@ -21,6 +21,21 @@
         <p>{{ timeConverter(study.created_on)}}</p>
     </li>
 </ul>
+<div>
+    <script type="text/ng-template" id="StudiesDeleteStudyModalCtrl.html">
+        <div class="modal-header">
+            <h3>Delete study?</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure to delete this study?</p>
+            <p>Please note that all session data for this study will be also deleted.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="okDeleteStudy()">Save</button>
+            <button class="btn btn-danger" ng-click="cancelDeleteStudy()">Cancel</button>
+        </div>
+    </script>
+</div>
 <br/>
 <div ng-show="isStudyChosen">
 <tabset>
@@ -142,73 +157,93 @@
     <button class="btn btn-info btn-mini" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="icon-plus"></i></button> New &nbsp; </br></br>
     <p><b>Selected room:</b></p>
     <div style="margin-left: 60px">
-        <button class="btn btn-mini" ng-click="showActionSelector()"><i class="icon-star"></i></button> Actions &nbsp;
-        <button class="btn btn-mini" ng-click="showResourceSelector()"><i class="icon-star"></i></button> Resources &nbsp;
-        <button class="btn btn-danger btn-mini" ng-click="openRemoveRoom(room)"><i class="icon-minus"></i></button> Delete
+        <button class="btn btn-mini" ng-click="openActionModal()"><i class="icon-star"></i></button> Actions &nbsp;
+        <button class="btn btn-mini" ng-click="openResourceModal()"><i class="icon-star"></i></button> Resources &nbsp;
+        <button class="btn btn-danger btn-mini" ng-click="roomToDelete=room;openDeleteRoomModal()"><i class="icon-minus"></i></button> Delete
     </div>
 
-    <div modal="showSpaceActions" close="closeSpaceActions()" class="actionPickerDiv">
-        <div class="modal-header">
-            <h3>Actions</h3>
-        </div>
-        <div style="margin: 15px">
-            <div style="float: left; height: 300px;">
-                <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
-                <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
-                    <input type="text" id="actionLabelInput" placeholder="Action name" style="margin-bottom: 0; width: 100px">
-                    <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
+    <div>
+        <script type="text/ng-template" id="StudiesActionsModalCtrl.html">
+            <div class="modal-header">
+                <h3>Actions</h3>
+            </div>
+            <div style="margin-left: 15px;margin-right: 15px">
+                <div style="float: left; height: 300px;">
+                    <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
+                    <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
+                        <input type="text" id="actionLabelInput" placeholder="Action name" style="margin-bottom: 0; width: 100px">
+                        <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
+                    </div>
+                    <select id="allActionsList" size="2" style="height: 230px">
+                        <option ng-repeat="action in allActions" value="action._id">{{ action.type }}</option>
+                    </select>
                 </div>
-                <select id="allActionsList" size="2" style="height: 230px">
-                    <option ng-repeat="action in allActions" value="action._id">{{ action.type }}</option>
-                </select>
+                <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
+                    <button ng-click="removeActionFromSpace()"><i class="icon-arrow-left"></i></button>
+                    <button ng-click="addActionToSpace()"><i class="icon-arrow-right"></i></button>
+                </div>
+                <div style="float: left; height: 300px">
+                    <h5>Selected actions</h5>
+                    <select id="spaceActionsList" size="2" style="height: 230px;margin-top: 10px">
+                        <option ng-repeat="action in spaceActions" value="action._id">{{ action.type }}</option>
+                    </select>
+                </div>
             </div>
-            <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
-                <button ng-click="removeActionFromSpace()"><i class="icon-arrow-left"></i></button>
-                <button ng-click="addActionToSpace()"><i class="icon-arrow-right"></i></button>
-            </div>
-            <div style="float: left; height: 300px">
-                <h5>Selected actions</h5>
-                <select id="spaceActionsList" size="2" style="height: 230px;margin-top: 10px">
-                    <option ng-repeat="action in spaceActions" value="action._id">{{ action.type }}</option>
-                </select>
-            </div>
-            <div style="clear: both;margin-top: 20px;text-align: center;width: 100%">
+            <div class="modal-footer">
                 <button class="btn btn-primary" ng-click="closeAndSaveSpaceActions()">Save</button>
                 <button class="btn btn-danger" ng-click="closeSpaceActions()">Cancel</button>
             </div>
-        </div>
+        </script>
     </div>
 
-    <div modal="showSpaceResources" close="closeSpaceResources()" class="resourcePickerDiv">
-        <div class="modal-header">
-            <h3>Resources</h3>
-        </div>
-        <div style="margin: 15px">
-            <div style="float: left; height: 300px;">
-                <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
-                <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
-                    <input type="text" id="resourceLabelInput" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
-                    <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
+    <div>
+        <script type="text/ng-template" id="StudiesResourcesModalCtrl.html">
+            <div class="modal-header">
+                <h3>Resources</h3>
+            </div>
+            <div style="margin-left: 15px;margin-right: 15px">
+                <div style="float: left; height: 300px;">
+                    <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
+                    <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
+                        <input type="text" id="resourceLabelInput" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
+                        <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
+                    </div>
+                    <select id="allResourcesList" size="2" style="height: 230px">
+                        <option ng-repeat="resource in allResources" value="resource._id">{{ resource.type }}</option>
+                    </select>
                 </div>
-                <select id="allResourcesList" size="2" style="height: 230px">
-                    <option ng-repeat="resource in allResources" value="resource._id">{{ resource.type }}</option>
-                </select>
+                <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
+                    <button ng-click="removeResourceFromSpace()"><i class="icon-arrow-left"></i></button>
+                    <button ng-click="addResourceToSpace()"><i class="icon-arrow-right"></i></button>
+                </div>
+                <div style="float: left; height: 300px">
+                    <h5>Selected resources</h5>
+                    <select id="spaceResourcesList" size="2" style="height: 230px;margin-top: 10px">
+                        <option ng-repeat="resource in spaceResources" value="resource._id">{{ resource.type }}</option>
+                    </select>
+                </div>
             </div>
-            <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
-                <button ng-click="removeResourceFromSpace()"><i class="icon-arrow-left"></i></button>
-                <button ng-click="addResourceToSpace()"><i class="icon-arrow-right"></i></button>
-            </div>
-            <div style="float: left; height: 300px">
-                <h5>Selected resources</h5>
-                <select id="spaceResourcesList" size="2" style="height: 230px;margin-top: 10px">
-                    <option ng-repeat="resource in spaceResources" value="resource._id">{{ resource.type }}</option>
-                </select>
-            </div>
-            <div style="clear: both;margin-top: 20px;text-align: center;width: 100%">
+            <div class="modal-footer">
                 <button class="btn btn-primary" ng-click="closeAndSaveSpaceResources()">Save</button>
                 <button class="btn btn-danger" ng-click="closeSpaceResources()">Cancel</button>
             </div>
-        </div>
+        </script>
+    </div>
+
+    <div>
+        <script type="text/ng-template" id="StudiesDeleteRoomModalCtrl.html">
+            <div class="modal-header">
+                <h3>Delete room?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to delete this room?</p>
+                <p>Please note that sessions will not be using this room to map anymore.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="okDeleteRoom()">Save</button>
+                <button class="btn btn-danger" ng-click="cancelDeleteRoom()">Cancel</button>
+            </div>
+        </script>
     </div>
 
     <div collapse="isSpaceActionsEmpty">
@@ -248,7 +283,7 @@
         </div>
         <div collapse="!isEditRoomCollapsed" style="float: right">
             <accordion close-others="true">
-                <accordion-group  ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
+                <accordion-group ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                     <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
                     <p>Duration: {{ tDiffMoment(sessions.created_on, sessions.finished_on) }}</p>
                     <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>

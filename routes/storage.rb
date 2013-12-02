@@ -34,7 +34,6 @@ class Iobserve < Sinatra::Application
 
   ## post image
   post '/image' do
-    if authorized?
       awskey     = ENV['AWS_ACCESS_KEY_ID']
       awssecret  = ENV['AWS_SECRET_ACCESS_KEY']
       bucket     = 'net.engagelab.iobserveservice'
@@ -62,9 +61,6 @@ class Iobserve < Sinatra::Application
       else
         error 404
       end
-    else
-      status 401
-    end
   end
 
   ### delete image
