@@ -4,9 +4,28 @@ var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'lo
 // var routePrePath = "http://visitracker.uio.im";
 var routePrePath = "";
 
-var logoutTime = 20000; // This timer should be set to match the desired logout notification time
+iObserveApp.factory('iObserveStorage', function ($storage) {
+    var vtStorage = $storage('visiTrackerStorage');
 
-iObserveApp.factory('iObserveConfig', function ($storage) {
+    var getItem = function (itemKey) {
+        return vtStorage.getItem(itemKey);
+    }
+    var setItem = function (itemKey, itemValue) {
+        return vtStorage.setItem(itemKey, itemValue);
+    }
+    var removeItem = function (itemKey) {
+        return vtStorage.removeItem(itemKey);
+    }
+
+    return {
+        getItem:getItem,
+        setItem:setItem,
+        removeItem:removeItem
+    }
+
+});
+
+iObserveApp.factory('iObserveConfig', function (iObserveStorage) {
     var postConfiguration = {
         type: "POST",
         contentType: 'application/json',
@@ -43,14 +62,16 @@ iObserveApp.factory('iObserveConfig', function ($storage) {
         params: {token:""}
     }
 
-    var vtStorage = $storage('visiTrackerStorage');
+    // In milliseconds
+    var loginDuration = 86400000;     // 24 hours
+    var logoutModalDuration = 180000;  // 3 minutes
 
     return {
         updateToken: function() {
-            postConfiguration.params.token = vtStorage.getItem('token');
-            getConfiguration.params.token = vtStorage.getItem('token');
-            putConfiguration.params.token = vtStorage.getItem('token');
-            deleteConfiguration.params.token = vtStorage.getItem('token');
+            postConfiguration.params.token = iObserveStorage.getItem('token');
+            getConfiguration.params.token = iObserveStorage.getItem('token');
+            putConfiguration.params.token = iObserveStorage.getItem('token');
+            deleteConfiguration.params.token = iObserveStorage.getItem('token');
         },
         removeToken: function() {
             postConfiguration.params.token = "";
@@ -58,13 +79,13 @@ iObserveApp.factory('iObserveConfig', function ($storage) {
             putConfiguration.params.token = "";
             deleteConfiguration.params.token = "";
         },
-        vtStorage:vtStorage,
+        loginDuration:loginDuration,
+        logoutModalDuration:logoutModalDuration,
         postConfiguration:postConfiguration,
         getConfiguration:getConfiguration,
         putConfiguration:putConfiguration,
         deleteConfiguration:deleteConfiguration
     }
-
 });
 
 iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
@@ -395,29 +416,29 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig) {
     }
 });
 
-iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveConfig) {
+iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveConfig, iObserveStorage) {
 
     var showHideNavTabs;
     var showTimerModal;
 
     var userLoginState = function() {
-        if (iObserveConfig.vtStorage.getItem('loginState') == true)
+        if (iObserveStorage.getItem('loginState') == true)
             return true;
         else
             return false;
     }
 
     var userLogout = function() {
-        if(iObserveConfig.vtStorage.getItem('loginState')) {
+        if(iObserveStorage.getItem('loginState')) {
             var deferred = $q.defer();
             stopLogoutTimer();
+            iObserveStorage.setItem('tokenExpiry', 0);
+            iObserveStorage.setItem('loginState', false);
+            iObserveStorage.setItem('userId', '');
+            iObserveStorage.setItem('token', '');
 
             $http.get(routePrePath + '/logout', iObserveConfig.postConfiguration).success(function(data) {
                 iObserveConfig.removeToken();
-                iObserveConfig.vtStorage.removeItem('token');
-                iObserveConfig.vtStorage.setItem('loginState', false);
-                iObserveConfig.vtStorage.setItem('token', '');
-                iObserveConfig.vtStorage.setItem('userId', '');
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message );
@@ -434,11 +455,13 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
 
         $http.post(routePrePath + '/login', data, iObserveConfig.postConfiguration)
             .success(function(data) {
-                startLogoutTimer();
-                iObserveConfig.vtStorage.setItem('loginState', true);
-                iObserveConfig.vtStorage.setItem('token', data.token);
-                iObserveConfig.vtStorage.setItem('userId', data.userId);
+                iObserveStorage.setItem('loginState', true);
+                iObserveStorage.setItem('token', data.token);
+                iObserveStorage.setItem('userId', data.userId);
+                var currentDate = new Date();
+                iObserveStorage.setItem('tokenExpiry', (currentDate.getTime()) + iObserveConfig.loginDuration);
                 iObserveConfig.updateToken();
+                startLogoutTimer();
                 deferred.resolve(data);
             })
             .error(function(data, status){
@@ -454,6 +477,8 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
 
         $http.get(routePrePath + '/renewlogin', iObserveConfig.postConfiguration)
             .success(function(data) {
+                var currentDate = new Date();
+                iObserveStorage.setItem('tokenExpiry', (currentDate.getTime()) + iObserveConfig.loginDuration);
                 startLogoutTimer();
                 deferred.resolve(data);
             })
@@ -480,10 +505,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
 
     var getProfile = function() {
 
-        if(iObserveConfig.vtStorage.getItem('loginState') == true) {
+        if(iObserveStorage.getItem('loginState') == true) {
             var deferred = $q.defer();
 
-            $http.get(routePrePath + '/user/'+iObserveConfig.vtStorage.getItem('userId'), iObserveConfig.getConfiguration).success(function(data) {
+            $http.get(routePrePath + '/user/'+iObserveStorage.getItem('userId'), iObserveConfig.getConfiguration).success(function(data) {
                 deferred.resolve(data);
             }).error(function(data, status){
                     alert( "Request failed: " + data.message  );
@@ -511,12 +536,23 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
     }
 
     var mytimeout;
-    var startLogoutTimer = function () {
-        mytimeout = $timeout(onTimeout,logoutTime - 10000);
-    }
 
     var onTimeout = function () {
         showTimerModal();
+    }
+
+    var startLogoutTimer = function () {
+        if(mytimeout != null)
+            $timeout.cancel(mytimeout);
+        var currentDate = new Date();
+        var t1 = iObserveStorage.getItem('tokenExpiry');
+        var t2 = currentDate.getTime();
+        var t3 = iObserveConfig.logoutModalDuration;
+        var duration =  t1 - t2 - t3;  //iObserveStorage.getItem('tokenExpiry') - currentDate.getTime() - iObserveConfig.logoutModalDuration;
+        if(duration > 0) // Only enable showing of logout modal if there is more than it's duration time remaining until logout. Else logout.
+            mytimeout = $timeout(onTimeout, duration);  // Difference is the time to display modal
+        else
+            userLogout();   // This will not change tabs to logged out
     }
 
     var stopLogoutTimer = function() {
@@ -532,7 +568,7 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
 
     return {
         getLoginState: function() {
-            if(iObserveConfig.vtStorage.getItem('loginState') == true)
+            if(iObserveStorage.getItem('loginState') == true)
                 return "logged in";
             else
                 return "not logged in";
@@ -555,10 +591,10 @@ iObserveApp.factory('iObserveStates', function ($http, $q, $timeout, iObserveCon
         },
         */
         getUserId: function() {
-            return iObserveConfig.vtStorage.getItem('userId');
+            return iObserveStorage.getItem('userId');
         },
         getToken: function() {
-            return iObserveConfig.vtStorage.getItem('token');
+            return iObserveStorage.getItem('token');
         },
         setShowHideNavTabsFn : setShowHideNavTabsFn,
         setShowTimerModal : setShowTimerModal,

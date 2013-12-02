@@ -37,6 +37,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfi
             })[0];
         }
     };
+
     $scope.logout = function() {
         iObserveStates.doUserLogout();
         $scope.showHideNavTabs(false);
@@ -45,8 +46,10 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfi
     function init() {
         iObserveConfig.updateToken();
         iObserveStates.setShowHideNavTabsFn($scope.showHideNavTabs);
-        if(iObserveStates.doGetLoginState())
+        if(iObserveStates.doGetLoginState()) {
+            iObserveStates.startLogoutTimer();
             $scope.showHideNavTabs(true);
+        }
         else
             $scope.showHideNavTabs(false);
     }
@@ -138,61 +141,57 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
 iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveStates) {
 
-    $scope.counter = "";
-
     $scope.open = function() {
 
         var modalInstance = $modal.open({
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
-            resolve: {
-                'counter': function() {
-                    return $scope.counter;
-                }
-            }
+            backdrop: 'static'
         });
 
-        modalInstance.result.then(function(command) {  // Run on close:
-            }, function(command) {  // Run on dismissal:
-            if(command == "logout")
-                $scope.logout();
-            else if(command == "extend")
+        modalInstance.result.then(function(command) {
+            if(command == "extend") {
                 iObserveStates.doUserRenewLogin();
+            }
+            }, function() {
+                $scope.logout();
         });
     };
 
     iObserveStates.setShowTimerModal($scope.open);
 });
 
-iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, counter) {
+iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, iObserveConfig) {
 
-    var timeCounter = 10;
-    $scope.counter = counter;
-    var countDownTimer;
-
-    $scope.logout = function() {
-        $modalInstance.dismiss('logout');
-    };
+    var timer;
+    var timeCounter = Math.round(iObserveConfig.logoutModalDuration / 1000);
+    $scope.counter = timeCounter.toString();
 
     $scope.extend = function() {
-        $modalInstance.dismiss('extend');
+        $timeout.cancel(timer);
+        $modalInstance.close('extend');
+    };
+    $scope.logout = function() {
+        $timeout.cancel(timer);
+        $modalInstance.dismiss('cancel');
     };
 
-    function onCDTimeout() {
+    function onSecondTimeout() {
         timeCounter--;
         $scope.counter = timeCounter.toString();
         if(timeCounter == 0) {
-            $timeout.cancel(countDownTimer);
-            $modalInstance.close('logout');
+            $timeout.cancel(timer);
+            $modalInstance.dismiss('cancel');
         }
         else
-            startCDTimer();
+            startSecondTimer();
     }
 
-    function startCDTimer() {
-        countDownTimer = $timeout(onCDTimeout, 1000);
+    function startSecondTimer() {
+        timer = $timeout(onSecondTimeout, 1000);
     }
-    startCDTimer();
+    startSecondTimer();
+
 });
 
 iObserveApp.controller('UserEditorController', function($scope) {

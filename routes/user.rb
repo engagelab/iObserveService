@@ -172,8 +172,10 @@ class Iobserve < Sinatra::Application
     if authorized?
       tokenparam = params[:token]
       token = Token.find_by(token: tokenparam)
-      token.update_attributes(:expire_on => Time.now.to_i + 86400)
-      status 200
+      if (token.expires_on - 175) > Time.now.to_i  # 3 minute (+ 5 sec allowance for latency) (180 seconds) pre-expiry window allowed for renewal. This is matched client side.
+        token.update_attributes(:expires_on => Time.now.to_i + 86400)
+        status 200
+      end
     else
       status 401
     end
