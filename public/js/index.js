@@ -1,4 +1,4 @@
-iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfig) {
+iObserveApp.controller('NavCtrl', function($scope, iObserveUser) {
 
     $scope.showingSplashScreen = {showing: false};
 
@@ -39,15 +39,14 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfi
     };
 
     $scope.logout = function() {
-        iObserveStates.doUserLogout();
+        iObserveUser.doUserLogout();
         $scope.showHideNavTabs(false);
     }
 
     function init() {
-        iObserveConfig.updateToken();
-        iObserveStates.setShowHideNavTabsFn($scope.showHideNavTabs);
-        if(iObserveStates.doGetLoginState()) {
-            iObserveStates.startLogoutTimer();
+        iObserveUser.setShowHideNavTabsFn($scope.showHideNavTabs);
+        if(iObserveUser.doGetLoginState()) {
+            iObserveUser.startLogoutTimer();
             $scope.showHideNavTabs(true);
         }
         else
@@ -58,16 +57,16 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveStates, iObserveConfi
 });
 
 
-iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('RegisterCtrl', function($scope, iObserveUser) {
 
     $scope.registerMe = function($event) {
         if(registrationValidated()) {
             var data = {last_name : $scope.user.lastName, first_name: $scope.user.firstName, email: $scope.user.email, password : $scope.user.password};
-            iObserveStates.doUserRegistration(data).then(function(resultData) {
-                $scope.resultData = resultData;
+            iObserveUser.doUserRegistration(data).then(function(resultData) {
+                $scope.resultData = resultData[0];
                 var data = {email : $scope.resultData.email, password: $scope.resultData.password};
-                iObserveStates.doUserLogin(data, null).then(function(resultData) {
-                    if(iObserveStates.getLoginState()) {
+                iObserveUser.doUserLogin(data, null).then(function(resultData) {
+                    if(iObserveUser.getLoginState()) {
                         $scope.showHideNavTabs(true);
                     }
                 });
@@ -82,23 +81,24 @@ iObserveApp.controller('RegisterCtrl', function($scope, iObserveStates) {
 });
 
 
-iObserveApp.controller('AboutCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('AboutCtrl', function($scope, iObserveUser) {
 
     $scope.getLoginState = function () {
-        return iObserveStates.doGetLoginState();
+        return iObserveUser.doGetLoginState();
     }
 
 });
 
 
-iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, iObserveUtilities) {
+iObserveApp.controller('LoginCtrl', function($scope, iObserveUser, iObserveUtilities) {
 
     $scope.logMeIn = function() {
 
         if(loginValidated()) {
             var data = {email : $scope.email, password: $scope.password};
-            iObserveStates.doUserLogin(data, null).then(function(resultData) {
-                if(iObserveStates.getLoginState()) {
+            var promise = iObserveUser.doUserLogin(data);
+            promise.then(function(data) {
+                if(iObserveUser.getLoginState()) {
                     $scope.showHideNavTabs(true);
                 }
             });
@@ -111,13 +111,13 @@ iObserveApp.controller('LoginCtrl', function($scope, iObserveStates, iObserveUti
 
 });
 
-iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
+iObserveApp.controller('ProfileCtrl', function($scope, iObserveUser) {
 
     $scope.userEdit = [{key:"first_name", name: "First Name", value:""},{key:"last_name", name: "Last Name", value:""},{key:"email", name: "Email", value:""},{key:"password", name: "Password", value:""}]
 
     function getProfile() {
-        iObserveStates.doGetProfile().then(function(resultData) {
-            $scope.user = resultData;
+        iObserveUser.doGetProfile().then(function(resultData) {
+            $scope.user = resultData[0];
             $scope.userEdit[0].value = $scope.user.first_name;
             $scope.userEdit[1].value = $scope.user.last_name;
             $scope.userEdit[2].value = $scope.user.email;
@@ -126,9 +126,9 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
     }
 
     $scope.updateProfile = function($event) {
-            var data = {_id : iObserveStates.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, password: $scope.user.password};
-            iObserveStates.doUpdateProfile(data).then(function(resultData) {
-                $scope.user = resultData.user;
+            var data = {_id : iObserveUser.getUserId(), first_name: $scope.user.first_name, last_name: $scope.user.last_name, email: $scope.user.email, password: $scope.user.password};
+            iObserveUser.doUpdateProfile(data).then(function(resultData) {
+                $scope.user = resultData[0].user;
             });
     }
 
@@ -139,26 +139,26 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveStates) {
 
 });
 
-iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveStates) {
+iObserveApp.controller('ModalCtrl', function($scope, $modal, $log, iObserveUser) {
 
     $scope.open = function() {
 
         var modalInstance = $modal.open({
-            templateUrl: 'myModalContent.html',
+            templateUrl: 'LogoutWarningModal.html',
             controller: 'ModalInstanceCtrl',
             backdrop: 'static'
         });
 
         modalInstance.result.then(function(command) {
             if(command == "extend") {
-                iObserveStates.doUserRenewLogin();
+                iObserveUser.doUserRenewLogin();
             }
             }, function() {
                 $scope.logout();
         });
     };
 
-    iObserveStates.setShowTimerModal($scope.open);
+    iObserveUser.setShowTimerModal($scope.open);
 });
 
 iObserveApp.controller('ModalInstanceCtrl', function($scope, $timeout, $modalInstance, iObserveConfig) {

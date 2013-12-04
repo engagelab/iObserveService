@@ -1,6 +1,12 @@
 class Iobserve < Sinatra::Application
   include BCrypt
 
+#  Use this to save lines!
+#  before do
+#    request.body.rewind
+#    @request_payload = JSON.parse request.body.read
+#  end
+
   ######################## User ##################################
   ### get all users
   get '/user' do
@@ -172,9 +178,14 @@ class Iobserve < Sinatra::Application
     if authorized?
       tokenparam = params[:token]
       token = Token.find_by(token: tokenparam)
-      if (token.expires_on - 175) > Time.now.to_i  # 3 minute (+ 5 sec allowance for latency) (180 seconds) pre-expiry window allowed for renewal. This is matched client side.
+      startwindow = token.expires_on - 175
+      endwindow = token.expires_on
+      nowtime = Time.now.to_i
+      if nowtime >= startwindow and nowtime < endwindow  # 3 minute (+ 5 sec allowance for latency) (180 seconds) pre-expiry window allowed for renewal. This is matched client side.
         token.update_attributes(:expires_on => Time.now.to_i + 86400)
         status 200
+      else
+        status 401
       end
     else
       status 401
@@ -187,7 +198,7 @@ class Iobserve < Sinatra::Application
 
     bdy = request.body.read
 
-    if bdy.length > 2 then
+    if bdy.length >= 2 then
       data = JSON.parse bdy
     else
       halt 404

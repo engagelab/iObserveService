@@ -148,6 +148,10 @@ text {
     margin-left: -30%;
 }
 
+.imageDetailModal {
+    width:1024px; margin-left:-512px; top:5%;
+}
+
 .eventSublistScrollable li {
     line-height:0.7em;
     white-space: nowrap;

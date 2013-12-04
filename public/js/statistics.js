@@ -1,4 +1,4 @@
-iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObserveData, iObserveUtilities, ngProgress) {
+iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserveUser, iObserveData, iObserveUtilities, ngProgress) {
     $scope.roomListRequested = false;
     $scope.roomListButton = 0;
     $scope.studyChartButton = 0;
@@ -11,15 +11,14 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
     $scope.sessionSequenceRequested = false;
     $scope.sessionSequenceButton = 0;
     $scope.chartPartialLoaded = false;
-
     $scope.chartRequested = false;
     $scope.showChart = false;
-
     $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
     $scope.chartName = "";
-
-    iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
+    $scope.studies.then(function (response) {
+        $scope.studies = response[0];
+    });
 
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.timeConverterShort = iObserveUtilities.timeConverterShort;
@@ -27,7 +26,6 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
 
     $scope.showSessionList = false;
-    $scope.showImageModal = false;
 
     var activeStudyButton = null;
     var activeRoomButton = null;
@@ -62,7 +60,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
                 $scope.roomListRequested = true;
                 $scope.currentStudy = $study;
                 iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
-                    $scope.rooms = resultData;
+                    $scope.rooms = resultData[0];
                 })
             }
         }
@@ -95,7 +93,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
                 $scope.sessionListRequested = false;
                 $scope.currentRoom = $room;
                 iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
-                    $scope.sessions = resultData;
+                    $scope.sessions = resultData[0];
                     $scope.sessionListRequested = true;
                     if($scope.sessions.length > 0)
                         $scope.showSessionList = true;
@@ -132,7 +130,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
                 $scope.sessionInfoListRequested = false;
                 $scope.currentSession = $session;
                 iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
-                    $scope.chartData = resultData;
+                    $scope.chartData = resultData[0];
                     $scope.sessionInfoListRequested = true;
                 });
             }
@@ -148,7 +146,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
     $scope.displaySessionSequence = function(e) {
         $scope.sessionSequenceRequested = !$scope.sessionSequenceRequested;
         $(e.target).closest('button').toggleClass("btn-info").toggleClass("btn-success");
-    }
+    };
 
     $scope.countSessionsForRoom = function(room) {
         var count = 0;
@@ -157,7 +155,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
                 count++;
         }
         return count;
-    }
+    };
 
     $scope.displayChart = function($chart, e) {
         ngProgress.start();
@@ -171,24 +169,29 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
         $scope.chartName = $chart.name;
         $scope.chartShortName = $chart.shortName;
         $scope.chartRequested = true;
-
-    //    $scope.chartDialogOpts.templateUrl = '/iObserveAngular/partial/charts/' + $scope.chartShortName + '.html';
-    //    openDialog();
     };
 
-/*
-    $scope.$watch('chartData', function(chartData) {
-        angular.forEach(chartData, function(event, idx){
+    $scope.showImageModal = function () {
 
-        })
-    }, true);
-*/
+        var modalInstance = $modal.open({
+            templateUrl: 'ImageDetailModal.html',
+            controller: 'ImageDetailModalCtrl',
+            windowClass: 'imageDetailModal',
+            resolve: {
+                currentSession: function () {
+                    return $scope.currentSession;
+                }
+            }
+        });
 
+  /*      modalInstance.result.then(function(command) {
+        }, function() {
+        });
+  */
+    };
 
     $scope.setVisitorClass = function (visitorColor) {
            return "visitor-color-" + visitorColor;
-   //     var computedColour = "visitor-color-" + visitors.indexOf(visitor).toString();
-   //         return computedColour;
     };
 
     $scope.getChartControllerName = function () {
@@ -201,21 +204,13 @@ iObserveApp.controller('StatisticsCtrl', function($scope, iObserveStates, iObser
         }
         return res;
     }
-/*
-    var openDialog = function(){
-        var d = $dialog.dialog($scope.chartDialogOpts);
-        d.open().then(function(result){
-            if(result)
-            {
-                alert('dialog closed with result: ' + result);
-            }
-        });
-    };
-*/
 
+});
 
+iObserveApp.controller('ImageDetailModalCtrl', function($scope, $modalInstance, currentSession) {
+        $scope.currentSession = currentSession;
+});
 
-})
 /*
 iObserveApp.controller('TestDialogController', ['$scope', function($scope, dialog, chartData) {
     $scope.chartData = chartData;

@@ -1,4 +1,4 @@
-<div ng-controller="StatisticsCtrl">
+<div ng-controller="StatisticsCtrl" id="statisticsCtrl">
     <div>
         <div class="colStudies">
             <h3>Studies</h3>
@@ -64,7 +64,7 @@
                 <div style="margin: 0.5em">
                 <h3>Session Information</h3>
                     <div class="innerColumnLeft" style="margin: 0.5em">
-                        <img ng-src="{{ currentSession.storage.url || '' }}" width="500px" style="margin-bottom: 10px" ng-click="showImageModal = true;"/>
+                        <img ng-src="{{ currentSession.storage.url || '' }}" width="500px" style="margin-bottom: 10px" ng-click="showImageModal()"/>
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                                 <ul style="list-style-type: none">
@@ -112,13 +112,15 @@
             </div>
         </div>
     </div>
-    <div modal="showImageModal" close="showImageModal = false" options="{dialogClass:'modal modal-huge'}">
-        <div class="modal-header">
-            <h3>Session Detail</h3>
+
+
+    <script type="text/ng-template" id="ImageDetailModal.html">
+        <div>
+            <h3 style="padding-left:20px; background-color:white;">Session detail</h3>
+            <img ng-src="{{currentSession.storage.url}}"/>
         </div>
-        <div style="margin: 15px">
-            <img ng-src="{{currentSession.storage.url}}" ng-click="showImageModal = false;"/>
-        </div>
-    </div>
-    <div id="statChartDiv" onload="partialLoaded()" collapse="!chartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
+    </script>
+
+    <div id="statChartDiv" ng-if="chartRequested" onload="partialLoaded()" collapse="!chartRequested" ng-include="'partial/charts/'+ chartShortName + '.html'"></div>
+
 </div>

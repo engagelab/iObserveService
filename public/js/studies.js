@@ -17,8 +17,8 @@ iObserveApp.directive('poiDraggable', function () {
     };
 });
 
-//iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveStates, iObserveData, iObserveUtilities) {
-iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, iObserveData, iObserveUtilities) {
+//iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveUser, iObserveData, iObserveUtilities) {
+iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iObserveData, iObserveUtilities) {
 
     //$scope variable definition
     $scope.isAddStudyCollapsed = true;
@@ -52,9 +52,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
     $scope.formItemType = "";
     var activeStudyButton = null;
     $scope.expandStudyButton = 0;
-
-    iObserveData.setUserId(iObserveStates.getUserId());
     $scope.studies = iObserveData.doGetStudies();
+    $scope.studies.then(function (response) {
+        $scope.studies = response[0];
+    });
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
@@ -131,6 +132,9 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
             var data = {label: label.value};
             iObserveData.doNewStudy(data).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
+                $scope.studies.then(function (response) {
+                    $scope.studies = response[0];
+                });
             });
 
             label.value = '';
@@ -140,15 +144,16 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
 
 
     $scope.getActions = function () {
-        iObserveData.doGetActions().then(function (resultData) {
-
+        var doactions = iObserveData.doGetActions();
+        doactions.then(function (data) {
+            var resultData = data[0];
             var actionsIds = [];
             for (var j = 0; j < $scope.currentStudy.actions.length; j++) {
                 actionsIds.push($scope.currentStudy.actions[j]._id);
             }
 
-            $scope.allActions = new Array();
-            $scope.spaceActions = new Array();
+            $scope.allActions = [];
+            $scope.spaceActions = [];
 
             for (var i = 0; i < resultData.length; i++) {
                 if (actionsIds.indexOf(resultData[i]._id) > -1) {
@@ -166,15 +171,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
     };
 
     $scope.getResources = function () {
-        iObserveData.doGetResources().then(function (resultData) {
-
+        iObserveData.doGetResources().then(function (data) {
+            var resultData = data[0];
             var resourcesIds = [];
             for (var j = 0; j < $scope.currentStudy.resources.length; j++) {
                 resourcesIds.push($scope.currentStudy.resources[j]._id);
             }
 
-            $scope.allResources = new Array();
-            $scope.spaceResources = new Array();
+            $scope.allResources = [];
+            $scope.spaceResources = [];
 
             for (var i = 0; i < resultData.length; i++) {
                 if (resourcesIds.indexOf(resultData[i]._id) > -1) {
@@ -275,7 +280,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
 
             if (Number(statusCode) == 200) {
                 iObserveData.doGetStudies().then(function(data) {
-                    $scope.studies = data;
+                    $scope.studies = data[0];
                     $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                 });
             }
@@ -539,10 +544,11 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
                     label.value = getID();
                 }
 
-                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: label.value, uri: $scope.uploadResponse.url}).then(function (resultData) {
+                iObserveData.doCreateStudyRoom({spaceid: $scope.currentStudy._id, label: label.value, uri: $scope.uploadResponse.url}).then(function (data) {
+                    var resultData = data[0];
                     if (resultData._id != "") {
                         iObserveData.doGetStudies().then(function(data) {
-                            $scope.studies = data;
+                            $scope.studies = data[0];
                             $scope.toggleAddSpace()
                             $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                             (angular.element.find('#imageUploaderForm'))[0].reset();
@@ -566,7 +572,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
     $scope.showhideEditMode = function () {
 
         if ($scope.roomStartPoints.length > 0 && $scope.roomEndPoints.length > 0) {
-            var newSPoints = new Array();
+            var newSPoints = [];
 
             var look = angular.element.find('.startPoint');
             for (var i = 0; i < look.length; i++) {
@@ -576,7 +582,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
 
             var data = {_id: $scope.roomToEdit._id, start_points: $scope.roomToEdit.start_points };
             iObserveData.doUpdateRoomStartCoordinates(data).then(function (resultData) {
-                var newEPoints = new Array();
+                var newEPoints = [];
 
                 var look = angular.element.find('.endPoint');
                 for (var i = 0; i < look.length; i++) {
@@ -761,7 +767,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         modalInstance.result.then(function (selectedRoom) {
             iObserveData.doDeleteRoom(selectedRoom._id).then(function (resultData) {
                 iObserveData.doGetStudies().then(function(data) {
-                    $scope.studies = data;
+                    $scope.studies = data[0];
                     $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
                     (angular.element.find('#imageUploaderForm'))[0].reset();
                     $scope.roomToDelete = null;
@@ -790,6 +796,9 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveStates, 
         modalInstance.result.then(function (selectedStudy) {
             iObserveData.doDeleteStudy(selectedStudy._id).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
+                $scope.studies.then(function (response) {
+                    $scope.studies = response[0];
+                });
             });
 
         }, function () {

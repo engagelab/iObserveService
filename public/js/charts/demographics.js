@@ -135,6 +135,10 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope, ngProgress) {
 
     var objSet = { "Male" : chartData[0], "Female" : chartData[1], "Norwegian" : chartData[2], "Tourist" : chartData[3], "Other" : chartData[4] };
 
+    $scope.getArray = function () {
+        return objSet;
+    }
+
     var processData = function () {
 
         for(var i=0; i<$scope.sessions.length; i++) {

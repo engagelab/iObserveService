@@ -20,7 +20,8 @@
     <!--script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.7.0.js"></script-->
     <!--script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script-->
     <!--script src="http://mgcrea.github.com/angular-strap/js/angular-strap.js"></script-->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
+    <!--script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
     <script type="text/javascript" src="js/libs/ui-bootstrap-tpls-0.7.0.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
@@ -39,6 +40,7 @@
 
 
     <!--  External Chart Scripts -->
+    <script src="js/charts/ng-csv.min.js"></script>
     <link rel="stylesheet" href="js/charts/libs/d3-parsets-master/d3.parsets.css">
     <script src="js/charts/libs/d3-parsets-master/d3.parsets.js"></script>
     <link rel="stylesheet" href="js/charts/libs/nv-d3/nv.d3.css">
@@ -65,7 +67,7 @@
     <div ng-controller="NavCtrl">
 
         <div ng-controller="ModalCtrl">
-            <script type="text/ng-template" id="myModalContent.html">
+            <script type="text/ng-template" id="LogoutWarningModal.html">
                 <div class="modal-header">
                     <h3>Session expiry imminent!</h3>
                 </div>
