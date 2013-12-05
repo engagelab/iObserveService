@@ -17,6 +17,17 @@ iObserveApp.directive('poiDraggable', function () {
     };
 });
 
+
+/*iObserveApp.controller('SurveyDropdownCtrl', function ($scope) {
+    $scope.items = [
+        {"text": "Short Text", "clicktext": "addSelectedQuestion('tf')"},
+        {"text": "Long Text", "clicktext": "addSelectedQuestion('ta')"},
+        {"text": "Single Choice or Ranking", "clicktext": "addSelectedQuestion('rb')"},
+        {"text": "Multiple Choice Checkboxes", "clicktext": "addSelectedQuestion('cb')"}
+    ];
+
+});
+*/
 //iObserveApp.controller('StudiesCtrl', function ($scope, $dialog, iObserveUser, iObserveData, iObserveUtilities) {
 iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iObserveData, iObserveUtilities) {
 
@@ -60,13 +71,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
     $scope.tDiff = iObserveUtilities.tDiff;
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
     $scope.studyRefreshInterval = null
-
-    $scope.dropdown = [
-        {text: 'Short Text', click: "addSelectedQuestion('tf')"},
-        {text: 'Long Text', click: "addSelectedQuestion('ta')"},
-        {text: 'Single Choice or Ranking', click: "addSelectedQuestion('rb')"},
-        {text: 'Multiple Choice Checkboxes', click: "addSelectedQuestion('cb')"}
-    ];
+    $scope.locked = false;
 
     $scope.studyTabs = [
         {title:'Surveys', active: true, tabindex: 0},
@@ -79,6 +84,16 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
      Global
 
      */
+    $scope.surveytypes = [
+        {"text": "Please select..", "clicktext": ""},
+        {"text": "Short Text", "clicktext": "tf"},
+        {"text": "Long Text", "clicktext": "ta"},
+        {"text": "Single Choice or Ranking", "clicktext": "rb"},
+        {"text": "Multiple Choice Checkboxes", "clicktext": "cb"}
+    ];
+    $scope.selectedSurvey = {"type":""};
+    $scope.selectedSurvey.type = $scope.surveytypes[0];
+
     function getID() {
         if ($scope.roomLabel != "") {
             return $scope.roomLabel;
@@ -217,7 +232,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         $scope.refreshSurveys();
         $scope.rooms = $scope.currentStudy.rooms;
         $scope.sessions = $scope.currentStudy.sessionobs;
-
         // hide unfinished sessions from the result
         for (var k = 0; k < $scope.sessions.length; k++) {
             if ($scope.sessions[k].finished_on == null) {
@@ -337,7 +351,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
     };
 
     // show question type
-    $scope.addSelectedQuestion = function (type) {
+    $scope.addSelectedQuestion = function (selected) {
+        var type = selected.clicktext;
         switch (type) {
             case 'tf':
                 $scope.formItemType = 'TextField';
@@ -413,6 +428,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
                 }
             });
         }
+        $scope.formItemType = '';
+        $scope.selectedSurvey.type = $scope.surveytypes[0];
     };
 
     // add new radiobutton option
@@ -451,7 +468,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
             }
         }
 
-        if (checkboxLabel != "" && canAdd) {
+        if (checkboxLabel != null && checkboxLabel != "" && canAdd) {
             $scope.formCheckBoxButtonsList.push({label: checkboxLabel.toLowerCase(), uid: getID()});
             (angular.element.find('#formCheckBoxButtonInput'))[0].text = "";
         }
