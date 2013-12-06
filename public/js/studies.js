@@ -63,14 +63,12 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
     $scope.formItemType = "";
     var activeStudyButton = null;
     $scope.expandStudyButton = 0;
-    $scope.studies = iObserveData.doGetStudies();
-    $scope.studies.then(function (response) {
-        $scope.studies = response[0];
-    });
+
+    initStudiesPage();
+
     $scope.timeConverter = iObserveUtilities.timeConverter;
     $scope.tDiff = iObserveUtilities.tDiff;
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
-    $scope.studyRefreshInterval = null
     $scope.locked = false;
 
     $scope.studyTabs = [
@@ -93,6 +91,15 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
     ];
     $scope.selectedSurvey = {"type":""};
     $scope.selectedSurvey.type = $scope.surveytypes[0];
+
+
+    function initStudiesPage() {
+        console.log("refreshing studies ....");
+        $scope.studies = iObserveData.doGetStudies();
+        $scope.studies.then(function (response) {
+            $scope.studies = response[0];
+        });
+    };
 
     function getID() {
         if ($scope.roomLabel != "") {
@@ -146,15 +153,14 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         if (label.value != "") {
             var data = {label: label.value};
             iObserveData.doNewStudy(data).then(function (resultData) {
-                $scope.studies = iObserveData.doGetStudies();
-                $scope.studies.then(function (response) {
-                    $scope.studies = response[0];
-                });
+                initStudiesPage();
             });
 
             label.value = '';
         }
-        $scope.isAddStudyCollapsed = true;
+
+        $scope.toggleAddStudy();
+
     };
 
 
@@ -295,7 +301,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
             if (Number(statusCode) == 200) {
                 iObserveData.doGetStudies().then(function(data) {
                     $scope.studies = data[0];
-                    $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
+                    setTimeout($scope.activateCurrentSurvey, 1000);
                 });
             }
         });
@@ -306,7 +312,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
     //activate current survey
     $scope.activateCurrentSurvey = function () {
-        clearInterval($scope.studyRefreshInterval);
         (angular.element.find('#'+$scope.currentStudy._id))[0].click();
     };
 
@@ -567,7 +572,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
                         iObserveData.doGetStudies().then(function(data) {
                             $scope.studies = data[0];
                             $scope.toggleAddSpace()
-                            $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
+                            setTimeout($scope.activateCurrentSurvey, 1000);
                             (angular.element.find('#imageUploaderForm'))[0].reset();
                         });
                     }
@@ -785,7 +790,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
             iObserveData.doDeleteRoom(selectedRoom._id).then(function (resultData) {
                 iObserveData.doGetStudies().then(function(data) {
                     $scope.studies = data[0];
-                    $scope.studyRefreshInterval = setTimeout($scope.activateCurrentSurvey, 1000);
+                    setTimeout($scope.activateCurrentSurvey, 1000);
                     (angular.element.find('#imageUploaderForm'))[0].reset();
                     $scope.roomToDelete = null;
                 });
@@ -811,11 +816,9 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         });
 
         modalInstance.result.then(function (selectedStudy) {
+
             iObserveData.doDeleteStudy(selectedStudy._id).then(function (resultData) {
-                $scope.studies = iObserveData.doGetStudies();
-                $scope.studies.then(function (response) {
-                    $scope.studies = response[0];
-                });
+                initStudiesPage();
             });
 
         }, function () {

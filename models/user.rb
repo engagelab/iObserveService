@@ -13,5 +13,4 @@ class User
   field :password_hash, :type => String
   field :password_salt, :type => String
   field :created_on, :type => Bignum
-
 end
