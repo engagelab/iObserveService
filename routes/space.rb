@@ -225,6 +225,14 @@ class Iobserve < Sinatra::Application
 
         end
 
+
+        unless space.user_ids.nil? then
+          space.user_ids.each do|userId|
+            user = User.without(:password_hash, :password_salt).find(userId);
+            user.spaces.delete(space);
+          end
+        end
+
         if space.destroy then
           status 200
           return {"message" => "Space deleted"}.to_json
