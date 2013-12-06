@@ -1,4 +1,4 @@
-iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserveUser, iObserveData, iObserveUtilities, ngProgress) {
+iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserveUser, iObserveData, iObserveUtilities) {
     $scope.roomListRequested = false;
     $scope.roomListButton = 0;
     $scope.studyChartButton = 0;
@@ -158,7 +158,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
     };
 
     $scope.displayChart = function($chart, e) {
-        ngProgress.start();
+        //ngProgress.start();
         $("button.btn").addClass("btn-info").removeClass("btn-success").removeClass("active");
         $(e.target).closest('button').removeClass("btn-info").addClass("btn-success").addClass("active");
         activeStudyButton.removeClass("btn-info").addClass("btn-success").addClass("active");

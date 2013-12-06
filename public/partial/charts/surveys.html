@@ -19,11 +19,11 @@
     </div>
     <div style="margin-left:20px; margin-top: 20px; min-height: 100px; float: left">
         <h5>Textual questions</h5>
-        <select id="textQuestionList" size="2" style="width: 400px; min-height: 100px" required ng-options="a as a.label for a in textAnswers" ng-model="textQuestion" ng-change="showTextAnswers()"></select>
+        <select id="textQuestionList" size="2" style="width: 400px; min-height: 100px" required ng-options="a as a.label for a in textAnswers" ng-model="textQuestion.question" ng-change="showTextAnswers()"></select>
     </div>
     <div style="margin-left:20px; margin-top: 20px; min-height: 100px; float: left">
         <h5>Textual answers</h5>
-        <select id="textAnswerList" size="2" style="width: 400px; min-height: 100px" required ng-options="b for b in textQuestion.answer" ng-model="textQuestionAnswer" ></select>
+        <select id="textAnswerList" size="2" style="width: 400px; min-height: 100px" required ng-options="b for b in textQuestion.question.answer" ng-model="textQuestionAnswer.answer" ></select>
     </div>
     <div class="chart">
         <div id="chartSurvey"></div>

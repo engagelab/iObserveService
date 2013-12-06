@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-demographics', function($scope, ngProgress) {
+iObserveApp.controller('ChartCtrl-demographics', function($scope) {
 
     var chartData = [
         {
@@ -169,7 +169,7 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope, ngProgress) {
     };
 
     processData();
-    ngProgress.complete();
+    //ngProgress.complete();
 
     var chart;
     nv.addGraph(function() {
