@@ -811,6 +811,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         });
 
         modalInstance.result.then(function (selectedStudy) {
+
             iObserveData.doDeleteStudy(selectedStudy._id).then(function (resultData) {
                 $scope.studies = iObserveData.doGetStudies();
                 $scope.studies.then(function (response) {

@@ -87,8 +87,8 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
     var requestNewQuestionObject = function(data) { return postData("/survey/" + data.survey_id + "/question", data); };
 
     // DELETE requests
-    var requestDeleteStudyObject = function(data) { return deleteData("/space/", data); };
-    var requestDeleteRoomObject = function(data) { return deleteData("/room/", data); };
+    var requestDeleteStudyObject = function(data) { return deleteData("/space/" + data, null); };
+    var requestDeleteRoomObject = function(data) { return deleteData("/room/" + data, null); };
     var requestDeleteQuestionObject = function(data) { return deleteData("/question/"+data, null); };
     var requestDeleteSurveyObject = function(data) { return deleteData("/survey/"+data, null); };
 
