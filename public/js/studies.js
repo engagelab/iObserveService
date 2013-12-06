@@ -158,7 +158,9 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
             label.value = '';
         }
-        $scope.isAddStudyCollapsed = true;
+
+        $scope.toggleAddStudy();
+
     };
 
 
@@ -816,8 +818,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         modalInstance.result.then(function (selectedStudy) {
 
             iObserveData.doDeleteStudy(selectedStudy._id).then(function (resultData) {
-                $scope.studies = [];
-                setTimeout(initStudiesPage, 1000);
+                initStudiesPage();
             });
 
         }, function () {

@@ -44,7 +44,12 @@ class Iobserve < Sinatra::Application
         visitorgroup.update_attributes(:comment => data['comment'])
       end
 
-      return visitorgroup.to_json
+      unless data['consent'].nil?
+        visitorgroup.update_attributes(:consent => data['consent'])
+      end
+
+      visitorgroup.save;
+      return visitorgroup.to_json;
     else
       status 404
       return {"message" => "Provide comment"}.to_json

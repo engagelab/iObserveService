@@ -10,4 +10,5 @@ class Visitorgroup
 
   field :comment, :type => String, :default => ''
   field :created_on, :type => Bignum
+  field :consent, :type => Boolean, :default => true
 end
