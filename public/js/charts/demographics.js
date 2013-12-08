@@ -133,11 +133,21 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope) {
         }
     ]
 
+    var objHeader = ["Male", "Female", "Norwegian", "Tourist", "Other"];
+    var objRowNames = ["Child", "Young Adult", "Adult", "Middle Aged", "Senior"];
     var objSet = { "Male" : chartData[0], "Female" : chartData[1], "Norwegian" : chartData[2], "Tourist" : chartData[3], "Other" : chartData[4] };
 
-    $scope.getArray = function () {
-        return objSet;
-    }
+    $scope.getCSVArray = function () {
+        var flattenedArray = [];
+        for(var i=0; i<5; i++) {
+            var newRow = {age: objRowNames[i], Male: 0, Female: 0, Norwegian: 0, Tourist: 0, Other: 0};
+            for(var j=0; j<5;j++) {
+                newRow[objHeader[j]] = objSet[objHeader[j]].values[i].value;
+            }
+            flattenedArray.push(newRow);
+        }
+        return flattenedArray;
+    };
 
     var processData = function () {
 
