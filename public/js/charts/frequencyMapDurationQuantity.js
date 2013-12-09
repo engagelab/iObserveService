@@ -5,7 +5,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     var lastEventCreationTimeInSeconds = 0;
     var mapScale = 5;
 
-    $scope.ageGroups = ["Child", "Young Adult", "Adult", "Middle Aged", "Senior"];
+    $scope.ageGroups = ["Child", "Young adult", "Adult", "Middle aged", "Senior"];
     $scope.nationalities = ["Norwegian", "Tourist", "Other"];
 
     var svg = d3.select("#chart")
@@ -61,12 +61,12 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     else if(j == eventSubset.length-1)
                         nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
                     var dataPoint = {
+                        id : event._id,
                         session : i.toString(),
                         relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
                         x : event.xpos,
                         y : event.ypos,
                         ageGroups : ageGroupList,
-                        selectable : true,
                         nationalities : nationalityList,
                         radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
                         duration : getTimeDuration(event.created_on, event.finished_on)
@@ -182,8 +182,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .attr("r", function(d) { return d.radius*mapScale; })
             }
         });
-
-    }
+    };
 
     var assignCheckBoxes = function () {
 
@@ -197,7 +196,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .filter(function(d) { return d.session === session; })
                     .attr("display", display);
             });
-
+        /*
         d3.selectAll(".age_filter_button")
             .property("checked", true)
             .on("change", function() {
@@ -219,6 +218,87 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .filter(function(d) { return d.nationalities.indexOf(nation) != -1; })
                     .attr("display", display);
             });
+        */
+    };
+
+/*
+    var hiddenSessionList = [];
+    var hiddenAgeList = [];
+    var hiddenNationalityList = [];
+
+    var assignCheckBoxes = function () {
+
+        d3.selectAll(".session_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var session = this.value,
+                    display = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenSessionList.indexOf(session) == -1)
+                        hiddenSessionList.push(session);
+                }
+                else {
+                    var index = hiddenSessionList.indexOf(session);
+                    if(index >= 0)
+                        hiddenSessionList.splice(index, 1);
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) { return (d.session === session) && (hiddenAgeList.indexOf(d.ageGroups) < 0) && (hiddenNationalityList.indexOf(d.nationalities) < 0); })
+                    .attr("display", display);
+            });
+
+        d3.selectAll(".age_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var age = this.value,
+                    display; // = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenAgeList.indexOf(age) == -1)
+                        hiddenAgeList.push(age);
+                    display = "none";
+                }
+                else {
+                    var index = hiddenAgeList.indexOf(age);
+                    if(index >= 0)
+                        hiddenAgeList.splice(index, 1);
+                    display = "inline";
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) {
+                        var result = d.ageGroups.indexOf(age) != -1 && (hiddenSessionList.indexOf(d.session) < 0) && (hiddenNationalityList.indexOf(d.nationalities) < 0);
+                        return result;
+                    })
+                    .attr("display", display);
+            });
+
+        d3.selectAll(".nation_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var nation = this.value,
+                    display = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenNationalityList.indexOf(nation) == -1)
+                        hiddenNationalityList.push(nation);
+                }
+                else {
+                    var index = hiddenNationalityList.indexOf(nation);
+                    if(index >= 0)
+                        hiddenNationalityList.splice(index, 1);
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) {
+                        var result = d.nationalities.indexOf(nation) != -1 && (hiddenSessionList.indexOf(d.session) < 0) && (hiddenAgeList.indexOf(d.ageGroups) < 0);
+                        return result;
+                    })
+                    .attr("display", display);
+            });
 
     }
+ */
 });

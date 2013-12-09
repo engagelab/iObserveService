@@ -14,7 +14,7 @@
             <div id="scaleSliderBar" class="scale-bar handle"></div>
         </div></br>
     </div>
-    <span>Darker circles represent longer time durations, including travel from one event to the next.</span></br>
+    <span>Darker circles represent longer time durations.</span></br>
     <span>Larger circles indicate multiple visitors (up to four).</span>
     <div class="filter_options">
         <form>
@@ -23,7 +23,7 @@
                 <input class="session_filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
             </span>
         </form>
-        <form>
+        <!--form>
             <b>Age Groups:</b></br>
             <span ng-repeat="age in ageGroups">
                 <input class="age_filter_button" id="button_{{ageGroups.indexOf(age)}}" type="checkbox" value="{{age}}" label="{{ageGroups.indexOf(age)}}">&nbsp{{age}}<br>
@@ -34,6 +34,6 @@
             <span ng-repeat="nation in nationalities">
                 <input class="nation_filter_button" id="button_{{nationalities.indexOf(nation)}}" type="checkbox" value="{{nation}}" label="{{nationalities.indexOf(nation)}}">&nbsp{{nation}}<br>
             </span>
-        </form>
+        </form-->
     </div>
 </div>
