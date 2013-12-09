@@ -69,7 +69,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                         selectable : true,
                         nationalities : nationalityList,
                         radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
-                        duration : getTimeDuration(event.created_on, nextEventTime)
+                        duration : getTimeDuration(event.created_on, event.finished_on)
                     }
                     chartData.push(dataPoint);
                     if(lastEventCreationTimeInSeconds < relativeCreationTimeInSeconds)

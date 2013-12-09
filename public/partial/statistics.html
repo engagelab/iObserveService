@@ -74,8 +74,8 @@
                                             <li ng-repeat="interaction in event.interactions">
                                                 <ul style="list-style-type: none">
                                                     <li ng-repeat="action in interaction.actions">
-                                                        <p style="font-size: 0.8em;">Action & Resource:</p>
-                                                        <p style="font-weight: bold">{{ action.type }} &nbsp; {{ getInteraction(interaction.resources[interaction.actions.indexOf(action)].type) }}</p>
+                                                        <p><span style="font-size: 0.8em;">Action & Resource:</span><span style="font-size: 0.8em; padding-left:40px;">Duration: {{tDiffMoment(interaction.created_on, interaction.finished_on, false)}}s</span></p>
+                                                        <p><span style="font-weight: bold">{{ action.type }} &nbsp; {{ getInteraction(interaction.resources[interaction.actions.indexOf(action)].type) }}</span></p>
                                                     </li>
                                                 </ul>
                                                 <ul style="list-style-type: none">
@@ -92,8 +92,9 @@
                         </div>
                     </div>
                     <div class="innerColumnRight">
-                        <p>Finished on: {{ timeConverter(currentSession.finished_on) }}<br/>
-                        Duration: {{ tDiffMoment(currentSession.created_on, currentSession.finished_on) }}<br/>
+                        <p>Started on: {{ timeConverter(currentSession.created_on) }}<br/>
+                        Finished on: {{ timeConverter(currentSession.finished_on) }}<br/>
+                        Duration: {{ tDiffMoment(currentSession.created_on, currentSession.finished_on, true) }}<br/>
                         Visitor(s): {{ currentSession.visitorgroup.visitors.length }}<br/>
                         Event(s): {{ currentSession.eventob_ids.length }}</p>
                         <br/>

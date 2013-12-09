@@ -282,11 +282,14 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         return moment.unix($ts).format("h:mm:ss a");
     };
 
-    var tDiffMoment = function ($a,$b) {
+    var tDiffMoment = function ($a,$b, humanize) {
         var a = moment.unix($a);
         var b = moment.unix($b);
         var difference = b.diff(a);
-        return moment.duration(difference, "milliseconds").humanize();
+        if(humanize)
+            return moment.duration(difference, "milliseconds").humanize();
+        else
+            return moment.duration(difference, "milliseconds").asSeconds();
     }
 
 
