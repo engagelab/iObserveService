@@ -101,7 +101,8 @@ class Iobserve < Sinatra::Application
   put '/interaction/:interaction_id/close' do
     content_type :json
     begin
-      interaction = Interaction.find(params[:interaction_id])
+      interaction = Interaction.find(params[:interaction_id]);
+      eventob = Eventob.find(interaction.eventob_id);
     rescue
       return {"message" => "Error: the visitor id provided does not exist"}.to_json
       halt 404
@@ -109,8 +110,11 @@ class Iobserve < Sinatra::Application
 
     unless interaction.nil? then
       if interaction.finished_on.nil? then
-        interaction.finished_on = Time.now.to_i
-        interaction.save
+        fo = Time.now.to_i;
+        interaction.finished_on = fo;
+        eventob.finished_on = fo;
+        eventob.save;
+        interaction.save;
       end
     end
 
