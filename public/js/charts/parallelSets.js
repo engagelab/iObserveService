@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-parallelSets', function($scope, ngProgress) {
+iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
 
     var chartData = [];
 
@@ -31,7 +31,7 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope, ngProgress) {
     }
 
     processData();
-    ngProgress.complete();
+    //ngProgress.complete();
 
     var theChart = d3.parsets()
         .dimensions(["Sex", "Age", "Nationality", "Action", "Resource"]);

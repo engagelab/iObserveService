@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData, ngProgress) {
+iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData) {
 
     var chartData = [];
     var firstEventCreationTime = 0;
@@ -79,6 +79,25 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
         }
     };
 
+    function sortFunction(a, b) {
+        if(a.relativeCreationTimeInSeconds < b.relativeCreationTimeInSeconds)
+            return -1;
+        else if(a.relativeCreationTimeInSeconds > b.relativeCreationTimeInSeconds)
+            return 1;
+        else if(a.relativeCreationTimeInSeconds == b.relativeCreationTimeInSeconds)
+            return 0;
+    }
+
+    $scope.getCSVArray = function () {
+        var flattenedArray = [];
+        for(var i=0; i<chartData.length; i++) {
+            var newRow = {Time: chartData[i].relativeCreationTimeInSeconds, X: chartData[i].x, Y: chartData[i].y, Duration: chartData[i].duration, Quantity: chartData[i].radius};
+            flattenedArray.push(newRow);
+        }
+        flattenedArray.sort(sortFunction);
+        return flattenedArray;
+    };
+
     // Calculate the time passed in seconds since the first event
     var getRelativeCreationTime = function (time) {
         var a = moment.unix(firstEventCreationTime);
@@ -101,7 +120,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
             $scope.eventCollection = resultData[0].events;
             processData();
             drawChart();
-            ngProgress.complete();
+            //ngProgress.complete();
             $timeout(assignCheckBoxes, 0);
         })
     });

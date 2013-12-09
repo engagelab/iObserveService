@@ -1,5 +1,5 @@
 //angular.module('LocalStorageModule').value('prefix', 'visitracker');
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngProgress', 'ngCsv'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngCsv'], null);
 /*
 iObserveApp.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';

@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData, iObserveUtilities, ngProgress) {
+iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveData, iObserveUtilities) {
 
     var chartData = [];
     var linkData = [];
@@ -111,7 +111,7 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                     processData();
                     buildMarkers();
                     drawChart();
-                    ngProgress.complete();
+                    //ngProgress.complete();
                  //   $timeout(assignCheckBoxes, 0);
                 });
             })

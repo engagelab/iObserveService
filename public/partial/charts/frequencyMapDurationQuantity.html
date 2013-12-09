@@ -1,6 +1,8 @@
 <div ng-controller="ChartCtrl-frequencyMapDurationQuantity">
     <div class="modal-header">
-        <h3>Frequency Map - Duration and Visitor Quantity</h3>
+        <h3>Frequency Map - Duration and Visitor Quantity
+            <button type="button" class="btn btn-info btn-mini" ng-csv="getCSVArray()" csv-header="['Time', 'X', 'Y', 'Duration', 'Visitors']" filename="duration&quantity.csv">Export</button>
+        </h3></h3>
     </div>
     <div class="chart">
         <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
