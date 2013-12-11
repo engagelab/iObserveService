@@ -31,9 +31,14 @@ class Iobserve < Sinatra::Application
           unless data['ypos'].nil?
             eventob.update_attributes(:ypos => data['ypos'])
           end
+
+          unless data['label'].nil?
+            eventob.update_attributes(:label => data['label'])
+          end
         end
 
         sessionob.eventobs << eventob
+        eventob.save
         return eventob.to_json
       else
         status 404
@@ -136,6 +141,10 @@ class Iobserve < Sinatra::Application
 
         unless data['ypos'].nil?
           eventob.update_attributes(:ypos => data['ypos'])
+        end
+
+        unless data['label'].nil?
+          eventob.update_attributes(:label => data['label'])
         end
 
         unless data['interaction_id'].nil? then

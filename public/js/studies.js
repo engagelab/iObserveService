@@ -598,17 +598,18 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
             var look = angular.element.find('.startPoint');
             for (var i = 0; i < look.length; i++) {
-                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", "")))});
+                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
             }
             $scope.roomToEdit.start_points = newSPoints;
 
             var data = {_id: $scope.roomToEdit._id, start_points: $scope.roomToEdit.start_points };
+
             iObserveData.doUpdateRoomStartCoordinates(data).then(function (resultData) {
                 var newEPoints = [];
 
                 var look = angular.element.find('.endPoint');
                 for (var i = 0; i < look.length; i++) {
-                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", "")))});
+                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
                 }
                 $scope.roomToEdit.end_points = newEPoints;
 
@@ -688,15 +689,77 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
     //add start point
     $scope.addStartPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.start_points.push({uuid: getID(), xpos: 1024 / 2, ypos: 768 / 2, rotation: 0});
+        $scope.roomToEdit.start_points.push({uuid: getID(), xpos: 1024 / 2, ypos: 768 / 2, rotation: 0, label: null});
         $scope.openEditRoom($scope.roomToEdit);
     };
 
     //add end point
     $scope.addEndPoint = function () {
         $scope.isEditRoomCollapsed = !$scope.isEditRoomCollapsed;
-        $scope.roomToEdit.end_points.push({uuid: getID(), xpos: 1024 / 2, ypos: 768 / 2, rotation: 0});
+        $scope.roomToEdit.end_points.push({uuid: getID(), xpos: 1024 / 2, ypos: 768 / 2, rotation: 0, label: null});
         $scope.openEditRoom($scope.roomToEdit);
+    };
+
+    $scope.getPOILabel = function(currentPOI) {
+        if(currentPOI.label != null) {
+            return currentPOI.label.substr(0, 15)+' ...';
+        }
+        else {
+            return currentPOI.uuid.substr(0, 15)+' ...';
+        }
+
+    };
+
+    $scope.openEditStartPOILabelModal = function(currentPOI) {
+        $scope.currentStartPOILabelEdit = currentPOI;
+
+        var modalInstance = $modal.open({
+            templateUrl: 'OpenEditStartPOILabelModalCtrl.html',
+            controller: 'OpenEditStartPOILabelModalInstanceCtrl',
+            resolve: {
+                'currentPOI': function() {
+                    return currentPOI;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (newLabel) {
+            for (var i in $scope.roomToEdit.start_points) {
+                if ($scope.roomToEdit.start_points[i].uuid == $scope.currentStartPOILabelEdit.uuid) {
+                    $scope.roomToEdit.start_points[i].label = newLabel;
+                    break;
+                }
+            };
+        }, function () {
+            console.log("EditStartPOILabel panel dismissed");
+        });
+
+    };
+
+    $scope.openEditEndPOILabelModal = function(currentPOI) {
+        $scope.currentEndPOILabelEdit = currentPOI;
+
+        var modalInstance = $modal.open({
+            templateUrl: 'OpenEditEndPOILabelModalCtrl.html',
+            controller: 'OpenEditEndPOILabelModalInstanceCtrl',
+            resolve: {
+                'currentPOI': function() {
+                    return currentPOI;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (newLabel) {
+            for (var i in $scope.roomToEdit.end_points) {
+                if ($scope.roomToEdit.end_points[i].uuid == $scope.currentEndPOILabelEdit.uuid) {
+                    $scope.roomToEdit.end_points[i].label = newLabel;
+                    break;
+                }
+            };
+        }, function () {
+            console.log("EditEndPOILabel panel dismissed");
+        });
+
     };
 
     $scope.openActionModal = function() {
@@ -824,6 +887,36 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         }, function () {
             $scope.studyToDelete = null;
         });
+    };
+});
+
+iObserveApp.controller('OpenEditStartPOILabelModalInstanceCtrl', function($scope, iObserveData, $modalInstance, currentPOI) {
+    $scope.currentPOI = currentPOI;
+
+    if(currentPOI.label != null) {
+        $scope.startPOILabel = currentPOI.label;
+    }
+    else {
+        $scope.startPOILabel = currentPOI.uuid;
+    }
+
+    $scope.updateLabel = function (lab) {
+        $modalInstance.close(lab);
+    };
+});
+
+iObserveApp.controller('OpenEditEndPOILabelModalInstanceCtrl', function($scope, iObserveData, $modalInstance, currentPOI) {
+    $scope.currentPOI = currentPOI;
+
+    if(currentPOI.label != null) {
+        $scope.endPOILabel = currentPOI.label;
+    }
+    else {
+        $scope.endPOILabel = currentPOI.uuid;
+    }
+
+    $scope.updateLabel = function (lab) {
+        $modalInstance.close(lab);
     };
 });
 
