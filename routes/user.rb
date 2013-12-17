@@ -211,12 +211,12 @@ class Iobserve < Sinatra::Application
       if user then
         if user.password_hash == BCrypt::Engine.hash_secret(data['password'], user.password_salt)
           newtoken = SecureRandom.uuid
-          Token.create(
+          tok = Token.create(
               :token => newtoken,
               :expires_on => Time.now.to_i + 86400)  #Token expires 24hrs from now
           cleantokenlist
           status 200
-          return {"token" => newtoken, "userId" => user._id}.to_json
+          return {"token" => newtoken, "userId" => user._id, "expire" => tok.expires_on}.to_json
         else
           status 400
           return {"message" => "Error: wrong password"}.to_json
