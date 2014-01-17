@@ -598,7 +598,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
             var look = angular.element.find('.startPoint');
             for (var i = 0; i < look.length; i++) {
-                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
+                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: look[i].innerText});
+                //newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
             }
             $scope.roomToEdit.start_points = newSPoints;
 
@@ -609,7 +610,8 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
                 var look = angular.element.find('.endPoint');
                 for (var i = 0; i < look.length; i++) {
-                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
+                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: look[i].innerText});
+                    //newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
                 }
                 $scope.roomToEdit.end_points = newEPoints;
 
@@ -702,10 +704,10 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
     $scope.getPOILabel = function(currentPOI) {
         if(currentPOI.label != null) {
-            return currentPOI.label.substr(0, 15)+' ...';
+            return currentPOI.label;
         }
         else {
-            return currentPOI.uuid.substr(0, 15)+' ...';
+            return currentPOI.uuid.substr(0, 6)+' ...';
         }
 
     };
