@@ -1,39 +1,278 @@
-//var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'ui.bootstrap', 'ngUpload', 'ngDragDrop']);
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'LocalStorageModule', 'ui.bootstrap', 'ngUpload', '$strap.directives'], null);
+//angular.module('LocalStorageModule').value('prefix', 'visitracker');
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngCsv'], null);
+/*
+iObserveApp.config(function ($httpProvider) {
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
+    $httpProvider.defaults.transformRequest = function(data){
+        if (data === undefined) {
+            return data;
+        }
+        //return $.param(data);
+        return angular.toJson(data);
+        //return data;
+    }
+});
+*/
+iObserveApp.factory('iObserveStorage', function ($storage) {
+    var vtStorage = $storage('visiTrackerStorage');
+    var getItem = function (itemKey) { return vtStorage.getItem(itemKey); };
+    var setItem = function (itemKey, itemValue) { return vtStorage.setItem(itemKey, itemValue); };
+    var removeItem = function (itemKey) { return vtStorage.removeItem(itemKey); };
 
-// var routePrePath = "http://visitracker.uio.im";
-var routePrePath = "";
+    return {
+        getItem:getItem,
+        setItem:setItem,
+        removeItem:removeItem
+    }
+});
 
-var postConfiguration = {
-    type: "POST",
-    contentType: 'application/json',
-    dataType: "json",
-    async: true,
-    processData: false
-}
-var putConfiguration = {
-    type: "PUT",
-    contentType: 'application/json',
-    dataType: "json",
-    async: true,
-    processData: false
-}
-var getConfiguration = {
-    type: "GET",
-    contentType: 'application/json',
-    dataType: "json",
-    async: true,
-    processData: false
-}
-var deleteConfiguration = {
-    type: "DELETE",
-    contentType: 'application/json',
-    dataType: "json",
-    async: true,
-    processData: false
-}
+iObserveApp.factory('iObserveConfig', function () {
+    return {
+        routePrePath: "",               //  http://visitracker.uio.im
+        logoutModalDuration: 180000,    //  3 minutes  In milliseconds
+        loginDuration: 86400000         //  24 hours   In milliseconds
+    }
+});
+
+iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserveStorage) {
+
+    function requestHttpData(config) {
+        var deferred = $q.defer();
+        $http(config).success(function(data, status, textStatus, jqXHR) {
+            deferred.resolve([data, status, textStatus, jqXHR]);
+        }).error(function(data){
+                alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    }
+
+    function getData(url) {
+        var config = { method: "GET", url : iObserveConfig.routePrePath + url, params: {token:iObserveStorage.getItem('token')}, data : {} };
+        return requestHttpData(config);
+    }
+
+    function postData(url, data) {
+        var config = { method: "POST", url : iObserveConfig.routePrePath + url, params: {token:iObserveStorage.getItem('token')}, data : data };
+        return requestHttpData(config);
+    }
+
+    function deleteData(url, data) {
+        var config = { method: "DELETE", url : iObserveConfig.routePrePath + url, params: {token:iObserveStorage.getItem('token')}, data : data };
+        return requestHttpData(config);
+    }
+
+    function putData(url, data) {
+        var config = { method: "PUT", url : iObserveConfig.routePrePath + url, params: {token:iObserveStorage.getItem('token')}, data : data };
+        return requestHttpData(config);
+    }
+
+    // GET requests
+    var requestSurveysForSpace = function(space_id) { return getData("/space/" + space_id + "/survey"); };
+    var requestEventsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/events"); };
+    var requestSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/session"); };
+    var requestRoomsForSpace = function(space_id) { return getData("/space/" + space_id + "/rooms"); };
+    var requestEventListObject = function(sessionID) { return getData("/session/" + sessionID + "/events"); };
+    var requestSessionObject = function(sessionID) { return getData("/session/" + sessionID); };
+    var requestStudyListObject = function() { return getData("/user/" + iObserveStorage.getItem('userId') + "/space"); };
+    var requestListActionsObject = function() { return getData("/action/simple"); };
+    var requestListResourcesObject = function() { return getData("/resource/simple"); };
+
+    // POST requests
+    var requestNewStudyObject = function(data) { return postData("/user/" + iObserveStorage.getItem('userId') + "/space", data); };
+    var requestAddStudyRoomObject = function(data) { return postData("/space/"+data.spaceid+"/room", data); };
+    var requestNewActionObject = function(data) { return postData("/action", data); };
+    var requestNewResourceObject = function(data) { return postData("/resource", data); };
+    var requestNewSurveyObject = function(data) { return postData("/space/" + data.study_id + "/survey", data); };
+    var requestNewQuestionObject = function(data) { return postData("/survey/" + data.survey_id + "/question", data); };
+
+    // DELETE requests
+    var requestDeleteStudyObject = function(data) { return deleteData("/space/" + data, null); };
+    var requestDeleteRoomObject = function(data) { return deleteData("/room/" + data, null); };
+    var requestDeleteQuestionObject = function(data) { return deleteData("/question/"+data, null); };
+    var requestDeleteSurveyObject = function(data) { return deleteData("/survey/"+data, null); };
+
+    // PUT requests
+    var requestUpdateRoomStartCoordinatesObject = function(data) { return putData("/room/startcoords", data); };
+    var requestUpdateRoomEndCoordinatesObject = function(data) { return putData("/room/endcoords", data); };
+    var requestUpdateSpaceActionsObject = function(data) { return putData("/space/action", data); };
+    var requestUpdateSpaceResourcesObject = function(data) { return putData("/space/resource", data); };
+
+    // USER
+    // GET requests
+    var requestUserLogout = function() { return getData('/logout')};
+    var requestUserRegistration = function(data) { return postData('/user', data)};
+    var requestUserProfile = function() { return getData('/user/'+iObserveStorage.getItem('userId'))};
+    var requestUserUpdateProfile = function() { return getData('/logout')};
+
+    return {
+        doGetSession:requestSessionObject,
+        goGetSurveysForSpace: requestSurveysForSpace,
+        doGetEvents: requestEventListObject,
+        doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
+        doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,
+        doGetStudies: requestStudyListObject,
+        doGetRoomsForSpace: requestRoomsForSpace,
+        doNewStudy: requestNewStudyObject,
+        doDeleteStudy: requestDeleteStudyObject,
+        doCreateStudyRoom: requestAddStudyRoomObject,
+        doDeleteRoom: requestDeleteRoomObject,
+        doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
+        doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
+        doGetActions: requestListActionsObject,
+        doUpdateSpaceActions: requestUpdateSpaceActionsObject,
+        doNewAction: requestNewActionObject,
+        doGetResources: requestListResourcesObject,
+        doUpdateSpaceResources: requestUpdateSpaceResourcesObject,
+        doNewResource: requestNewResourceObject,
+        doNewSurvey: requestNewSurveyObject,
+        doNewQuestion: requestNewQuestionObject,
+        doDeleteQuestion: requestDeleteQuestionObject,
+        doDeleteSurvey: requestDeleteSurveyObject,
+
+        // USER
+        doUserLogout:requestUserLogout,
+        doUserRegistration:requestUserRegistration,
+        doUserGetTheProfile:requestUserProfile,
+        doUserUpdateProfile:requestUserUpdateProfile
+    }
+});
+
+iObserveApp.factory('iObserveUser', function ($http, $q, $timeout, iObserveConfig, iObserveStorage, iObserveData) {
+
+    var showHideNavTabs;
+    var showTimerModal;
+
+    var userLoginState = function() {
+        return (iObserveStorage.getItem('loginState'));
+    };
+
+    var userLogout = function() {
+        if(iObserveStorage.getItem('loginState')) {
+            var deferred = $q.defer();
+            stopLogoutTimer();
+            iObserveStorage.setItem('tokenExpiry', 0);
+            iObserveStorage.setItem('loginState', false);
+            iObserveStorage.setItem('userId', '');
+            var config = { method : "GET", url : iObserveConfig.routePrePath + '/logout', params: {token :iObserveStorage.getItem('token')} };
+            $http(config).success(function(data) {
+                iObserveStorage.setItem('token', '');
+                deferred.resolve(data);
+            }).error(function(data, status){
+                    alert( "Request failed: " + data.message );
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+        else return null;
+    };
+
+    var userLogin = function(data) {
+        var deferred = $q.defer();
+        var config = { method : "POST", url : iObserveConfig.routePrePath + '/login', params: {token :iObserveStorage.getItem('token')}, data : data };
+        $http(config).success(function(data) {
+                iObserveStorage.setItem('loginState', true);
+                iObserveStorage.setItem('token', data.token);
+                iObserveStorage.setItem('userId', data.userId);
+                var currentDate = new Date();
+                iObserveStorage.setItem('tokenExpiry', (currentDate.getTime()) + iObserveConfig.loginDuration);
+                startLogoutTimer();
+                deferred.resolve(data);
+            })
+            .error(function(data, status){
+                alert( "Request failed: " + data.message  );
+                deferred.reject(data);
+            });
+        return deferred.promise;
+    };
+
+    var userRenewLogin = function() {
+        var deferred = $q.defer();
+        var config = { method: "GET", url : iObserveConfig.routePrePath + '/renewlogin', params: {token:iObserveStorage.getItem('token')} };
+        $http(config)
+            .success(function(data, status) {
+                var thestatus = status;
+                var currentDate = new Date();
+                iObserveStorage.setItem('tokenExpiry', (currentDate.getTime()) + iObserveConfig.loginDuration);
+                startLogoutTimer();
+                deferred.resolve(data);
+            })
+            .error(function(data, status){
+                var thestatus = status;
+                if(thestatus == 401)
+                    alert( "You have missed the renewal period, please log in again" );
+                else
+                    alert( "Request failed: " + data.message  );
+                deferred.reject();
+            });
+        return deferred.promise;
+    };
+
+    var userRegistration = function(data) {
+        return iObserveData.doUserRegistration(data);
+    };
+
+    var getProfile = function() {
+        return iObserveData.doUserGetTheProfile();
+    };
+
+    var updateProfile = function(data) {
+        return iObserveData.doUserUpdateProfile();
+    };
+
+    var mytimeout;
+    var onTimeout = function () {
+        showTimerModal();
+    };
+
+    var startLogoutTimer = function () {
+        if(mytimeout != null)
+            $timeout.cancel(mytimeout);
+        var currentDate = new Date();
+        var t1 = iObserveStorage.getItem('tokenExpiry');
+        var t2 = currentDate.getTime();
+        var t3 = iObserveConfig.logoutModalDuration;
+        var duration =  t1 - t2 - t3;  //iObserveStorage.getItem('tokenExpiry') - currentDate.getTime() - iObserveConfig.logoutModalDuration;
+        if(duration > 0) // Only enable showing of logout modal if there is more than it's duration time remaining until logout. Else logout.
+            mytimeout = $timeout(onTimeout, duration);  // Difference is the time to display modal
+        else
+            userLogout();   // This will not change tabs to logged out
+    };
+
+    var stopLogoutTimer = function() {
+        $timeout.cancel(mytimeout);
+    };
+
+    function setShowHideNavTabsFn (shFunction) {
+        showHideNavTabs = shFunction;
+    }
+    function setShowTimerModal (tmFunction) {
+        showTimerModal = tmFunction;
+    }
+
+    return {
+        getLoginState: function() {
+            if(iObserveStorage.getItem('loginState') == true) return "logged in";
+            else return "not logged in";
+        },
+        setShowHideNavTabsFn : setShowHideNavTabsFn,
+        setShowTimerModal : setShowTimerModal,
+        startLogoutTimer : startLogoutTimer,
+        stopLogoutTimer : stopLogoutTimer,
+        doUpdateProfile : updateProfile,
+        doGetProfile : getProfile,
+        doGetLoginState : userLoginState,
+        doUserRegistration: userRegistration,
+        doUserLogin: userLogin,
+        doUserLogout: userLogout,
+        doUserRenewLogin : userRenewLogin
+    };
+});
+
 
 iObserveApp.factory('iObserveUtilities', function ($http) {
+
+    var colorsUsed = [];
 
     var timeConverter = function($ts){
         return moment.unix($ts).format("ddd Do MMM YYYY, h:mm a");
@@ -43,12 +282,16 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         return moment.unix($ts).format("h:mm:ss a");
     };
 
-    var tDiffMoment = function ($a,$b) {
+    var tDiffMoment = function ($a,$b, humanize) {
         var a = moment.unix($a);
         var b = moment.unix($b);
         var difference = b.diff(a);
-        return moment.duration(difference, "milliseconds").humanize();
+        if(humanize)
+            return moment.duration(difference, "milliseconds").humanize();
+        else
+            return moment.duration(difference, "milliseconds").asSeconds();
     }
+
 
     var tDiff = function($a,$b) {
         var a = new Date($a*1000);
@@ -72,13 +315,10 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
     };
 
     var loadJSONFile =  function(fileName) {
-
         var obj = {content:null};
-
         $http.get(fileName).success(function(data) {
             obj.content = data;
         });
-
         return obj;
     }
 
@@ -92,8 +332,6 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
             .substring(1);
     };
 
-
-
     var decColor2hex = function (color){
         // input:   (String) decimal color (i.e. 16711680)
         // returns: (String) hex color (i.e. 0xFF0000)
@@ -102,6 +340,8 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         var numChars = colArr.length;
         for(var a=0;a<(6-numChars);a++){colArr.unshift("0");}
         var result = '#' + colArr.join('');
+        if(colorsUsed.indexOf(result) == -1)
+            colorsUsed.push(result);
         return result;
     }
 
@@ -113,431 +353,10 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         getRandomUUID: getRandomUUID,
         decColor2hex : decColor2hex,
         tDiffMoment: tDiffMoment,
-        loadJSONFile: loadJSONFile
+        loadJSONFile: loadJSONFile,
+        colorsUsed: colorsUsed
     }
 });
-
-iObserveApp.factory('iObserveData', function ($http, $q) {
-
-    var currentUserId = null;
-
-    var requestSurveysForSpace = function(space_id) {
-        var deferred = $q.defer();
-        var route = routePrePath + "/space/" + space_id + "/survey";
-
-        $http.get(route, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestEventsForSpaceAndRoom = function(space_id, room_id) {
-        var deferred = $q.defer();
-        var route = routePrePath + "/space/" + space_id + "/" + room_id + "/events";
-
-        $http.get(route, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestSessionsForSpaceAndRoom = function(space_id, room_id) {
-        var deferred = $q.defer();
-        var route = routePrePath + "/space/" + space_id + "/" + room_id + "/session";
-
-        $http.get(route, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestRoomsForSpace = function(space_id) {
-        var deferred = $q.defer();
-        var route = routePrePath + "/space/" + space_id + "/rooms";
-
-        $http.get(route, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestEventListObject = function(sessionID) {
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + "/session/" + sessionID + "/events", getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestSessionObject = function(sessionID) {
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + "/session/" + sessionID, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestStudyListObject = function() {
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + "/user/" + currentUserId + "/space", getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestNewStudyObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/user/" + currentUserId + "/space", data, getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestDeleteStudyObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.delete(routePrePath + "/space/"+data, deleteConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestDeleteRoomObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.delete(routePrePath + "/room/"+data, deleteConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestAddStudyRoomObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/space/"+data.spaceid+"/room", data, postConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestUpdateRoomStartCoordinatesObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.put(routePrePath + "/room/startcoords", data, putConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestUpdateRoomEndCoordinatesObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.put(routePrePath + "/room/endcoords", data, putConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestListActionsObject = function() {
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + "/action/simple", getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestUpdateSpaceActionsObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.put(routePrePath + "/space/action", data, putConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-        });
-        return deferred.promise;
-    };
-
-    var requestNewActionObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/action", data, getConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-        });
-        return deferred.promise;
-    };
-
-    var requestListResourcesObject = function() {
-        var deferred = $q.defer();
-
-        $http.get(routePrePath + "/resource/simple", getConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestUpdateSpaceResourcesObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.put(routePrePath + "/space/resource", data, putConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestNewResourceObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/resource", data, getConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestNewSurveyObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/space/" + data.study_id + "/survey", data, getConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestNewQuestionObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + "/survey/" + data.survey_id + "/question", data, getConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestDeleteQuestionObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.delete(routePrePath + "/question/"+data, deleteConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    var requestDeleteSurveyObject = function(data) {
-        var deferred = $q.defer();
-
-        $http.delete(routePrePath + "/survey/"+data, deleteConfiguration).success(function(data, textStatus, jqXHR) {
-            deferred.resolve([data, textStatus, jqXHR]);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-            });
-        return deferred.promise;
-    };
-
-    return {
-
-        setUserId: function(id) {
-            currentUserId = id;
-        },
-
-        doGetSession:requestSessionObject,
-        goGetSurveysForSpace: requestSurveysForSpace,
-        doGetEvents: requestEventListObject,
-        doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
-        doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,
-        doGetStudies: requestStudyListObject,
-        doGetRoomsForSpace: requestRoomsForSpace,
-        doNewStudy: requestNewStudyObject,
-        doDeleteStudy: requestDeleteStudyObject,
-        doCreateStudyRoom: requestAddStudyRoomObject,
-        doDeleteRoom: requestDeleteRoomObject,
-        doUpdateRoomStartCoordinates: requestUpdateRoomStartCoordinatesObject,
-        doUpdateRoomEndCoordinates: requestUpdateRoomEndCoordinatesObject,
-        doGetActions: requestListActionsObject,
-        doUpdateSpaceActions: requestUpdateSpaceActionsObject,
-        doNewAction: requestNewActionObject,
-        doGetResources: requestListResourcesObject,
-        doUpdateSpaceResources: requestUpdateSpaceResourcesObject,
-        doNewResource: requestNewResourceObject,
-        doNewSurvey: requestNewSurveyObject,
-        doNewQuestion: requestNewQuestionObject,
-        doDeleteQuestion: requestDeleteQuestionObject,
-        doDeleteSurvey: requestDeleteSurveyObject
-    }
-});
-
-iObserveApp.factory('iObserveStates', function ($http, $q, localStorageService) {
-
-    var userLogout = function() {
-        localStorageService.clearAll();
-    }
-
-    var userLogin = function(data, def) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + '/login', data, postConfiguration).success(function(data) {
-
-            localStorageService.add('loginState', true);
-            localStorageService.add('loginToken', data.token);
-            localStorageService.add('userId', data.userId);
-
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message  );
-                deferred.reject();
-          });
-
-        return deferred.promise;
-    }
-
-    var userRegistration = function(data) {
-        var deferred = $q.defer();
-
-        $http.post(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message );
-                deferred.reject();
-          });
-
-        return deferred.promise;
-    }
-
-    var getProfile = function() {
-
-        if(localStorageService.get('loginState')) {
-            var deferred = $q.defer();
-
-            $http.get(routePrePath + '/user/'+localStorageService.get('userId'), getConfiguration).success(function(data) {
-                deferred.resolve(data);
-            }).error(function(data, status){
-                    alert( "Request failed: " + data.message  );
-                    deferred.reject();
-              });
-
-            return deferred.promise;
-        }
-        else
-            return null;
-    }
-
-    var updateProfile = function(data) {
-        var deferred = $q.defer();
-
-        $http.put(routePrePath + '/user', data, postConfiguration).success(function(data) {
-            userLogin(data, deferred);
-        //    deferred.resolve(data);
-        }).error(function(data, status){
-                alert( "Request failed: " + data.message );
-                deferred.reject();
-            });
-
-        return deferred.promise;
-    }
-
-    return {
-        getLoginState: function() {
-            return localStorageService.get('loginState');
-        },
-        /*
-        setLoginState: function(state) {
-            loginState = state;
-        },
-        getSessionObject: function() {
-            return sessionObject;
-        },
-        setSessionObject: function(so) {
-            sessionObject = so;
-        },
-        getLoginToken: function() {
-            return loginToken;
-        },
-        setLoginToken: function(token) {
-            loginToken = token;
-        },
-        setUserId: function(id) {
-            userId = id;
-        },
-        */
-        getUserId: function() {
-            return localStorageService.get('userId');
-        },
-        doUpdateProfile : updateProfile,
-        doGetProfile : getProfile,
-        doUserRegistration: userRegistration,
-        doUserLogin: userLogin,
-        doUserLogout: userLogout
-    };
-});
-
-
 
 
 //  Place a tag called <markdown></markdown> in a html file and this directive will convert any contained plain text to markup.

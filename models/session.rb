@@ -22,4 +22,8 @@ class Sessionob
   field :created_on, :type => Bignum
   field :finished_on, :type => Bignum
   field :stats, :type => Array, :default => []
+
+  # searches for this model will only return if finished_on is not nil
+  # also requires that mongoid.yml contains 'options: raise_not_found_error: false' so that default scope searches for unfinished IDs does not result in error
+  default_scope where(:finished_on.ne => nil)
 end

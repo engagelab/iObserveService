@@ -11,7 +11,6 @@ class Visitor
   field :sex, :type => String
   field :nationality, :type => String
   field :comment, :type => String
-  field :consent, :type => String
   field :color, :type => String
   field :isGroupVisitor, :type => Boolean, :default => false
 

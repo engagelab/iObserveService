@@ -1,11 +1,11 @@
-iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData, iObserveUtilities) {
+iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData) {
 
     var chartData = [];
     var firstEventCreationTime = 0;
     var lastEventCreationTimeInSeconds = 0;
     var mapScale = 5;
 
-    $scope.ageGroups = ["Child", "Young Adult", "Adult", "Middle Aged", "Senior"];
+    $scope.ageGroups = ["Child", "Young adult", "Adult", "Middle aged", "Senior"];
     $scope.nationalities = ["Norwegian", "Tourist", "Other"];
 
     var svg = d3.select("#chart")
@@ -30,49 +30,72 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                 var nationalityList = [];
                 var event = eventSubset[j];
 
-                if(j == 0)
-                    firstEventCreationTime = event.created_on;
-                relativeCreationTimeInSeconds = getRelativeCreationTime(event.created_on);
+                // This counters a bug caused when an event is posted with no interactions
+                if(event.interactions.length > 0) {
 
-                // Iterate through Interactions and Visitors and collect unique visitors for this event
-                for(var k=0; k<event.interactions.length; k++) {
-                    var interaction = event.interactions[k];
+                    if(j == 0)
+                        firstEventCreationTime = event.created_on;
+                    relativeCreationTimeInSeconds = getRelativeCreationTime(event.created_on);
 
-                    for(var l=0;  l<interaction.visitors.length; l++) {
-                        var visitor = interaction.visitors[l];
-                        if(storedVisitorsIds.indexOf(visitor._id) == -1) {
-                            storedVisitorsIds.push(visitor._id);
-                            if(ageGroupList.indexOf(visitor.age) == -1) {
-                                ageGroupList.push(visitor.age);
-                            }
-                            if(nationalityList.indexOf(visitor.nationality) == -1) {
-                                nationalityList.push(visitor.nationality);
+                    // Iterate through Interactions and Visitors and collect unique visitors for this event
+                    for(var k=0; k<event.interactions.length; k++) {
+                        var interaction = event.interactions[k];
+
+                        for(var l=0;  l<interaction.visitors.length; l++) {
+                            var visitor = interaction.visitors[l];
+                            if(storedVisitorsIds.indexOf(visitor._id) == -1) {
+                                storedVisitorsIds.push(visitor._id);
+                                if(ageGroupList.indexOf(visitor.age) == -1) {
+                                    ageGroupList.push(visitor.age);
+                                }
+                                if(nationalityList.indexOf(visitor.nationality) == -1) {
+                                    nationalityList.push(visitor.nationality);
+                                }
                             }
                         }
                     }
-                }
 
-                // Create a data point with teh information gathered
-                if(j < eventSubset.length-1)
-                    nextEventTime = eventSubset[j+1].created_on;
-                else if(j == eventSubset.length-1)
-                    nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
-                var dataPoint = {
-                    session : i.toString(),
-                    relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
-                    x : event.xpos,
-                    y : event.ypos,
-                    ageGroups : ageGroupList,
-                    selectable : true,
-                    nationalities : nationalityList,
-                    radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
-                    duration : getTimeDuration(event.created_on, nextEventTime)
+                    // Create a data point with the information gathered
+                    if(j < eventSubset.length-1)
+                        nextEventTime = eventSubset[j+1].created_on;
+                    else if(j == eventSubset.length-1)
+                        nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
+                    var dataPoint = {
+                        id : event._id,
+                        session : i.toString(),
+                        relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
+                        x : event.xpos,
+                        y : event.ypos,
+                        ageGroups : ageGroupList,
+                        nationalities : nationalityList,
+                        radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
+                        duration : getTimeDuration(event.created_on, event.finished_on)
+                    }
+                    chartData.push(dataPoint);
+                    if(lastEventCreationTimeInSeconds < relativeCreationTimeInSeconds)
+                        lastEventCreationTimeInSeconds = relativeCreationTimeInSeconds;
                 }
-                chartData.push(dataPoint);
-                if(lastEventCreationTimeInSeconds < relativeCreationTimeInSeconds)
-                    lastEventCreationTimeInSeconds = relativeCreationTimeInSeconds;
             }
         }
+    };
+
+    function sortFunction(a, b) {
+        if(a.relativeCreationTimeInSeconds < b.relativeCreationTimeInSeconds)
+            return -1;
+        else if(a.relativeCreationTimeInSeconds > b.relativeCreationTimeInSeconds)
+            return 1;
+        else if(a.relativeCreationTimeInSeconds == b.relativeCreationTimeInSeconds)
+            return 0;
+    }
+
+    $scope.getCSVArray = function () {
+        var flattenedArray = [];
+        for(var i=0; i<chartData.length; i++) {
+            var newRow = {Time: chartData[i].relativeCreationTimeInSeconds, X: chartData[i].x, Y: chartData[i].y, Duration: chartData[i].duration, Quantity: chartData[i].radius};
+            flattenedArray.push(newRow);
+        }
+        flattenedArray.sort(sortFunction);
+        return flattenedArray;
     };
 
     // Calculate the time passed in seconds since the first event
@@ -93,10 +116,11 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
 
     $scope.$watch('chartPartialLoaded', function(newValue) {
         iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
-            $scope.sessionDetails = resultData.sessions;
-            $scope.eventCollection = resultData.events;
+            $scope.sessionDetails = resultData[0].sessions;
+            $scope.eventCollection = resultData[0].events;
             processData();
             drawChart();
+            //ngProgress.complete();
             $timeout(assignCheckBoxes, 0);
         })
     });
@@ -158,8 +182,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .attr("r", function(d) { return d.radius*mapScale; })
             }
         });
-
-    }
+    };
 
     var assignCheckBoxes = function () {
 
@@ -173,7 +196,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .filter(function(d) { return d.session === session; })
                     .attr("display", display);
             });
-
+        /*
         d3.selectAll(".age_filter_button")
             .property("checked", true)
             .on("change", function() {
@@ -195,6 +218,87 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     .filter(function(d) { return d.nationalities.indexOf(nation) != -1; })
                     .attr("display", display);
             });
+        */
+    };
+
+/*
+    var hiddenSessionList = [];
+    var hiddenAgeList = [];
+    var hiddenNationalityList = [];
+
+    var assignCheckBoxes = function () {
+
+        d3.selectAll(".session_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var session = this.value,
+                    display = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenSessionList.indexOf(session) == -1)
+                        hiddenSessionList.push(session);
+                }
+                else {
+                    var index = hiddenSessionList.indexOf(session);
+                    if(index >= 0)
+                        hiddenSessionList.splice(index, 1);
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) { return (d.session === session) && (hiddenAgeList.indexOf(d.ageGroups) < 0) && (hiddenNationalityList.indexOf(d.nationalities) < 0); })
+                    .attr("display", display);
+            });
+
+        d3.selectAll(".age_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var age = this.value,
+                    display; // = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenAgeList.indexOf(age) == -1)
+                        hiddenAgeList.push(age);
+                    display = "none";
+                }
+                else {
+                    var index = hiddenAgeList.indexOf(age);
+                    if(index >= 0)
+                        hiddenAgeList.splice(index, 1);
+                    display = "inline";
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) {
+                        var result = d.ageGroups.indexOf(age) != -1 && (hiddenSessionList.indexOf(d.session) < 0) && (hiddenNationalityList.indexOf(d.nationalities) < 0);
+                        return result;
+                    })
+                    .attr("display", display);
+            });
+
+        d3.selectAll(".nation_filter_button")
+            .property("checked", true)
+            .on("change", function() {
+                var nation = this.value,
+                    display = this.checked ? "inline" : "none";
+
+                if(!this.checked) {
+                    if(hiddenNationalityList.indexOf(nation) == -1)
+                        hiddenNationalityList.push(nation);
+                }
+                else {
+                    var index = hiddenNationalityList.indexOf(nation);
+                    if(index >= 0)
+                        hiddenNationalityList.splice(index, 1);
+                }
+
+                svg.selectAll(".eventCircle")
+                    .filter(function(d) {
+                        var result = d.nationalities.indexOf(nation) != -1 && (hiddenSessionList.indexOf(d.session) < 0) && (hiddenAgeList.indexOf(d.ageGroups) < 0);
+                        return result;
+                    })
+                    .attr("display", display);
+            });
 
     }
+ */
 });

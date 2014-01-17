@@ -1,6 +1,8 @@
 <div ng-controller="ChartCtrl-frequencyMapDurationQuantity">
     <div class="modal-header">
-        <h3>Frequency Map - Duration and Visitor Quantity</h3>
+        <h3>Frequency Map - Duration and Visitor Quantity
+            <button type="button" class="btn btn-info btn-mini" ng-csv="getCSVArray()" csv-header="['Time', 'X', 'Y', 'Duration', 'Visitors']" filename="duration&quantity.csv">Export</button>
+        </h3></h3>
     </div>
     <div class="chart">
         <img ng-src="{{currentRoom.uri}}" width="1024px" height="723px" />
@@ -12,7 +14,7 @@
             <div id="scaleSliderBar" class="scale-bar handle"></div>
         </div></br>
     </div>
-    <span>Darker circles represent longer time durations, including travel from one event to the next.</span></br>
+    <span>Darker circles represent longer time durations.</span></br>
     <span>Larger circles indicate multiple visitors (up to four).</span>
     <div class="filter_options">
         <form>
@@ -21,7 +23,7 @@
                 <input class="session_filter_button" id="button_{{sessionDetails.indexOf(session)}}" type="checkbox" value="{{sessionDetails.indexOf(session)}}" label="{{sessionDetails.indexOf(session)}}">&nbsp{{timeConverter(session.created_on)}}<br>
             </span>
         </form>
-        <form>
+        <!--form>
             <b>Age Groups:</b></br>
             <span ng-repeat="age in ageGroups">
                 <input class="age_filter_button" id="button_{{ageGroups.indexOf(age)}}" type="checkbox" value="{{age}}" label="{{ageGroups.indexOf(age)}}">&nbsp{{age}}<br>
@@ -32,6 +34,6 @@
             <span ng-repeat="nation in nationalities">
                 <input class="nation_filter_button" id="button_{{nationalities.indexOf(nation)}}" type="checkbox" value="{{nation}}" label="{{nationalities.indexOf(nation)}}">&nbsp{{nation}}<br>
             </span>
-        </form>
+        </form-->
     </div>
 </div>

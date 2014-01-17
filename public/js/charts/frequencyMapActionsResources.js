@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-frequencyMapActionsResources', function($scope, $timeout, iObserveData, iObserveUtilities) {
+iObserveApp.controller('ChartCtrl-frequencyMapActionsResources', function($scope, $timeout, iObserveData) {
 
     var chartData = [];
     var firstEventCreationTime = 0;
@@ -96,6 +96,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapActionsResources', function($scope
             $scope.eventCollection = resultData.events;
             processData();
             drawChart();
+            //ngProgress.complete();
             $timeout(assignCheckBoxes, 0);
         })
     });

@@ -3,7 +3,8 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
     $scope.surveys = [];
     $scope.selectedSurvey = null;
     $scope.dropdown = [];
-    $scope.textQuestion = null;
+    $scope.textQuestion = {question: null};
+    $scope.textQuestionAnswer = {answer: null};
 
     var chartData = [];
     $scope.textAnswers = [];
@@ -15,7 +16,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             newArray.push(arrayOfObjects[i][extractItem]);
         }
         return newArray;
-    }
+    };
 
     // Add up a total for answers (one survey, multiple poeple)
     // Relying on the fact that order is preserved in JSON arrays - that the question index matches the inner answer index
@@ -37,7 +38,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 results[scoreIndex].value++;
         }
         return results;
-    }
+    };
 
     var tallyCheckBoxAnswers = function (answerArray, questionLabels, answerIndex) {
         var results = [];
@@ -45,7 +46,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             var result = {
                 label : questionLabels[i],
                 value : 0
-            }
+            };
             results.push(result);
         }
         for(var j=0; j<answerArray.length; j++) {
@@ -58,7 +59,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
             }
         }
         return results;
-    }
+    };
 
     var getTextFieldAnswers = function (answerArray, answerIndex) {
         var results = [];
@@ -68,7 +69,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 results.push(result);
         }
         return results;
-    }
+    };
 
     var getTextAreaAnswers = function (answerArray, answerIndex) {
         var results = [];
@@ -78,11 +79,12 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 results.push(result);
         }
         return results;
-    }
+    };
 
     $scope.showTextAnswers = function () {
-           $scope.selectedQuestion = $scope.textQuestion;
-    }
+        $scope.selectedQuestion = $scope.textQuestion.question;
+        $scope.textQuestionAnswer.answer = $scope.textQuestion.question.answer[0];
+    };
 
     var setupSelectionMenu = function () {
             for(var i=0; i < $scope.surveys.length; i++) {
@@ -98,7 +100,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
 
         chartData = [];
         $scope.textAnswers = [];
-        $scope.textQuestion = null;
+        $scope.textQuestion.question = null;
 
         if($scope.selectedSurvey == null)
             return;
@@ -146,8 +148,8 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
         }
 
         if($scope.textAnswers.length > 0) {
-            $scope.textQuestion = $scope.textAnswers[0];
-            $scope.textQuestionAnswer = $scope.textQuestion.answer[0];
+            $scope.textQuestion.question = $scope.textAnswers[0];
+            $scope.textQuestionAnswer.answer = $scope.textQuestion.question.answer[0];
         }
         drawChart();
 
@@ -156,7 +158,7 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
 
     $scope.$watch('chartPartialLoaded', function(newValue) {
         iObserveData.goGetSurveysForSpace($scope.currentStudy._id).then(function(resultData) {
-            $scope.surveys = resultData;
+            $scope.surveys = resultData[0];
             //$timeout(setupSelectionMenu, 0);
             setupSelectionMenu();
         })
@@ -282,105 +284,6 @@ iObserveApp.controller('ChartCtrl-survey', function($scope, $timeout, iObserveDa
                 .attr("y1", 0)
                 .attr("y2", height)
                 .style("stroke", "#000");
-
-         /*   bars.append("svg:text")
-                .attr("x", 0)
-                .attr("y", 10 + yFit.rangeBand() / 2)
-                .attr("dx", -6)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "end")
-                .text(function(d) { return d.label; })
-
-            var rules = newG.selectAll("g.rule")
-                .data(xFit.ticks(10))
-                .enter().append("svg:g")
-                .attr("class", "rule")
-                .attr("transform", function(d) { return "translate(" + xFit(d.value) + ", 0)"; })
-
-            rules.append("svg:line")
-                .attr("y1", height)
-                .attr("y2", height + 6)
-                .attr("x1", labelpad)
-                .attr("x2", labelpad)
-                .attr("stroke", "black");
-
-            rules.append("svg:line")
-                .attr("y1", 0)
-                .attr("y2", height)
-                .attr("x1", labelpad)
-                .attr("x2", labelpad)
-                .attr("stroke", "white")
-                .attr("stroke-opacity", .3);
-
-            rules.append("svg:text")
-                .attr("y", height + 8)
-                .attr("x", labelpad)
-                .attr("dy", ".71em")
-                .attr("text-anchor", "middle")
-                .text(xFit.tickFormat(10));
-*/
-            /*
-            var rect = d3.svg.line()
-                .interpolate("basis")
-                .x(function(d, i) { return x(d.itemTotals[i]); })
-                .y(function(d, i) { return y(d.itemLabels[i]); });
-
-            svg.append("g")
-                .attr("transform", function(d) {
-                    xTranslation = xTranslation/120 < 5 ? xTranslation+120 : -120;
-                    yTranslation = xTranslation/120 == 5 ? yTranslation+120 : yTranslation;
-                    return "translate(" + xTranslation + "," + yTranslation + ")";
-                })
-                .selectAll(".line")
-                .data(data)
-                .enter()
-                .append("path")
-                .attr("class", "line")
-                .attr("d", line);
-*/
-           //     .append("g")
-           //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-
         }
-   /*
-        var w = 815,
-            h = 260,
-            labelpad = 165,
-            x = d3.scale.linear().domain([0, 100]).range([0, w]),
-            y = d3.scale.ordinal().domain(d3.range(sampleData.length)).rangeBands([0, h], .2);
-
-        var svg = d3.select("#chartSurvey").selectAll()
-            .data(sampleData)
-            .enter().append("svg")
-            .attr("class", function(d) { return d.type })
-            .attr("width", 100)
-            .attr("height", 100)
-            .append("g")
-            .attr("class", "bar")
-            .attr("transform", "translate(" + 100 + "," + 100 + ")");
-
-        var bars = svg.selectAll(".bar");
-
-        bars.append("svg:rect")
-            .attr("fill", "darkblue" )
-            .attr("width", x)
-            .attr("height", y.rangeBand());
-
-        bars.append("svg:text")
-            .attr("x", 0)
-            .attr("y", 10 + y.rangeBand() / 2)
-            .attr("dx", -6)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "end")
-            .text(function(d) { return d.label; });
-    */
-/*
-        svg.selectAll(".RadioButtons").selectAll("g.bar")
-            .append("svg:g")
-            .attr("class", "bar")
-            .attr("transform", function(d, i) { return "translate(" + labelpad + "," + y(i) + ")"; });
-*/
     }
 });
