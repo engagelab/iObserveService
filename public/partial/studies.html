@@ -59,7 +59,23 @@
                         <div style="float: left;margin-left: 20px">
                             <div style="min-height: 300px" id="surveyEditDiv">
                                 <p><b>Selected survey:</b></p>
-                                <button class="btn btn-danger btn-mini" ng-click="deleteSurvey(survey._id)"><i id="deleteSurveyButton" class="icon-minus"></i></button> Delete <br/><br/>
+                                <button class="btn btn-danger btn-mini" ng-click="deleteSurvey(survey)"><i id="deleteSurveyButton" class="icon-minus"></i></button> Delete <br/><br/>
+                                <div>
+                                    <script type="text/ng-template" id="StudiesDeleteSurveyModalCtrl.html">
+                                        <div class="modal-header">
+                                            <h3>Delete survey?</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure to delete this survey?</p>
+                                            <p>Please note that all data for this survey will be also deleted.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary" ng-click="okDeleteSurvey()">Ok</button>
+                                            <button class="btn btn-danger" ng-click="cancelDeleteSurvey()">Cancel</button>
+                                        </div>
+                                    </script>
+                                </div>
+
                                 <p ng-show="survey.locked" style="color: red;"><b>Answers submitted, survey is locked</b></p>
                                 <select ng-hide="survey.locked" ng-model="selectedSurvey.type" ng-options="i as i.text for i in surveytypes" ng-change="addSelectedQuestion(selectedSurvey.type)" ></select>
                                 <div id="quest-group">
