@@ -32,6 +32,7 @@ iObserveApp.directive('poiDraggable', function () {
 iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iObserveData, iObserveUtilities) {
 
     //$scope variable definition
+    $scope.studies = null;
     $scope.isAddStudyCollapsed = true;
     $scope.isAddSurveyCollapsed = true;
     $scope.isAddRoomCollapsed = true;
@@ -235,6 +236,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         $scope.isSpaceResourcesEmpty = true;
         $scope.surveys = $scope.currentStudy.surveys;
         $scope.isEditRoomCollapsed = true;
+        $scope.currentSelectedSurvey = null;
         $scope.refreshSurveys();
         $scope.rooms = $scope.currentStudy.rooms;
         $scope.sessions = $scope.currentStudy.sessionobs;
