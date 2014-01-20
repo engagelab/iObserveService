@@ -335,26 +335,6 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
         $scope.formItemType = "";
     };
 
-    // delete survey
-    $scope.deleteSurvey = function (survey_id) {
-
-        iObserveData.doDeleteSurvey(survey_id).then(function (args) {
-            var statusCode = args[1];
-
-            if (Number(statusCode) == 200) {
-                for (var i = 0; i < ($scope.surveys).length; i++) {
-                    if (survey_id == ($scope.surveys)[i]._id) {
-                        $scope.surveys.splice(i, 1);
-                    }
-                }
-
-                $scope.currentSelectedSurvey = undefined;
-                $scope.refreshSurveys();
-
-            }
-        });
-    };
-
     // show question type
     $scope.addSelectedQuestion = function (selected) {
         var type = selected.clicktext;
@@ -890,6 +870,43 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
             $scope.studyToDelete = null;
         });
     };
+
+    //delete survey
+    $scope.deleteSurvey = function (selectedSurvey) {
+        $scope.surveyToDelete = selectedSurvey;
+
+        var modalInstance = $modal.open({
+            templateUrl: 'StudiesDeleteSurveyModalCtrl.html',
+            controller: 'StudiesDeleteSurveyModalInstanceCtrl',
+            resolve: {
+                'surveyToDelete': function() {
+                    return $scope.surveyToDelete;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedSurvey) {
+
+            iObserveData.doDeleteSurvey(selectedSurvey._id).then(function (args) {
+                var statusCode = args[1];
+
+                if (Number(statusCode) == 200) {
+                    for (var i = 0; i < ($scope.surveys).length; i++) {
+                        if (selectedSurvey._id == ($scope.surveys)[i]._id) {
+                            $scope.surveys.splice(i, 1);
+                        }
+                    }
+
+                    $scope.currentSelectedSurvey = undefined;
+                    $scope.refreshSurveys();
+
+                }
+            });
+
+        }, function () {
+            $scope.surveyToDelete = null;
+        });
+    };
 });
 
 iObserveApp.controller('OpenEditStartPOILabelModalInstanceCtrl', function($scope, iObserveData, $modalInstance, currentPOI) {
@@ -1077,4 +1094,16 @@ iObserveApp.controller('StudiesResourcesModalInstanceCtrl', function($scope, iOb
         $modalInstance.dismiss();
     };
 
+});
+
+iObserveApp.controller('StudiesDeleteSurveyModalInstanceCtrl', function($scope, iObserveData, $modalInstance, surveyToDelete) {
+    $scope.surveyToDelete = surveyToDelete;
+
+    $scope.okDeleteSurvey = function () {
+        $modalInstance.close($scope.surveyToDelete);
+    };
+
+    $scope.cancelDeleteSurvey = function () {
+        $modalInstance.dismiss();
+    };
 });
