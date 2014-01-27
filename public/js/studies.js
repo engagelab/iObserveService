@@ -580,7 +580,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
             var look = angular.element.find('.startPoint');
             for (var i = 0; i < look.length; i++) {
-                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: look[i].innerText});
+                newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: String(look[i].innerText).replace(/\n/g, "")});
                 //newSPoints.push({uuid: look[i].id, rotation: getStartObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
             }
             $scope.roomToEdit.start_points = newSPoints;
@@ -592,7 +592,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
                 var look = angular.element.find('.endPoint');
                 for (var i = 0; i < look.length; i++) {
-                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: look[i].innerText});
+                    newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: look[i].offsetLeft, ypos: look[i].offsetTop, label: String(look[i].innerText).replace(/\n/g, "")});
                     //newEPoints.push({uuid: look[i].id, rotation: getEndObjectRotation(look[i].id), xpos: Number((look[i].style.left).replace("px", "")), ypos: Number((look[i].style.top.replace("px", ""))), label: look[i].innerText.substr(0, look[i].innerText.length-5).replace("\n", "")});
                 }
                 $scope.roomToEdit.end_points = newEPoints;
@@ -689,7 +689,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
             return currentPOI.label;
         }
         else {
-            return currentPOI.uuid.substr(0, 6)+' ...';
+            return currentPOI.uuid;
         }
 
     };
