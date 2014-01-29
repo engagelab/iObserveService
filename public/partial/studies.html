@@ -300,7 +300,7 @@
                         <accordion close-others="true">
                             <accordion-group ng-repeat="session in sessions" heading="Session ({{ sessions.indexOf(session) }}): {{ timeConverter(session.created_on) }}">
                                 <p>Finished on: {{ timeConverter(session.finished_on) }}</p>
-                                <p>Duration: {{ tDiffMoment(sessions.created_on, sessions.finished_on) }}</p>
+                                <p>Duration: {{ tDiffMoment(session.created_on, session.finished_on, true) }}</p>
                                 <p>Visitor(s): {{ session.visitorgroup.visitors.length }}</p>
                                 <p>Event(s): {{ session.eventob_ids.length }}</p>
                                 <img ng-src="{{session.storage.url}}" width="500px" />
