@@ -192,15 +192,12 @@ class Iobserve < Sinatra::Application
               end
 
               if newVisitorArray.length > 0 then
-                interaction.visitors.clear
-                newVisitorArray.each do |visitor|
-                  interaction.visitors << visitor
-                end
+                interaction.update_attributes(:visitors => newVisitorArray)
               end
             end
           end
 
-          interaction.save
+          interaction.save!
           return interaction.to_json
         end
       end
