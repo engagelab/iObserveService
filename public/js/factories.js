@@ -29,8 +29,8 @@ iObserveApp.factory('iObserveStorage', function ($storage) {
 iObserveApp.factory('iObserveConfig', function () {
     return {
         routePrePath: "",               //  http://visitracker.uio.im
-        logoutModalDuration: 180000,    //  3 minutes  In milliseconds
-        loginDuration: 86400000         //  24 hours   In milliseconds
+        logoutModalDuration: 180000,    //  3 minutes  In milliseconds = 180000
+        loginDuration: 86400000         //  24 hours   In milliseconds  = 86400000
     }
 });
 
@@ -159,7 +159,7 @@ iObserveApp.factory('iObserveUser', function ($http, $q, $timeout, iObserveConfi
                 iObserveStorage.setItem('token', '');
                 deferred.resolve(data);
             }).error(function(data, status){
-                    alert( "Request failed: " + data.message );
+               //     alert( "Request failed: " + data.message );
                     deferred.reject();
                 });
             return deferred.promise;
@@ -169,7 +169,7 @@ iObserveApp.factory('iObserveUser', function ($http, $q, $timeout, iObserveConfi
 
     var userLogin = function(data) {
         var deferred = $q.defer();
-        var config = { method : "POST", url : iObserveConfig.routePrePath + '/login', params: {token :iObserveStorage.getItem('token')}, data : data };
+        var config = { method : "POST", url : iObserveConfig.routePrePath + '/login', data : data };
         $http(config).success(function(data) {
                 iObserveStorage.setItem('loginState', true);
                 iObserveStorage.setItem('token', data.token);
@@ -233,10 +233,14 @@ iObserveApp.factory('iObserveUser', function ($http, $q, $timeout, iObserveConfi
         var t2 = currentDate.getTime();
         var t3 = iObserveConfig.logoutModalDuration;
         var duration =  t1 - t2 - t3;  //iObserveStorage.getItem('tokenExpiry') - currentDate.getTime() - iObserveConfig.logoutModalDuration;
-        if(duration > 0) // Only enable showing of logout modal if there is more than it's duration time remaining until logout. Else logout.
-            mytimeout = $timeout(onTimeout, duration);  // Difference is the time to display modal
-        else
-            userLogout();   // This will not change tabs to logged out
+        if(duration > 0) {// Only enable showing of logout modal if there is more than it's duration time remaining until logout. Else logout.
+            mytimeout = $timeout(onTimeout, duration);  // Duration is the time to display modal
+            return true;
+        }
+        else {
+            userLogout();
+            return false;
+        }
     };
 
     var stopLogoutTimer = function() {

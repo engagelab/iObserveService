@@ -19,7 +19,7 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveUser) {
                 { title:"Register", content:"", page: 'partial/register.html'}
             ];
         }
-    }
+    };
 
     $scope.checkSelectedTab = function(title) {
         $scope.showingSplashScreen = false;
@@ -41,19 +41,17 @@ iObserveApp.controller('NavCtrl', function($scope, iObserveUser) {
     $scope.logout = function() {
         iObserveUser.doUserLogout();
         $scope.showHideNavTabs(false);
-    }
+    };
 
     function init() {
         iObserveUser.setShowHideNavTabsFn($scope.showHideNavTabs);
-        if(iObserveUser.doGetLoginState()) {
-            iObserveUser.startLogoutTimer();
+        if(iObserveUser.doGetLoginState() && iObserveUser.startLogoutTimer()) {
             $scope.showHideNavTabs(true);
         }
         else
             $scope.showHideNavTabs(false);
     }
     init();
-
 });
 
 
@@ -103,7 +101,7 @@ iObserveApp.controller('LoginCtrl', function($scope, iObserveUser, iObserveUtili
                 }
             });
         }
-    }
+    };
 
     function loginValidated() {
         return true;
@@ -130,7 +128,7 @@ iObserveApp.controller('ProfileCtrl', function($scope, iObserveUser) {
             iObserveUser.doUpdateProfile(data).then(function(resultData) {
                 $scope.user = resultData[0].user;
             });
-    }
+    };
 
 
     if($scope.user == null) {

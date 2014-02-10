@@ -51,7 +51,7 @@ class Iobserve < Sinatra::Application
     def authorized?
       thetoken = params[:token]
       token = Token.find_by(token: thetoken)
-      if token and token.expires_on > Time.now.to_i
+      if token and token.expires_on >= Time.now.to_i
         return true
       end
       return false
