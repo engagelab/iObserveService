@@ -40,18 +40,21 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             relativeCreationTime = getRelativeCreationTime(event.created_on);
             var bitsChecked = 0; // Bitwise variable to track four visitors
             var interactionIterator = 0;
-
+            var linksPrinted = false;
+            var rolloverText = "";
             // Iterate through Interactions within the event, check which visitors are present
             while(interactionIterator<event.interactions.length && bitsChecked != Math.pow(2, $scope.uniqueVisitors.length)-1) {
                 // The set of visitors in the current interaction
                 var eventVisitorIDs = event.interactions[interactionIterator].visitor_ids;
-
+                rolloverText += event.interactions[interactionIterator].actions[0].type + ' '
+                    + event.interactions[interactionIterator].resources[0].type + '\n';
                 // Set up the data points and lines, with locations, for each unique visitor. Process each visitor only once.
                 for(var v=0; v<$scope.uniqueVisitors.length; v++) {
                     if(eventVisitorIDs.indexOf($scope.uniqueVisitors[v]._id) != -1) {
                         bitsChecked = bitsChecked | (1 << v);
                         var visitor = $scope.uniqueVisitors[v];
                         var col = iObserveUtilities.decColor2hex(visitor.color);
+
                         var eventDataPoint = {
                             eventIndex : i,
                             visitorIndex : v,
@@ -63,32 +66,36 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                             sex: visitor.sex,
                             age: visitor.age,
                             nationality : visitor.nationality
-                        }
-                        var linkDataPoint = {
-                            eventIndex : i,
-                            visitorIndex : v,
-                            relativeCreationTime : relativeCreationTime,
-                            x : event.xpos,
-                            y : event.ypos,
-                            xPrev : xPrev[v],
-                            yPrev : yPrev[v],
-                            color : col
+                        };
+                        if(!linksPrinted) {
+                            var linkDataPoint = {
+                                eventIndex : i,
+                                visitorIndex : v,
+                                relativeCreationTime : relativeCreationTime,
+                                x : event.xpos,
+                                y : event.ypos,
+                                xPrev : xPrev[v],
+                                yPrev : yPrev[v],
+                                color : col
+                            };
+                            linkData.push(linkDataPoint);
                         }
                         chartData.push(eventDataPoint);
-                        linkData.push(linkDataPoint);
                         xPrev[v] = event.xpos;
                         yPrev[v] = event.ypos;
                     }
-                    var linkCircleDataPoint = {
-                        eventIndex : i,
-                        relativeCreationTime : relativeCreationTime,
-                        x : event.xpos,
-                        y : event.ypos
-                    }
-                    linkCircleData.push(linkCircleDataPoint);
                 }
+                linksPrinted = true;
                 interactionIterator++;
             }
+            var linkCircleDataPoint = {
+                eventIndex : i,
+                relativeCreationTime : relativeCreationTime,
+                x : event.xpos,
+                y : event.ypos,
+                description : rolloverText.trim()
+            };
+            linkCircleData.push(linkCircleDataPoint);
         }
         lastEventCreationTime = event.created_on;
     };
@@ -182,7 +189,9 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             .attr("cx", function(d) { return d.x })
             .attr("cy", function(d) { return d.y })
             .attr("display", function(d) { return d.eventIndex <= 0 ? "inline" : "none"})
-            .attr("fill", "white");
+            .attr("fill", "white")
+            .append("svg:title")
+            .text(function(d) { return d.description; });
 
         var eventCircle = svg.selectAll(".eventCircle")
             .data(chartData)
