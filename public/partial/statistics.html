@@ -84,6 +84,10 @@
                                                         <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
                                                     </li>
                                                 </ul>
+                                                <ul style="list-style-type: none">
+                                                    <p style="font-size: 0.8em;">Comment:</p>
+                                                    <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ event.comment }}</p>
+                                                </ul>
                                             </li>
                                         </ul>
                                     </li>
@@ -92,11 +96,13 @@
                         </div>
                     </div>
                     <div class="innerColumnRight">
-                        <p>Started on: {{ timeConverter(currentSession.created_on) }}<br/>
-                        Finished on: {{ timeConverter(currentSession.finished_on) }}<br/>
-                        Duration: {{ tDiffMoment(currentSession.created_on, currentSession.finished_on, true) }}<br/>
-                        Visitor(s): {{ currentSession.visitorgroup.visitors.length }}<br/>
-                        Event(s): {{ currentSession.eventob_ids.length }}</p>
+                        <p><span style="text-decoration: underline;">Started on:</span> {{ timeConverter(currentSession.created_on) }}<br/>
+                        <span style="text-decoration: underline;">Finished on:</span> {{ timeConverter(currentSession.finished_on) }}<br/>
+                        <span style="text-decoration: underline;">Duration:</span> {{ tDiffMoment(currentSession.created_on, currentSession.finished_on, true) }}<br/>
+                        <span style="text-decoration: underline;">Visitor(s):</span> {{ currentSession.visitorgroup.visitors.length }}<br/>
+                        <span style="text-decoration: underline;">Group comment:</span> {{ currentSession.visitorgroup.comment }}<br/>
+                        <span style="text-decoration: underline;">Group consent:</span> {{ currentSession.visitorgroup.consent }}<br/>
+                        <span style="text-decoration: underline;">Event(s):</span> {{ currentSession.eventob_ids.length }}</p>
                         <br/>
                         <h5>Charts for this Session</h5>
                         <ul>

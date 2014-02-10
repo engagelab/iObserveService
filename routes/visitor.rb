@@ -162,6 +162,15 @@ class Iobserve < Sinatra::Application
     if visitor.nil? then
       status 404
     else
+
+      visitorgroup = Visitorgroup.find(visitor.visitorgroup_id)
+      visitorgroup.visitors.each do |v|
+        if v == visitor then
+          visitorgroup.visitors.delete(v)
+        end
+      end
+      visitorgroup.save!
+
       if visitor.destroy then
         status 200
         return {"message" => "Visitor deleted"}.to_json
