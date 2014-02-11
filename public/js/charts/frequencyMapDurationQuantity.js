@@ -4,6 +4,8 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     var firstEventCreationTime = 0;
     var lastEventCreationTimeInSeconds = 0;
     var mapScale = 5;
+    var sessionList = [];
+    var timeSlider;
 
     $scope.ageGroups = ["Child", "Young adult", "Adult", "Middle aged", "Senior"];
     $scope.nationalities = ["Norwegian", "Tourist", "Other"];
@@ -18,11 +20,14 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
         var nextEventTime = 0;
         var relativeCreationTimeInSeconds = 0;
 
-
         // Iterate over the entire set of sessions
         for(var i=0; i<$scope.eventCollection.length; i++) {
             var eventSubset = $scope.eventCollection[i];
-
+            var optionsObject = {
+                hidden : false,
+                lastEventTime : 0
+            };
+            lastEventCreationTimeInSeconds = 0;
             // Iterate over events within the session
             for(var j=0; j<eventSubset.length; j++) {
                 var storedVisitorsIds = [];
@@ -76,6 +81,9 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                         lastEventCreationTimeInSeconds = relativeCreationTimeInSeconds;
                 }
             }
+            optionsObject.lastEventTime = lastEventCreationTimeInSeconds;
+            // Index of the optionsObject is the session number used for checkboxes
+            sessionList.push(optionsObject);
         }
     };
 
@@ -114,6 +122,17 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
         return difference;
     }
 
+    // Find the time when occurs the last event for visible sessions
+    var getLastEventTime = function () {
+        var newLastEventTime = 0;
+        for(var i=0; i<sessionList.length; i++) {
+            if(!sessionList[i].hidden && newLastEventTime < sessionList[i].lastEventTime)
+                newLastEventTime = sessionList[i].lastEventTime;
+        }
+        lastEventCreationTimeInSeconds = newLastEventTime;
+        return newLastEventTime;
+    }
+
     $scope.$watch('chartPartialLoaded', function(newValue) {
         iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
             $scope.sessionDetails = resultData[0].sessions;
@@ -126,7 +145,8 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     });
 
     var drawChart = function () {
-        var circle = svg.selectAll(".eventCircle")
+        getLastEventTime();
+        svg.selectAll(".eventCircle")
             .data(chartData)
             .enter()
             .append("svg:circle")
@@ -155,7 +175,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
 
         // The slider (dragger) - Works by relative creation time from first event
         // Usage:  http://code.ovidiu.ch/dragdealer/
-        new Dragdealer('eventSlider', {
+        timeSlider = new Dragdealer('eventSlider', {
             horizontal: true,
             vertical: false,
             xPrecision: 1024,
@@ -165,7 +185,12 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                 var totalSteps = lastEventCreationTimeInSeconds;
                 $("#eventSliderBar").html("<i class='icon-double-angle-left'></i>&nbsp<span>t: "+Math.round(x*totalSteps)+"s</span>&nbsp<i class='icon-double-angle-right'></i>");
                 svg.selectAll(".eventCircle")
-                    .attr("display", function(d) { return d.relativeCreationTimeInSeconds <= x*totalSteps ? "inline" : "none"});
+                    .attr("display", function(d) {
+                        if(!sessionList[d.session].hidden && d.relativeCreationTimeInSeconds <= x*totalSteps)
+                            return  "inline";
+                        else
+                            return "none";
+                    });
             }
         });
 
@@ -176,8 +201,8 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
             x: 0.4,
             animationCallback: function(x, y)
             {
-                $("#scaleSliderBar").html("<span>"+Math.round(x*this.xPrecision)+"%</span>");
-                mapScale = x*this.xPrecision/10;
+                $("#scaleSliderBar").html("<span>"+Math.round(x*100)+"%</span>");
+                mapScale = x*100/10;
                 svg.selectAll(".eventCircle")
                     .attr("r", function(d) { return d.radius*mapScale; })
             }
@@ -191,10 +216,42 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
             .on("change", function() {
                 var session = this.value,
                     display = this.checked ? "inline" : "none";
-
+                if(sessionList[session].hidden) {
+                    sessionList[session].hidden = false;
+                    display = "inline";
+                }
+                else {
+                    sessionList[session].hidden = true;
+                    display = "none";
+                }
                 svg.selectAll(".eventCircle")
                     .filter(function(d) { return d.session === session; })
                     .attr("display", display);
+
+                getLastEventTime();
+                var newX = timeSlider.getValue()[0];
+                $("#eventSliderBar").html("<i class='icon-double-angle-left'></i>&nbsp<span>t: "+Math.round(newX*lastEventCreationTimeInSeconds)+"s</span>&nbsp<i class='icon-double-angle-right'></i>");
+
+     /*
+                timeSlider = new Dragdealer('eventSlider', {
+                    horizontal: true,
+                    vertical: false,
+                    x: newX,
+                    animationCallback: function(x, y)
+                    {
+                        //var newX = ($("#eventSliderBar").position().left + 100) / 1024;
+                        var totalSteps = lastEventCreationTimeInSeconds;
+                        $("#eventSliderBar").html("<i class='icon-double-angle-left'></i>&nbsp<span>t: "+Math.round(newX*totalSteps)+"s</span>&nbsp<i class='icon-double-angle-right'></i>");
+                        svg.selectAll(".eventCircle")
+                            .attr("display", function(d) {
+                                if(!sessionList[d.session].hidden && d.relativeCreationTimeInSeconds <= newX*totalSteps)
+                                    return  "inline";
+                                else
+                                    return "none";
+                            });
+                    }
+                });
+*/
             });
         /*
         d3.selectAll(".age_filter_button")
