@@ -1,6 +1,9 @@
 class Iobserve < Sinatra::Application
   include BCrypt
 
+  SESSION_PERIOD = 86400 #Token expires 24hrs from now  = 86400
+  SESSION_EXPIRY_WINDOW = 175
+
 #  Use this to save lines!
 #  before do
 #    request.body.rewind
@@ -178,11 +181,11 @@ class Iobserve < Sinatra::Application
     if authorized?
       tokenparam = params[:token]
       token = Token.find_by(token: tokenparam)
-      startwindow = token.expires_on - 175
+      startwindow = token.expires_on - SESSION_EXPIRY_WINDOW
       endwindow = token.expires_on
       nowtime = Time.now.to_i
       if nowtime >= startwindow and nowtime < endwindow  # 3 minute (+ 5 sec allowance for latency) (180 seconds) pre-expiry window allowed for renewal. This is matched client side.
-        token.update_attributes(:expires_on => Time.now.to_i + 86400)
+        token.update_attributes(:expires_on => Time.now.to_i + SESSION_PERIOD)
         status 200
       else
         status 401
@@ -213,7 +216,7 @@ class Iobserve < Sinatra::Application
           newtoken = SecureRandom.uuid
           tok = Token.create(
               :token => newtoken,
-              :expires_on => Time.now.to_i + 86400)  #Token expires 24hrs from now
+              :expires_on => Time.now.to_i + SESSION_PERIOD)  #Token expires 24hrs from now  = 86400
           cleantokenlist
           status 200
           return {"token" => newtoken, "userId" => user._id, "expire" => tok.expires_on}.to_json
