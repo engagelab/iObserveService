@@ -70,6 +70,8 @@
                                 <ul style="list-style-type: none">
                                     <li ng-repeat="event in chartData">
                                         <p style="font-weight: bold">Event {{chartData.indexOf(event)}} &nbsp;&nbsp;  {{ timeConverterShort(event.created_on) }} &nbsp;&nbsp; x: {{ event.xpos }} y: {{ event.ypos }}</p>
+                                        <p style="font-size: 0.8em;">Comment:</p>
+                                        <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ event.comment }}</p>
                                         <ul style="list-style-type: none" class="eventSublistScrollable">
                                             <li ng-repeat="interaction in event.interactions">
                                                 <ul style="list-style-type: none">
@@ -83,10 +85,6 @@
                                                     <li ng-repeat="visitor in interaction.visitors">
                                                         <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ visitor.sex }}  {{ visitor.age }}  {{ visitor.nationality }}</p>
                                                     </li>
-                                                </ul>
-                                                <ul style="list-style-type: none">
-                                                    <p style="font-size: 0.8em;">Comment:</p>
-                                                    <p ng-class="setVisitorClass(visitor.color)" style="font-weight: bold">{{ event.comment }}</p>
                                                 </ul>
                                             </li>
                                         </ul>
