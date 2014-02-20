@@ -157,22 +157,26 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope) {
             for(var j=0; j<session.visitorgroup.visitors.length; j++) {
                 var visitor = session.visitorgroup.visitors[j];
                 var filter = visitor.sex;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
+                if(filter) {
+                    switch(visitor.age) {
+                        case "Child" : objSet[filter].values[0].value++; break;
+                        case "Young adult" : objSet[filter].values[1].value++; break;
+                        case "Adult" : objSet[filter].values[2].value++; break;
+                        case "Middle aged" : objSet[filter].values[3].value++; break;
+                        case "Senior" : objSet[filter].values[4].value++; break;
+                        default : break;
+                    }
                 }
                 filter = visitor.nationality;
-                switch(visitor.age) {
-                    case "Child" : objSet[filter].values[0].value++; break;
-                    case "Young adult" : objSet[filter].values[1].value++; break;
-                    case "Adult" : objSet[filter].values[2].value++; break;
-                    case "Middle aged" : objSet[filter].values[3].value++; break;
-                    case "Senior" : objSet[filter].values[4].value++; break;
-                    default : break;
+                if(filter) {
+                    switch(visitor.age) {
+                        case "Child" : objSet[filter].values[0].value++; break;
+                        case "Young adult" : objSet[filter].values[1].value++; break;
+                        case "Adult" : objSet[filter].values[2].value++; break;
+                        case "Middle aged" : objSet[filter].values[3].value++; break;
+                        case "Senior" : objSet[filter].values[4].value++; break;
+                        default : break;
+                    }
                 }
             }
         }
