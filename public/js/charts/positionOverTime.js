@@ -46,8 +46,6 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
             while(interactionIterator<event.interactions.length && bitsChecked != Math.pow(2, $scope.uniqueVisitors.length)-1) {
                 // The set of visitors in the current interaction
                 var eventVisitorIDs = event.interactions[interactionIterator].visitor_ids;
-                rolloverText += event.interactions[interactionIterator].actions[0].type + ' '
-                    + event.interactions[interactionIterator].resources[0].type + '\n';
                 // Set up the data points and lines, with locations, for each unique visitor. Process each visitor only once.
                 for(var v=0; v<$scope.uniqueVisitors.length; v++) {
                     if(eventVisitorIDs.indexOf($scope.uniqueVisitors[v]._id) != -1) {
@@ -87,6 +85,10 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
                 }
                 linksPrinted = true;
                 interactionIterator++;
+            }
+            for(var ii=0; ii<event.interactions.length; ii++) {
+                rolloverText += event.interactions[ii].actions[0].type + ' '
+                    + event.interactions[ii].resources[0].type + '\n';
             }
             var linkCircleDataPoint = {
                 eventIndex : i,
