@@ -16,7 +16,7 @@ class Iobserve < Sinatra::Application
       end
 
       unless (data.nil? and data['visitors'].nil? and data['action'].nil?) or (data.nil? and data['visitors'].nil? and data['resource'].nil?) then
-          interaction = Interaction.create(:created_on => Time.now.to_i)
+          interaction = Interaction.create(:created_on => params[:nocache])
           visitorArray = data['visitors']
 
           if visitorArray.kind_of?(Array)
@@ -110,7 +110,7 @@ class Iobserve < Sinatra::Application
 
     unless interaction.nil? then
       if interaction.finished_on.nil? then
-        fo = Time.now.to_i;
+        fo = params[:nocache];
         interaction.finished_on = fo;
         eventob.finished_on = fo;
         eventob.save;

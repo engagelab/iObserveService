@@ -33,8 +33,8 @@ class Iobserve < Sinatra::Application
       end
 
       unless space.nil? and room.nil? then
-        sessionob = Sessionob.create(:created_on => Time.now.to_i)
-        visitorgroup = Visitorgroup.create(:created_on => Time.now.to_i)
+        sessionob = Sessionob.create(:created_on => params[:nocache])
+        visitorgroup = Visitorgroup.create(:created_on => params[:nocache])
         sessionob.visitorgroup = visitorgroup
         sessionob.room_id = params[:room_id]
         space.sessionobs << sessionob
@@ -159,7 +159,7 @@ class Iobserve < Sinatra::Application
         storage = Storage.find(params[:map_id])
 
         unless storage.nil?
-          sessionob.update_attributes(:finished_on => Time.now.to_i, :storage => storage)
+          sessionob.update_attributes(:finished_on => params[:nocache], :storage => storage)
         end
 
         return sessionob.to_json

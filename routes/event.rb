@@ -9,7 +9,7 @@ class Iobserve < Sinatra::Application
 
       unless sessionob.nil? then
         status 200
-        eventob = Eventob.create(:created_on => Time.now.to_i)
+        eventob = Eventob.create(:created_on => params[:nocache])
 
         bdy = request.body.read
 
