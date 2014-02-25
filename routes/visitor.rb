@@ -18,7 +18,7 @@ class Iobserve < Sinatra::Application
       status 200
 
       if visitorgroup.visitors.size < 4 then
-        visitor = Visitor.create(:created_on => Time.now.to_i)
+        visitor = Visitor.create(:created_on => params[:nocache])
         visitorgroup.visitors << visitor
         visitorgroup.save
 
