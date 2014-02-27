@@ -15,10 +15,27 @@ class Iobserve < Sinatra::Application
   get '/user/:user_id/space' do
     if authorized?
       content_type :json
-      user = User.find(params[:user_id])
+      #user = User.without(:created_on, :email, :first_name, :last_name, :password_hash, :password_salt).find(params[:user_id])
+      #return user.spaces.to_json(:only => [ :_id, :created_on, :sessionobs, :sessionob_ids ])
+
+      user = User.only(:spaces, :space_ids).find(params[:user_id])
       return user.spaces.to_json
-      #spaces = Space.without(:sessionobs).in(:user_ids => params[:user_id])
-      #return spaces.to_json
+
+    else
+      status 401
+    end
+  end
+
+  ### list all spaces by user id for portal
+  get '/portal/user/:user_id/space' do
+    if authorized?
+      content_type :json
+      #user = User.without(:created_on, :email, :first_name, :last_name, :password_hash, :password_salt).find(params[:user_id])
+      #return user.spaces.to_json(:only => [ :_id, :created_on, :sessionobs, :sessionob_ids ])
+
+      user = User.only(:spaces, :space_ids).find(params[:user_id])
+      return user.spaces.to_json(:only => [ :_id, :created_on, :label, :room_ids ])
+
     else
       status 401
     end

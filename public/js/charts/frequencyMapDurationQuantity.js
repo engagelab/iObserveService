@@ -134,7 +134,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     }
 
     $scope.$watch('chartPartialLoaded', function(newValue) {
-        iObserveData.doGetEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+        iObserveData.doGetStatEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
             $scope.sessionDetails = resultData[0].sessions;
             $scope.eventCollection = resultData[0].events;
             processData();

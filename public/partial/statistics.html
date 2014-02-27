@@ -26,10 +26,10 @@
                 <h3>Rooms</h3>
                 <ul>
                     <li ng-repeat="room in rooms">
-                        <div>
+                        <div style="margin-bottom: 10px">
                             <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-folder-open-alt"></i></button>
                             <span><b> {{ room.label }} </b></span></br>
-                            <p>Sessions(s): <b>{{ countSessionsForRoom(room) }}</b></p>
+                            <!-- p>Sessions(s): <b>{{ countSessionsForRoom(room) }}</b></p -->
                         </div>
                     </li>
                 </ul>
@@ -46,7 +46,7 @@
                             <span><b>{{ chart.name }}</b></span></br>
                         </li>
                     </ul>
-                    <h3>Visitor Sessions</h3>
+                    <h3>Visitor Sessions ({{ sessions.length }})</h3>
                     <ul>
                         <li ng-repeat="session in sessions">
                             <div>

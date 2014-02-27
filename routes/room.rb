@@ -63,6 +63,17 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  ### list all rooms by space id for portal
+  get '/portal/space/:space_id/rooms' do
+    if authorized?
+      content_type :json
+      space = Space.only(:rooms, :room_ids).find(params[:space_id])
+      return space.rooms.to_json(:only => [ :_id, :created_on, :label, :room_ids, :uri ])
+    else
+      status 401
+    end
+  end
+
   ### list all rooms
   get '/room' do
     if authorized?

@@ -70,11 +70,15 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
     // GET requests
     var requestSurveysForSpace = function(space_id) { return getData("/space/" + space_id + "/survey"); };
     var requestEventsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/events"); };
+    var requestStatEventsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/events"); };
     var requestSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/session"); };
+    var requestStatSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/session"); };
     var requestRoomsForSpace = function(space_id) { return getData("/space/" + space_id + "/rooms"); };
+    var requestStatRoomsForSpace = function(space_id) { return getData("/portal/space/" + space_id + "/rooms"); };
     var requestEventListObject = function(sessionID) { return getData("/session/" + sessionID + "/events"); };
     var requestSessionObject = function(sessionID) { return getData("/session/" + sessionID); };
     var requestStudyListObject = function() { return getData("/user/" + iObserveStorage.getItem('userId') + "/space"); };
+    var requestStatsStudyListObject = function() { return getData("/portal/user/" + iObserveStorage.getItem('userId') + "/space"); };
     var requestListActionsObject = function() { return getData("/action/simple"); };
     var requestListResourcesObject = function() { return getData("/resource/simple"); };
 
@@ -110,9 +114,13 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
         goGetSurveysForSpace: requestSurveysForSpace,
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
+        doGetStatSessionsForSpaceAndRoom: requestStatSessionsForSpaceAndRoom,
         doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,
+        doGetStatEventsForSpaceAndRoom: requestStatEventsForSpaceAndRoom,
         doGetStudies: requestStudyListObject,
+        doGetStatsStudies: requestStatsStudyListObject,
         doGetRoomsForSpace: requestRoomsForSpace,
+        doGetStatRoomsForSpace: requestStatRoomsForSpace,
         doNewStudy: requestNewStudyObject,
         doDeleteStudy: requestDeleteStudyObject,
         doCreateStudyRoom: requestAddStudyRoomObject,
