@@ -98,12 +98,24 @@ class Iobserve < Sinatra::Application
     end
   end
 
+
   ### list all sessions by space id  and room id
   get '/space/:space_id/:room_id/session' do
     if authorized?
       content_type :json
       sessions = Sessionob.where(:room_id => params[:room_id]).in(:space_ids => params[:space_id])
       return sessions.to_json
+    else
+      status 401
+    end
+  end
+
+  ### list all sessions by space id  and room id for portal
+  get '/portal/space/:space_id/:room_id/session' do
+    if authorized?
+      content_type :json
+      sessions = Sessionob.where(:room_id => params[:room_id]).in(:space_ids => params[:space_id])
+      return sessions.to_json(:only => [ :storage, :url, :_id, :created_on, :finished_on, :label, :visitorgroup, :visitors, :comment, :age, :nationality, :sex ])
     else
       status 401
     end

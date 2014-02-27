@@ -108,6 +108,39 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  ### list all events from all sessions by space id and room id  for portal
+  get '/portal/space/:space_id/:room_id/events' do
+    if authorized?
+      content_type :json
+      space = Space.find(params[:space_id])
+
+      unless space.nil? then
+
+        @allSessionsForSpaceAndRoom = [];
+
+        space.sessionobs.each do |session|
+          if String(session.room_id).include?(params[:room_id]) then
+            @allSessionsForSpaceAndRoom.push(session)
+          end
+        end
+      end
+
+      unless @allSessionsForSpaceAndRoom.nil? then
+
+        @allEventsForSessions = [];
+        @allSessionsForSpaceAndRoom.each do |session|
+          sessionob = Sessionob.find(session._id)
+          events = sessionob.eventobs
+          @allEventsForSessions.push(events)
+        end
+      end
+      result = '{"sessions" : ' + @allSessionsForSpaceAndRoom.to_json(:only => [ :_id, :created_on, :label ]) + ', "events" : ' + @allEventsForSessions.to_json(:only => [ :_id, :created_on, :finished_on, :xpos, :ypos, :label, :interactions, :visitors, :age, :nationality ]) + '}'
+      return result
+    else
+      status 401
+    end
+  end
+
   ###  get an event by id
   get '/event/:event_id' do
     if authorized?

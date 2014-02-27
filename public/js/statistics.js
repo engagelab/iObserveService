@@ -15,7 +15,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
     $scope.showChart = false;
     $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
     $scope.chartName = "";
-    $scope.studies = iObserveData.doGetStudies();
+    $scope.studies = iObserveData.doGetStatsStudies();
     $scope.studies.then(function (response) {
         $scope.studies = response[0];
     });
@@ -59,7 +59,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             else {
                 $scope.roomListRequested = true;
                 $scope.currentStudy = $study;
-                iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
+                iObserveData.doGetStatRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
                     $scope.rooms = resultData[0];
                 })
             }
@@ -92,7 +92,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             else {
                 $scope.sessionListRequested = false;
                 $scope.currentRoom = $room;
-                iObserveData.doGetSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+                iObserveData.doGetStatSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
                     $scope.sessions = resultData[0];
                     $scope.sessionListRequested = true;
                     if($scope.sessions.length > 0)
@@ -148,14 +148,14 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
         $(e.target).closest('button').toggleClass("btn-info").toggleClass("btn-success");
     };
 
-    $scope.countSessionsForRoom = function(room) {
+    /*$scope.countSessionsForRoom = function(room) {
         var count = 0;
-        for(var i=0;i<$scope.currentStudy.sessionobs.length;i++) {
-            if($scope.currentStudy.sessionobs[i].room_id == room._id)
+        for(var i=0;i<$scope.currentStudy.room_ids.length;i++) {
+            if($scope.currentStudy.room_ids[i] == room._id)
                 count++;
         }
         return count;
-    };
+    };     */
 
     $scope.displayChart = function($chart, e) {
         //ngProgress.start();

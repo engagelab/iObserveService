@@ -1,7 +1,8 @@
 development:
   sessions:
     default:
-      database: iObserveService
+      #database: iObserveService
+      database: visitracker_backup
       hosts:
         - localhost
       options:
@@ -10,6 +11,18 @@ development:
     identity_map_enabled: true
     raise_not_found_error: false
   options:
+
+#development:
+# sessions:
+#   default:
+#     database: heroku_app15673847
+#     hosts:
+#       - ds029847.mongolab.com:29847
+#     username: rich
+#     password: MonkeyM78
+#     options:
+#       consistency: :strong
+# options:
 
 production:
   sessions:
