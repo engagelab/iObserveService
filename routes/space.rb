@@ -34,7 +34,7 @@ class Iobserve < Sinatra::Application
       #return user.spaces.to_json(:only => [ :_id, :created_on, :sessionobs, :sessionob_ids ])
 
       user = User.only(:spaces, :space_ids).find(params[:user_id])
-      return user.spaces.to_json(:only => [ :_id, :created_on, :label, :room_ids ])
+      return user.spaces.to_json(:only => [ :_id, :created_on, :label, :room_ids, :session_ids ])
 
     else
       status 401
