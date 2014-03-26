@@ -16,8 +16,8 @@ class Iobserve < Sinatra::Application
   include BCrypt
   #$log = Logger.new('./logs/output.log')
 
-  set :environment, :development
-  #set :environment, :production
+  #set :environment, :development
+  set :environment, :production
 
   #enable :sessions
   #set :sessions, true

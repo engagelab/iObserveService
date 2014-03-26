@@ -29,6 +29,41 @@ class Iobserve < Sinatra::Application
   end
 
 
+  ### list all events from all sessions by space id and room id  for portal
+  get '/portal/space/:space_id/:room_id/session/visitorgroupbysize' do
+    if authorized?
+      content_type :json
+      sessions = Sessionob.where(:room_id => params[:room_id]).in(:space_ids => params[:space_id])
+
+      groupofone = 0;
+      groupoftwo = 0;
+      groupofthree = 0;
+      groupoffour = 0;
+
+      unless sessions.nil? then
+        sessions.each do |session|
+          case (session.visitorgroup.visitors).length
+            when 1
+              groupofone = groupofone + 1
+            when 2
+              groupoftwo = groupoftwo + 1
+            when 3
+              groupofthree = groupofthree + 1
+            else
+              groupoffour = groupoffour + 1
+          end
+        end
+
+      end
+
+      status 200
+      return {"groupofone" => groupofone, "groupoftwo" => groupoftwo, "groupofthree" => groupofthree, "groupoffour" => groupoffour}.to_json
+    else
+      status 401
+    end
+  end
+
+
   ### update visitorgroup's properties
   put '/visitorgroup' do
     request.body.rewind  # in case someone already read it
