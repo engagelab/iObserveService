@@ -96,7 +96,7 @@ iObserveApp.controller('StudiesCtrl', function ($scope, $modal, iObserveUser, iO
 
     function initStudiesPage() {
         console.log("refreshing studies ....");
-        $scope.studies = iObserveData.doGetStudies();
+        $scope.studies = iObserveData.doGetStatsStudies();
         $scope.studies.then(function (response) {
             $scope.studies = response[0];
         });

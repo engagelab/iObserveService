@@ -131,7 +131,8 @@ class Iobserve < Sinatra::Application
         @allSessionsForSpaceAndRoom.each do |session|
           sessionob = Sessionob.find(session._id)
           events = sessionob.eventobs
-          @allEventsForSessions.push(events)
+
+          @allEventsForSessions.push(events.sort_by! { |x| x[:created_on] })
         end
       end
       result = '{"sessions" : ' + @allSessionsForSpaceAndRoom.to_json(:only => [ :_id, :created_on, :label ]) + ', "events" : ' + @allEventsForSessions.to_json(:only => [ :_id, :created_on, :finished_on, :xpos, :ypos, :label, :interactions, :visitors, :age, :nationality ]) + '}'
