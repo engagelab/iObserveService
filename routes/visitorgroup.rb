@@ -57,7 +57,10 @@ class Iobserve < Sinatra::Application
       end
 
       status 200
-      return {"groupofone" => groupofone, "groupoftwo" => groupoftwo, "groupofthree" => groupofthree, "groupoffour" => groupoffour}.to_json
+      #return {"groupofone" => groupofone, "groupoftwo" => groupoftwo, "groupofthree" => groupofthree, "groupoffour" => groupoffour}.to_json
+
+      return [{"label" => "Group of 1", "value" => groupofone}, {"label" => "Group of 2", "value" => groupoftwo}, {"label" => "Group of 3", "value" => groupofthree}, {"label" => "Group of 4","value" => groupoffour}].to_json
+
     else
       status 401
     end
