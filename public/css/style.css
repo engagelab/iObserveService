@@ -200,6 +200,10 @@ text {
     height: 500px;
 }
 
+.chartGroupsDemographics svg {
+    height: 500px;
+}
+
 .visitor-color-10012411 {
     color: #98C6FB;
 }

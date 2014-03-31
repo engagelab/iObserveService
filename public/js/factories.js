@@ -81,6 +81,7 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
     var requestStatsStudyListObject = function() { return getData("/portal/user/" + iObserveStorage.getItem('userId') + "/space"); };
     var requestListActionsObject = function() { return getData("/action/simple"); };
     var requestListResourcesObject = function() { return getData("/resource/simple"); };
+    var requestSessionsGroupDemographicsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/session/visitorgroupbysize"); };
 
     // POST requests
     var requestNewStudyObject = function(data) { return postData("/user/" + iObserveStorage.getItem('userId') + "/space", data); };
@@ -137,6 +138,7 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
         doNewQuestion: requestNewQuestionObject,
         doDeleteQuestion: requestDeleteQuestionObject,
         doDeleteSurvey: requestDeleteSurveyObject,
+        doGetStatSessionsGroupDemographicsForSpaceAndRoom: requestSessionsGroupDemographicsForSpaceAndRoom,
 
         // USER
         doUserLogout:requestUserLogout,

@@ -21,6 +21,11 @@
             "id": 5,
             "name": "Duration & Quantity",
             "shortName": "frequencyMapDurationQuantity"
+        },
+        {
+            "id": 6,
+            "name": "Groups Demographics",
+            "shortName": "groupsDemographics"
         }
     ],
     "studyChartList" : [
