@@ -77,7 +77,7 @@ iObserveApp.controller('ChartCtrl-groupsDemographics', function($scope, iObserve
             .y(function(d) { return d.value })
             .showControls(false)
             .showLegend(false)
-            .margin({top: 30, right: 20, bottom: 50, left: 20});
+            .margin({top: 30, right: 20, bottom: 50, left: 30});
 
         chart.yAxis
             .tickFormat(d3.format(',d'));
