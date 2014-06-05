@@ -8,23 +8,7 @@
 
 logs/output.log
 
-public/iObserveAngular/js/libs/jquery.slider.min.js
-
-public/iObserveAngular/js/libs/jquery.slider.min.js
-
-public/iObserveAngular/img/chart.png
-
-public/iObserveAngular/img/session.png
-
-public/iObserveAngular/partial/charts/css/jslider.blue.css
-
-public/iObserveAngular/partial/charts/css/jslider.css
-
-public/iObserveAngular/partial/charts/css/jslider.plastic.css
-
-public/iObserveAngular/partial/charts/css/jslider.round.css
-
-public/iObserveAngular/partial/charts/css/jslider.round.plastic.css
+config/mongoid.old
 
 .idea/iObserveService.iml
 
