@@ -1,8 +1,7 @@
 development:
   sessions:
     default:
-      database: iObserveService
-      #database: visitracker_backup
+      database: heroku_app15673847
       hosts:
         - localhost
       options:
@@ -10,7 +9,6 @@ development:
   options:
     identity_map_enabled: true
     raise_not_found_error: false
-  options:
 
 production:
   sessions:

@@ -115,15 +115,16 @@ iObserveApp.controller('ChartCtrl-positionOverTime', function($scope, iObserveDa
         if(newValue == true) {
             iObserveData.doGetSession($scope.currentSession._id).then(function(resultData1) {
                 $scope.uniqueVisitors = resultData1[0].visitorgroup.visitors;
-                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData2) {
+                processData();
+                buildMarkers();
+                drawChart();
+/*                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData2) {
                     $scope.eventCollection = resultData2[0];
-                    processData();
-                    buildMarkers();
-                    drawChart();
+
                     //ngProgress.complete();
                  //   $timeout(assignCheckBoxes, 0);
                 });
-            })
+*/            })
         }
     });
 

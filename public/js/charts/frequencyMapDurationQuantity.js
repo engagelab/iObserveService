@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData) {
+iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope, $timeout, iObserveData, ngProgress) {
 
     var chartData = [];
     var firstEventCreationTime = 0;
@@ -7,16 +7,63 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     var sessionList = [];
     var timeSlider;
 
+    $scope.myStartDateTime = new Date();
+    $scope.myEndDateTime = new Date();
+
     $scope.ageGroups = ["Child", "Young adult", "Adult", "Middle aged", "Senior"];
     $scope.nationalities = ["Norwegian", "Tourist", "Other"];
+
+    var ds = new Date(2014, 0, 0, 0, 0, 1, 0);
+    ds.setHours( 0 );
+    ds.setMinutes( 0 );
+    ds.setSeconds( 0 );
+    $scope.myStartDateTime = ds;
+    var de = new Date();
+    de.setHours( 23 );
+    de.setMinutes( 59 );
+    de.setSeconds( 59 );
+    $scope.myEndDateTime = de;
+
+    $scope.openDatePanelStart = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.openedDPS = true;
+    };
+    $scope.openDatePanelEnd = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.openedDPE = true;
+    };
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
 
     var svg = d3.select("#chart")
         .append("svg")
         .attr("width", 1024)
         .attr("height", 723)
-        .attr("top", 45);
+        .attr("top", -723);
+
+    $scope.dateTimeUpdate = function() {
+        var start = moment($scope.myStartDateTime).unix();
+        var end = moment($scope.myEndDateTime).unix();
+        ngProgress.start();
+        iObserveData.doGetStatEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id, start, end, 'durationquantity').then(function(resultData) {
+            $scope.sessionDetails = resultData[0].sessions;
+            $scope.eventCollection = resultData[0].events;
+            processData();
+            drawChart();
+            $timeout(assignCheckBoxes, 0);
+        })
+    };
+
+    $scope.timeChanged = function () {
+        console.log('Time changed to: ' + $scope.mytime);
+    };
 
     var processData = function () {
+        var progressCounter = 0;
         var nextEventTime = 0;
         var relativeCreationTimeInSeconds = 0;
 
@@ -41,7 +88,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                     if(j == 0)
                         firstEventCreationTime = event.created_on;
                     relativeCreationTimeInSeconds = getRelativeCreationTime(event.created_on);
-
+        /*
                     // Iterate through Interactions and Visitors and collect unique visitors for this event
                     for(var k=0; k<event.interactions.length; k++) {
                         var interaction = event.interactions[k];
@@ -59,20 +106,20 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
                             }
                         }
                     }
-
+        */
                     // Create a data point with the information gathered
-                    if(j < eventSubset.length-1)
+        /*          if(j < eventSubset.length-1)
                         nextEventTime = eventSubset[j+1].created_on;
                     else if(j == eventSubset.length-1)
                         nextEventTime = event.created_on+1;   // The final event will be the exit of the session - represent it as one second long
-                    var dataPoint = {
+        */          var dataPoint = {
                         id : event._id,
                         session : i.toString(),
                         relativeCreationTimeInSeconds : relativeCreationTimeInSeconds,
                         x : event.xpos,
                         y : event.ypos,
-                        ageGroups : ageGroupList,
-                        nationalities : nationalityList,
+               //         ageGroups : ageGroupList,
+               //         nationalities : nationalityList,
                         radius : event.interactions[0].visitors.length,      // Adds a radius to represent number of visitors at the event
                         duration : getTimeDuration(event.created_on, event.finished_on)
                     }
@@ -84,7 +131,10 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
             optionsObject.lastEventTime = lastEventCreationTimeInSeconds;
             // Index of the optionsObject is the session number used for checkboxes
             sessionList.push(optionsObject);
+            progressCounter++;
+            ngProgress.set(progressCounter/$scope.eventCollection.length*100);
         }
+        ngProgress.complete();
     };
 
     function sortFunction(a, b) {
@@ -99,7 +149,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     $scope.getCSVArray = function () {
         var flattenedArray = [];
         for(var i=0; i<chartData.length; i++) {
-            var newRow = {Time: chartData[i].relativeCreationTimeInSeconds, X: chartData[i].x, Y: chartData[i].y, Duration: chartData[i].duration, Quantity: chartData[i].radius};
+            var newRow = {Time: chartData[i].relativeCreationTimeInSeconds, X: chartData[i].x, Y: chartData[i].y, Duration: chartData[i].duration, Quantity: chartData[i].radius, EventID: chartData[i].id};
             flattenedArray.push(newRow);
         }
         flattenedArray.sort(sortFunction);
@@ -134,7 +184,10 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
     }
 
     $scope.$watch('chartPartialLoaded', function(newValue) {
-        iObserveData.doGetStatEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+        iObserveData.doGetBasicSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+            //$scope.sessionDetails = resultData[0];
+        })
+/*        iObserveData.doGetStatEventsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
             $scope.sessionDetails = resultData[0].sessions;
             $scope.eventCollection = resultData[0].events;
             processData();
@@ -142,6 +195,7 @@ iObserveApp.controller('ChartCtrl-frequencyMapDurationQuantity', function($scope
             //ngProgress.complete();
             $timeout(assignCheckBoxes, 0);
         })
+*/
     });
 
     var drawChart = function () {

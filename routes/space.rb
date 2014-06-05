@@ -26,6 +26,24 @@ class Iobserve < Sinatra::Application
     end
   end
 
+  ### get lists of actions and resources for a space
+  get '/space/:space_id/actionresourcelist' do
+    if authorized?
+      content_type :json
+      actions = resources = []
+      space = Space.only(:actions, :resources).find(params[:space_id])
+      unless space.actions.nil?
+        actions = space.actions
+      end
+      unless space.resources.nil?
+        resources = space.resources
+      end
+      '{"actions" : ' + actions.to_json + ', "resources" : ' + resources.to_json + '}'
+    else
+      status 401
+    end
+  end
+
   ### list all spaces by user id for portal
   get '/portal/user/:user_id/space' do
     if authorized?
@@ -34,7 +52,7 @@ class Iobserve < Sinatra::Application
       #return user.spaces.to_json(:only => [ :_id, :created_on, :sessionobs, :sessionob_ids ])
 
       user = User.only(:spaces, :space_ids).find(params[:user_id])
-      return user.spaces.to_json(:only => [ :_id, :created_on, :label, :room_ids, :session_ids ])
+      user.spaces.to_json(:only => [ :_id, :created_on, :label, :room_ids, :session_ids ])
 
     else
       status 401

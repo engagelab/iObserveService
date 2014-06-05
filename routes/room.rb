@@ -90,7 +90,7 @@ class Iobserve < Sinatra::Application
     if authorized?
       content_type :json
       room = Room.find(params[:room_id])
-      return room.to_json
+      room.to_json
     else
       status 401
     end

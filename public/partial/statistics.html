@@ -5,8 +5,8 @@
             <ul>
                 <li ng-repeat="study in studies">
                     <div>
-                        <button type="button" class="btn btn-info btn-mini" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="icon-suitcase"></i></button>
-                        <span><b> {{ study.label }} </b></span></br>
+                        <button type="button" class="btn btn-info btn-xs" ng-model="roomListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldRooms(study, $event)"><i class="fa fa-suitcase"></i></button>
+                        <span><b> {{ study.label }} </b></span><br/>
                         <span> Room(s): <b>{{ study.room_ids.length }}</b></span>
                         <p>{{ timeConverter(study.created_on) }}</p>
                     </div>
@@ -19,16 +19,16 @@
                 <h3>Visuals</h3>
                 <ul>
                     <li ng-repeat="chart in chartList.content.studyChartList" style="margin-top: 5px;">
-                        <button type="button" class="btn btn-info btn-mini" ng-model="surveyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
-                        <span><b>{{ chart.name }}</b></span></br>
+                        <button type="button" class="btn btn-info btn-xs" ng-model="surveyChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="fa fa-bar-chart-o"></i></button>
+                        <span><b>{{ chart.name }}</b></span><br/>
                     </li>
                 </ul>
                 <h3>Rooms</h3>
                 <ul>
                     <li ng-repeat="room in rooms">
                         <div style="margin-bottom: 10px">
-                            <button type="button" class="btn btn-info btn-mini" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="icon-folder-open-alt"></i></button>
-                            <span><b> {{ room.label }} </b></span></br>
+                            <button type="button" class="btn btn-info btn-xs" ng-model="sessionListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessions(room, $event)"><i class="fa fa-folder-open"></i></button>
+                            <span><b> {{ room.label }} </b></span><br/>
                             <!-- p>Sessions(s): <b>{{ countSessionsForRoom(room) }}</b></p -->
                         </div>
                     </li>
@@ -42,16 +42,16 @@
                     <h3>Visuals</h3>
                     <ul>
                         <li ng-repeat="chart in chartList.content.roomChartList" style="margin-top: 5px;">
-                            <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
-                            <span><b>{{ chart.name }}</b></span></br>
+                            <button type="button" class="btn btn-info btn-xs" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="fa fa-bar-chart-o"></i></button>
+                            <span><b>{{ chart.name }}</b></span><br/>
                         </li>
                     </ul>
                     <h3>Visitor Sessions ({{ sessions.length }})</h3>
                     <ul>
                         <li ng-repeat="session in sessions">
                             <div>
-                                <button type="button" class="btn btn-info btn-mini" ng-model="sessionInfoListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session, $event)"><i class="icon-calendar"></i></button>
-                                <span><b>Session (<b>{{ sessions.indexOf(session) }}</b>)</b></span></br>
+                                <button type="button" class="btn btn-info btn-xs" ng-model="sessionInfoListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="foldSessionInfo(session, $event)"><i class="fa fa-calendar"></i></button>
+                                <span><b>Session (<b>{{ sessions.indexOf(session) }}</b>)</b></span><br/>
                                 <p>{{ timeConverter(session.created_on) }}</p>
                             </div>
                         </li>
@@ -63,8 +63,8 @@
             <div collapse="!sessionInfoListRequested">
                 <div style="margin: 0.5em">
                 <h3>Session Information</h3>
-                    <div class="innerColumnLeft" style="margin: 0.5em">
-                        <img ng-src="{{ currentSession.storage.url || '' }}" width="500px" style="margin-bottom: 10px" ng-click="showImageModal()"/>
+
+                        <img ng-src="{{ currentSession.storage.url || '' }}" style="margin-bottom: 10px; width: 100%;" ng-click="showImageModal()"/>
                         <div collapse="!sessionSequenceRequested">
                             <div class="eventListingScrollable">
                                 <ul style="list-style-type: none">
@@ -92,8 +92,9 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="innerColumnRight">
+                        <button type="button" class="btn btn-info btn-xs" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="fa fa-th-list"></i></button>
+                        <span><b>Events Listing</b></span><br/><br/>
+
                         <p><span style="text-decoration: underline;">Started on:</span> {{ timeConverter(currentSession.created_on) }}<br/>
                         <span style="text-decoration: underline;">Finished on:</span> {{ timeConverter(currentSession.finished_on) }}<br/>
                         <span style="text-decoration: underline;">Duration:</span> {{ tDiffMoment(currentSession.created_on, currentSession.finished_on, true) }}<br/>
@@ -105,14 +106,13 @@
                         <h5>Charts for this Session</h5>
                         <ul>
                             <li ng-repeat="chart in chartList.content.sessionChartList" style="margin-top: 5px;">
-                                <button type="button" class="btn btn-info btn-mini" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="icon-bar-chart"></i></button>
-                                <span><b>{{ chart.name }}</b></span></br>
+                                <button type="button" class="btn btn-info btn-xs" ng-model="sessionChartButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displayChart(chart, $event)"><i class="fa fa-bar-chart-o"></i></button>
+                                <span><b>{{ chart.name }}</b></span><br/>
                             </li>
                         </ul>
                         <br/>
-                        <button type="button" class="btn btn-info btn-mini" ng-model="sessionSequenceListButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" ng-click="displaySessionSequence($event)"><i class="icon-th-list"></i></button>
-                        <span><b>Events Listing</b></span></br><br/>
-                    </div>
+
+
                 </div>
             </div>
         </div>

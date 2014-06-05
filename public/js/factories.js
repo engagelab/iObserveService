@@ -1,5 +1,5 @@
 //angular.module('LocalStorageModule').value('prefix', 'visitracker');
-var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngCsv'], null);
+var iObserveApp = angular.module('iObserveApp', ['ngResource', 'ngSanitize', 'localStorageModule', 'ui.bootstrap', 'ngUpload', 'ngCsv', 'ngProgress'], null);
 /*
 iObserveApp.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
@@ -70,8 +70,9 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
     // GET requests
     var requestSurveysForSpace = function(space_id) { return getData("/space/" + space_id + "/survey"); };
     var requestEventsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/events"); };
-    var requestStatEventsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/events"); };
+    var requestStatEventsForSpaceAndRoom = function(space_id, room_id, startDT, endDT, type) { return getData("/portal/space/" + space_id + "/" + room_id + "/" + startDT + "/" + endDT + "/" + type + "/events"); };
     var requestSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/space/" + space_id + "/" + room_id + "/session"); };
+    var requestBasicSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/basicSession"); };
     var requestStatSessionsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/session"); };
     var requestRoomsForSpace = function(space_id) { return getData("/space/" + space_id + "/rooms"); };
     var requestStatRoomsForSpace = function(space_id) { return getData("/portal/space/" + space_id + "/rooms"); };
@@ -82,7 +83,7 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
     var requestListActionsObject = function() { return getData("/action/simple"); };
     var requestListResourcesObject = function() { return getData("/resource/simple"); };
     var requestSessionsGroupDemographicsForSpaceAndRoom = function(space_id, room_id) { return getData("/portal/space/" + space_id + "/" + room_id + "/session/visitorgroupbysize"); };
-
+    var requestSpaceActionsAndResourceList = function(space_id) { return getData("/space/" + space_id + "/actionresourcelist"); };
     // POST requests
     var requestNewStudyObject = function(data) { return postData("/user/" + iObserveStorage.getItem('userId') + "/space", data); };
     var requestAddStudyRoomObject = function(data) { return postData("/space/"+data.spaceid+"/room", data); };
@@ -115,6 +116,7 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
         goGetSurveysForSpace: requestSurveysForSpace,
         doGetEvents: requestEventListObject,
         doGetSessionsForSpaceAndRoom: requestSessionsForSpaceAndRoom,
+        doGetBasicSessionsForSpaceAndRoom: requestBasicSessionsForSpaceAndRoom,
         doGetStatSessionsForSpaceAndRoom: requestStatSessionsForSpaceAndRoom,
         doGetEventsForSpaceAndRoom: requestEventsForSpaceAndRoom,
         doGetStatEventsForSpaceAndRoom: requestStatEventsForSpaceAndRoom,
@@ -122,6 +124,7 @@ iObserveApp.factory('iObserveData', function ($http, $q, iObserveConfig, iObserv
         doGetStatsStudies: requestStatsStudyListObject,
         doGetRoomsForSpace: requestRoomsForSpace,
         doGetStatRoomsForSpace: requestStatRoomsForSpace,
+        doGetSpaceActionsAndResourceList: requestSpaceActionsAndResourceList,
         doNewStudy: requestNewStudyObject,
         doDeleteStudy: requestDeleteStudyObject,
         doCreateStudyRoom: requestAddStudyRoomObject,
@@ -296,6 +299,10 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
         return moment.unix($ts).format("h:mm:ss a");
     };
 
+    var timeConverterDateToUnix = function($d) {
+        return moment($d).unix();
+    };
+
     var tDiffMoment = function ($a,$b, humanize) {
         var a = moment.unix($a);
         var b = moment.unix($b);
@@ -362,6 +369,7 @@ iObserveApp.factory('iObserveUtilities', function ($http) {
     return {
         timeConverter : timeConverter,
         timeConverterShort : timeConverterShort,
+        timeConverterDateToUnix : timeConverterDateToUnix,
         tDiff : tDiff,
         loadJSONFile: loadJSONFile,
         getRandomUUID: getRandomUUID,

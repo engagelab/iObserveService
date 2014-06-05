@@ -1,7 +1,7 @@
 <div ng-controller="StudiesCtrl" id="studiesWrapper">
     <div id="studyListHeader">
         <h3>Studies</h3>
-        <button class="btn btn-info btn-mini" ng-click="toggleAddStudy()"><i id="addStudyButton" class="icon-plus"></i></button> New
+        <button class="btn btn-info btn-xs" ng-click="toggleAddStudy()"><i id="addStudyButton" class="fa fa-plus"></i></button> New
         <div collapse="isAddStudyCollapsed" class="collapsableStudyDiv">
             <div class="innerCollapsableStudyDiv">
                 <input type="text" id="studyLabelInput" placeholder="Study label" style="margin-bottom: 0;">
@@ -14,8 +14,8 @@
     <br>
     <ul>
         <li style="margin-bottom: 10px" class="studiesListItem" ng-repeat="study in studies">
-            <button class="btn btn-info btn-mini studynav" id="{{ study._id }}" ng-click="expandStudy(study, $event)" ng-model="expandStudyButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><i class="icon-folder-open-alt"></i></button>
-            <button class="btn btn-danger btn-mini" ng-click="deleteStudy(study)"><i class="icon-remove"></i></button>
+            <button class="btn btn-info btn-xs studynav" id="{{ study._id }}" ng-click="expandStudy(study, $event)" ng-model="expandStudyButton" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><i class="fa fa-folder-open"></i></button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteStudy(study)"><i class="fa fa-times"></i></button>
             <span><b> {{ study.label }} </b></span></br>
             <span>Survey(s): <b>{{ study.surveys.length }}</b> | Session(s): <b>{{ study.sessionob_ids.length }}</b> | Room(s): <b>{{ study.room_ids.length }}</b></span>
             <p>{{ timeConverter(study.created_on)}}</p>
@@ -44,7 +44,7 @@
 
         <div ng-switch on="studyTabs.activeTab">
             <div ng-switch-when="0">
-                <button class="btn btn-info btn-mini" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="icon-plus"></i></button> New &nbsp;
+                <button class="btn btn-info btn-xs" ng-click="toggleAddSurvey()"><i id="addSurveyButton" class="fa fa-plus"></i></button> New &nbsp;
                 <div collapse="isAddSurveyCollapsed" class="collapsableStudyDiv">
                     <div class="innerCollapsableStudyDiv">
                         <input type="text" id="surveyLabelInput" placeholder="New survey label (optional)" style="margin-bottom: 0;">
@@ -59,7 +59,7 @@
                         <div style="float: left;margin-left: 20px">
                             <div style="min-height: 300px" id="surveyEditDiv">
                                 <p><b>Selected survey:</b></p>
-                                <button class="btn btn-danger btn-mini" ng-click="deleteSurvey(survey)"><i id="deleteSurveyButton" class="icon-minus"></i></button> Delete <br/><br/>
+                                <button class="btn btn-danger btn-xs" ng-click="deleteSurvey(survey)"><i id="deleteSurveyButton" class="fa fa-minus"></i></button> Delete <br/><br/>
                                 <div>
                                     <script type="text/ng-template" id="StudiesDeleteSurveyModalCtrl.html">
                                         <div class="modal-header">
@@ -162,19 +162,19 @@
                             <!--p><span style="text-decoration: underline">Survey ID:</span> {{ currentSelectedSurvey._id }}</p-->
                             <p><span style="text-decoration: underline">Questions:</span></p>
                             <ul style="width: 100%">
-                                <li style="margin-bottom: 10px" class="studiesListItem" ng-repeat="question in currentSelectedSurvey.questions"><button class="btn btn-danger btn-mini" ng-disabled="survey.locked" ng-click="deleteQuestion(question._id)"><i class="icon-remove"></i></button>&nbsp;&nbsp; <b>{{ question.label }}</b> | Options: ({{ getFormattedQuestionOptions(question.options) }}) | Type: ({{ getFormattedSurveyType(question.type) }})</li>
+                                <li style="margin-bottom: 10px" class="studiesListItem" ng-repeat="question in currentSelectedSurvey.questions"><button class="btn btn-danger btn-xs" ng-disabled="survey.locked" ng-click="deleteQuestion(question._id)"><i class="fa fa-remove"></i></button>&nbsp;&nbsp; <b>{{ question.label }}</b> | Options: ({{ getFormattedQuestionOptions(question.options) }}) | Type: ({{ getFormattedSurveyType(question.type) }})</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <div ng-switch-when="1">
-                <button class="btn btn-info btn-mini" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="icon-plus"></i></button> New &nbsp; </br></br>
+                <button class="btn btn-info btn-xs" ng-click="toggleAddSpace()"><i id="addSpaceButton" class="fa fa-plus"></i></button> New &nbsp; </br></br>
                 <p><b>Selected room:</b></p>
                 <div style="margin-left: 60px">
-                    <button class="btn btn-mini" ng-click="openActionModal()"><i class="icon-star"></i></button> Actions &nbsp;
-                    <button class="btn btn-mini" ng-click="openResourceModal()"><i class="icon-star"></i></button> Resources &nbsp;
-                    <button class="btn btn-danger btn-mini" ng-click="roomToDelete=room;openDeleteRoomModal()"><i class="icon-minus"></i></button> Delete
+                    <button class="btn btn-xs" ng-click="openActionModal()"><i class="fa fa-star"></i></button> Actions &nbsp;
+                    <button class="btn btn-xs" ng-click="openResourceModal()"><i class="fa fa-star"></i></button> Resources &nbsp;
+                    <button class="btn btn-danger btn-xs" ng-click="roomToDelete=room;openDeleteRoomModal()"><i class="fa fa-minus"></i></button> Delete
                 </div>
 
                 <div>
@@ -184,7 +184,7 @@
                         </div>
                         <div style="margin-left: 15px;margin-right: 15px">
                             <div style="float: left; height: 300px;">
-                                <h5>All actions <button class="btn btn-mini" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="icon-plus"></i></button></h5>
+                                <h5>All actions <button class="btn btn-xs" ng-click="isAddActionCollapsed = !isAddActionCollapsed"><i class="fa fa-plus"></i></button></h5>
                                 <div collapse="isAddActionCollapsed" style="margin-bottom: 10px">
                                     <input type="text" id="actionLabelInput" placeholder="Action name" style="margin-bottom: 0; width: 100px">
                                     <button class="btn btn-primary" ng-click="isAddActionCollapsed=true;createNewAction()">OK</button>
@@ -194,8 +194,8 @@
                                 </select>
                             </div>
                             <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
-                                <button ng-click="removeActionFromSpace()"><i class="icon-arrow-left"></i></button>
-                                <button ng-click="addActionToSpace()"><i class="icon-arrow-right"></i></button>
+                                <button ng-click="removeActionFromSpace()"><i class="fa fa-arrow-left"></i></button>
+                                <button ng-click="addActionToSpace()"><i class="fa fa-arrow-right"></i></button>
                             </div>
                             <div style="float: left; height: 300px">
                                 <h5>Selected actions</h5>
@@ -218,7 +218,7 @@
                         </div>
                         <div style="margin-left: 15px;margin-right: 15px">
                             <div style="float: left; height: 300px;">
-                                <h5>All resources <button class="btn btn-mini" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="icon-plus"></i></button></h5>
+                                <h5>All resources <button class="btn btn-xs" ng-click="isAddResourceCollapsed = !isAddResourceCollapsed"><i class="fa fa-plus"></i></button></h5>
                                 <div collapse="isAddResourceCollapsed" style="margin-bottom: 10px">
                                     <input type="text" id="resourceLabelInput" placeholder="Resource name" style="margin-bottom: 0; width: 100px">
                                     <button class="btn btn-primary" ng-click="isAddResourceCollapsed=true;createNewResource()">OK</button>
@@ -228,8 +228,8 @@
                                 </select>
                             </div>
                             <div style="float: left; margin-top: 150px; margin-left: 10px; margin-right: 10px">
-                                <button ng-click="removeResourceFromSpace()"><i class="icon-arrow-left"></i></button>
-                                <button ng-click="addResourceToSpace()"><i class="icon-arrow-right"></i></button>
+                                <button ng-click="removeResourceFromSpace()"><i class="fa fa-arrow-left"></i></button>
+                                <button ng-click="addResourceToSpace()"><i class="fa fa-arrow-right"></i></button>
                             </div>
                             <div style="float: left; height: 300px">
                                 <h5>Selected resources</h5>
@@ -290,7 +290,7 @@
                                     <h4>Room {{$index}}</h4>
                                     <p>{{room.label}}</p>
                                     <div class="studyCarouselRemoveRoom">
-                                        <button class="btn btn-primary btn-mini" ng-click="openEditRoom(room)"><i class="icon-pencil"></i></button>
+                                        <button class="btn btn-primary btn-xs" ng-click="openEditRoom(room)"><i class="fa fa-pencil"></i></button>
                                     </div>
                                 </div>
                             </slide>
@@ -317,8 +317,8 @@
                                     <img ng-src="{{roomToEdit.uri}}" width="1024px" height="723px" style="position: absolute; top: 45px" >
                                 </div>
                                 <div id="roomToEditLocs" style="position: absolute; top: 45px; left: 0; width: 1024px;height: 740px">
-                                    <div style="width: 90px" poi-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="startPoint" id="{{ roomStartPoint.uuid }}" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png" ng-style="{transform: 'rotate('+roomStartPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeStartPoint(roomStartPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateStartPoint(roomStartPoint.uuid)"><i class="icon-repeat"></i></button></div><div style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 0px"><label style="text-decoration: underline" ng-click="openEditStartPOILabelModal(roomStartPoint)">{{getPOILabel(roomStartPoint)}}</label></div></div>
-                                    <div style="width: 90px" poi-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="endPoint" id="{{ roomEndPoint.uuid }}" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png" ng-style="{transform: 'rotate('+roomEndPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeEndPoint(roomEndPoint.uuid)"><i class="icon-minus-sign"></i></button><button ng-click="rotateEndPoint(roomEndPoint.uuid)"><i class="icon-repeat"></i></button></div><div style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 0px"><label style="text-decoration: underline" ng-click="openEditEndPOILabelModal(roomEndPoint)">{{getPOILabel(roomEndPoint)}}</label></div></div>
+                                    <div style="width: 90px" poi-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="startPoint" id="{{ roomStartPoint.uuid }}" ng-repeat="roomStartPoint in roomStartPoints" ng-style="{left: roomStartPoint.xpos + 'px', top: roomStartPoint.ypos + 'px'}"><img ng-src="img/walkin.png" ng-style="{transform: 'rotate('+roomStartPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeStartPoint(roomStartPoint.uuid)"><i class="fa fa-minus"></i></button><button ng-click="rotateStartPoint(roomStartPoint.uuid)"><i class="fa fa-repeat"></i></button></div><div style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 0px"><label style="text-decoration: underline" ng-click="openEditStartPOILabelModal(roomStartPoint)">{{getPOILabel(roomStartPoint)}}</label></div></div>
+                                    <div style="width: 90px" poi-draggable="{ containment: '#roomToEditLocs', scroll: false }" class="endPoint" id="{{ roomEndPoint.uuid }}" ng-repeat="roomEndPoint in roomEndPoints" ng-style="{left: roomEndPoint.xpos + 'px', top: roomEndPoint.ypos + 'px'}"><img ng-src="img/walkaway.png" ng-style="{transform: 'rotate('+roomEndPoint.rotation+'deg)'}"><div style="float: right; width: 10px "><button ng-click="removeEndPoint(roomEndPoint.uuid)"><i class="fa fa-minus"></i></button><button ng-click="rotateEndPoint(roomEndPoint.uuid)"><i class="fa fa-repeat"></i></button></div><div style="float: left; padding-left: 10px; padding-right: 10px; padding-top: 0px"><label style="text-decoration: underline" ng-click="openEditEndPOILabelModal(roomEndPoint)">{{getPOILabel(roomEndPoint)}}</label></div></div>
                                     <div>
                                         <script type="text/ng-template" id="OpenEditStartPOILabelModalCtrl.html">
                                             <div class="modal-header">
@@ -345,11 +345,11 @@
                             </div>
                             <div style="float: left;margin-left: 15px">
                                 <img src="img/walkin.png">
-                                <button ng-click="addStartPoint()"><i class="icon-plus-sign"></i></button>
+                                <button ng-click="addStartPoint()"><i class="fa fa-plus"></i></button>
                             </div>
                             <div style="float: left;margin-left: 15px">
                                 <img src="img/walkaway.png">
-                                <button ng-click="addEndPoint()"><i class="icon-plus-sign"></i></button>
+                                <button ng-click="addEndPoint()"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>

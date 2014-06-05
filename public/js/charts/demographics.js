@@ -1,4 +1,4 @@
-iObserveApp.controller('ChartCtrl-demographics', function($scope) {
+iObserveApp.controller('ChartCtrl-demographics', function($scope, iObserveData, ngProgress) {
 
     var chartData = [
         {
@@ -149,10 +149,20 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope) {
         return flattenedArray;
     };
 
-    var processData = function () {
+    var requestData = function () {
+        ngProgress.start();
+        iObserveData.doGetStatSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+            $scope.sessionsFullListing = resultData[0];
+            processData();
+            drawChart();
+            ngProgress.complete();
+        })
+    };
 
-        for(var i=0; i<$scope.sessions.length; i++) {
-            var session = $scope.sessions[i];
+    function processData() {
+
+        for(var i=0; i<$scope.sessionsFullListing.length; i++) {
+            var session = $scope.sessionsFullListing[i];
             // session in sessions
             for(var j=0; j<session.visitorgroup.visitors.length; j++) {
                 var visitor = session.visitorgroup.visitors[j];
@@ -182,35 +192,42 @@ iObserveApp.controller('ChartCtrl-demographics', function($scope) {
         }
     };
 
-    processData();
+    requestData();
     //ngProgress.complete();
 
-    var chart;
-    nv.addGraph(function() {
-       // chart = nv.models.multiBarHorizontalChart()
-        chart = nv.models.multiBarChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
-            .margin({top: 30, right: 20, bottom: 50, left: 20})
-            //.showValues(true)
-            //.tooltips(false)
-            //.barColor(d3.scale.category20().range())
-            .showControls(true);
+    function drawChart() {
+        nv.addGraph(function () {
+            // chart = nv.models.multiBarHorizontalChart()
+            var chart = nv.models.multiBarChart()
+                .x(function (d) {
+                    return d.label
+                })
+                .y(function (d) {
+                    return d.value
+                })
+                .margin({top: 30, right: 20, bottom: 50, left: 20})
+                //.showValues(true)
+                //.tooltips(false)
+                //.barColor(d3.scale.category20().range())
+                .showControls(true);
 
-        chart.yAxis
-            .tickFormat(d3.format(',d'));
+            chart.yAxis
+                .tickFormat(d3.format(',d'));
 
-        d3.select('#chartDemographics')
-            .append("svg")
-            .datum(chartData)
-            .transition().duration(500)
-            .call(chart);
+            d3.select('#chartDemographics')
+                .append("svg")
+                .datum(chartData)
+                .transition().duration(500)
+                .call(chart);
 
-        nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(chart.update);
 
-        chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+            chart.dispatch.on('stateChange', function (e) {
+                nv.log('New State:', JSON.stringify(e));
+            });
 
-        return chart;
-    });
+            return chart;
+        });
+    }
 
 });

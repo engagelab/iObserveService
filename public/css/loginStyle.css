@@ -2,8 +2,8 @@
     display: none;
     position:absolute;
     z-index: 100;
-    top: -6px;
-    left: 160px;
+    top: 0px;
+    left: 260px;
     width:200px;
     padding:10px;
     background:#fefefe;
@@ -122,17 +122,14 @@ form.ng-invalid .btn[disabled], form.ng-valid .btn {
 form.ng-invalid .btnManual[disabled], .btnManual {
     display: inline-block;
 }
-
-body {
-/*    padding: 20px 0; */
-}
-input {
-    width: 166px
-}
+/*
 .form-horizontal .control-label {
     width: 100px;
 }
+*/
+/*
 .form-horizontal .controls {
     position: relative;
     margin-left: 120px;
 }
+*/

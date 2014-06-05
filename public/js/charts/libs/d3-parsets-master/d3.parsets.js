@@ -1,7 +1,10 @@
 // Parallel Sets by Jason Davies, http://www.jasondavies.com/
 // Functionality based on http://eagereyes.org/parallel-sets
 (function() {
-  d3.parsets = function() {
+  var dp = window.dp || {};
+  window.dp = dp;
+
+  dp.parsets = function() {
     var event = d3.dispatch("sortDimensions", "sortCategories"),
         dimensions_ = autoDimensions,
         dimensionFormat = String,
@@ -104,7 +107,7 @@
           var dEnter = dimension.enter().append("g")
               .attr("class", "dimension")
               .attr("transform", function(d) { return "translate(0," + d.y + ")"; })
-              .on("mousedown", cancelEvent);
+              .on("mousedown.parsets", cancelEvent);
           dimension.each(function(d) {
                 d.y0 = d.y;
                 d.categories.forEach(function(d) { d.x0 = d.x; });
@@ -123,12 +126,12 @@
               .attr("class", "sort alpha")
               .attr("dx", "2em")
               .text("alpha »")
-              .on("mousedown", cancelEvent);
+              .on("mousedown.parsets", cancelEvent);
           textEnter.append("tspan")
               .attr("class", "sort size")
               .attr("dx", "2em")
               .text("size »")
-              .on("mousedown", cancelEvent);
+              .on("mousedown.parsets", cancelEvent);
           dimension
               .call(d3.behavior.drag()
                 .origin(identity)
@@ -174,9 +177,9 @@
                       .tween("ribbon", ribbonTweenY);
                 }));
           dimension.select("text").select("tspan.sort.alpha")
-              .on("click", sortBy("alpha", function(a, b) { return a.name < b.name ? 1 : -1; }, dimension));
+              .on("click.parsets", sortBy("alpha", function(a, b) { return a.name < b.name ? 1 : -1; }, dimension));
           dimension.select("text").select("tspan.sort.size")
-              .on("click", sortBy("size", function(a, b) { return a.count - b.count; }, dimension));
+              .on("click.parsets", sortBy("size", function(a, b) { return a.count - b.count; }, dimension));
           dimension.transition().duration(duration)
               .attr("transform", function(d) { return "translate(0," + d.y + ")"; })
               .tween("ribbon", ribbonTweenY);
@@ -213,7 +216,7 @@
           var mouse = g.select(".ribbon-mouse").selectAll("path")
               .data(nodes, function(d) { return d.path; });
           mouse.enter().append("path")
-              .on("mousemove", function(d) {
+              .on("mousemove.parsets", function(d) {
                 ribbon.classed("active", false);
                 if (dragging) return;
                 highlight(d = d.node, true);
@@ -285,15 +288,15 @@
               .attr("transform", function(d) { return "translate(" + d.x + ")"; });
           category.exit().remove();
           category
-              .on("mousemove", function(d) {
+              .on("mousemove.parsets", function(d) {
                 ribbon.classed("active", false);
                 if (dragging) return;
                 d.nodes.forEach(function(d) { highlight(d); });
                 showTooltip(categoryTooltip.call(this, d));
                 d3.event.stopPropagation();
               })
-              .on("mouseout", unhighlight)
-              .on("mousedown", cancelEvent)
+              .on("mouseout.parsets", unhighlight)
+              .on("mousedown.parsets", cancelEvent)
               .call(d3.behavior.drag()
                 .origin(identity)
                 .on("dragstart", function(d) {
@@ -410,7 +413,7 @@
 
     parsets.tooltip = function(_) {
       if (!arguments.length) return tooltip;
-      tooltip = _ == null ? defaultTooltip : _;
+      tooltip_ = _ == null ? defaultTooltip : _;
       return parsets;
     };
 
@@ -563,7 +566,7 @@
       return a < b ? -1 : a > b ? 1 : a >= b ? 0 : a <= a ? -1 : b <= b ? 1 : NaN;
     }
   };
-  d3.parsets.tree = buildTree;
+  dp.parsets.tree = buildTree;
 
   function autoDimensions(d) {
     return d.length ? d3.keys(d[0]).sort() : [];
@@ -615,7 +618,7 @@
         nd = dimensions.length;
     for (var i = 0; i < n; i++) {
       var d = data[i],
-          v = value(d, i),
+          v = +value(d, i),
           node = root;
       for (var j = 0; j < nd; j++) {
         var dimension = dimensions[j],

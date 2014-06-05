@@ -70,9 +70,9 @@ a {
     position: absolute;
 }
 
-.filter_options form input {
+/*.filter_options form input {
     margin-top: 0;
-}
+}*/
 
 .colStudies {
     float: left;
@@ -116,13 +116,13 @@ a {
 .innerColumnLeft {
     width: 60%;
     display: inline-block;
-    float: left;
+
 }
 
 .innerColumnRight {
     width: 37%;
     display: inline-block;
-    float: right;
+
 }
 
 .eventListingScrollable {
@@ -149,7 +149,8 @@ text {
 }
 
 .imageDetailModal {
-    width:1024px; margin-left:-512px; top:5%;
+   /* width:1024px; margin-left:-512px; top:5%; */
+
 }
 
 .eventSublistScrollable li {
@@ -172,12 +173,10 @@ text {
     */
 }
 
-#chart {
-    position: absolute;
+.chart {
+    position: relative;
     width:1024px;
     height:723px;
-    top: 80px;
-    left: 40px;
     z-index: 2;
 }
 
@@ -189,6 +188,19 @@ text {
     border-width: 2px;
     border-color: darkgrey;
     padding: 0.5em;
+}
+
+.filterOptions {
+    display: inline-block;
+    height: 440px;
+    padding: 10px;
+    max-width: 330px;
+    margin: 0.5em;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: dotted;
+    border-width: 2px;
+    border-color: darkgrey;
 }
 
 #chartSurvey {

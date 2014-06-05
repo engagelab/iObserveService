@@ -24,13 +24,23 @@
         },
         {
             "id": 6,
-            "name": "Groups Demographics",
+            "name": "Actions & Resources",
+            "shortName": "bubbleMatrixActionsResources"
+        },
+        {
+            "id": 7,
+            "name": "Group Demographics",
             "shortName": "groupsDemographics"
+        },
+        {
+            "id": 8,
+            "name": "First Turn Estimation",
+            "shortName": "firstTurnEstimation"
         }
     ],
     "studyChartList" : [
         {
-            "id": 7,
+            "id": 9,
             "name": "Surveys",
             "shortName": "surveys"
         }

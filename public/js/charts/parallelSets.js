@@ -2,7 +2,7 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
 
     var chartData = [];
 
-    var processData = function () {
+    function processData() {
         // event in events - skip first and last items (START and STOP)
         for(var i=1; i<$scope.chartData.length-1; i++) {
             var event = $scope.chartData[i];
@@ -31,9 +31,11 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
     }
 
     processData();
-    //ngProgress.complete();
 
-    var theChart = d3.parsets()
+    // attachment of function to d3 object was broken.
+    // So add a new var inside function at top of d3.parsets.js:        var dp = window.dp || {};
+    //                                                                  window.dp = dp;
+    var theChart = dp.parsets()
         .dimensions(["Sex", "Age", "Nationality", "Action", "Resource"]);
 
     var svg = d3.select("#chartParallelSets")
@@ -43,4 +45,4 @@ iObserveApp.controller('ChartCtrl-parallelSets', function($scope) {
 
     svg.datum(chartData).call(theChart);
 
-})
+});

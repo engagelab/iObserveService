@@ -15,8 +15,9 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
     $scope.showChart = false;
     $scope.chartList = iObserveUtilities.loadJSONFile("js/chartTypes.json");
     $scope.chartName = "";
-    $scope.studies = iObserveData.doGetStatsStudies();
-    $scope.studies.then(function (response) {
+    $scope.studies = [];
+    var studyPromise = iObserveData.doGetStatsStudies();
+    studyPromise.then(function (response) {
         $scope.studies = response[0];
     });
 
@@ -26,6 +27,16 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
     $scope.tDiffMoment = iObserveUtilities.tDiffMoment;
 
     $scope.showSessionList = false;
+
+    $scope.currentRoom = { uri: 'http://net.engagelab.iobserveservice.s3.amazonaws.com/62b6e818-3757-423d-afb6-8eb15e5bcee0.png' };
+    $scope.chartStyle = {
+        'background-image': 'url(' + $scope.currentRoom.uri + ')',
+        'width': '1024px',
+        'height': '723px',
+        'padding-top': '27px',
+        'padding-left': '25px',
+        'background-repeat':'no-repeat'
+    };
 
     var activeStudyButton = null;
     var activeRoomButton = null;
@@ -59,7 +70,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             else {
                 $scope.roomListRequested = true;
                 $scope.currentStudy = $study;
-                iObserveData.doGetStatRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
+                iObserveData.doGetRoomsForSpace($scope.currentStudy._id).then(function(resultData) {
                     $scope.rooms = resultData[0];
                 })
             }
@@ -92,7 +103,15 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             else {
                 $scope.sessionListRequested = false;
                 $scope.currentRoom = $room;
-                iObserveData.doGetStatSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
+                $scope.chartStyle = {
+                    'background-image': 'url(' + $scope.currentRoom.uri + ')',
+                    'width': '1024px',
+                    'height': '723px',
+                    'padding-top': '25px',
+                    'padding-left': '25px',
+                    'background-repeat':'no-repeat'
+                };
+                iObserveData.doGetBasicSessionsForSpaceAndRoom($scope.currentStudy._id, $scope.currentRoom._id).then(function(resultData) {
                     $scope.sessions = resultData[0];
                     $scope.sessionListRequested = true;
                     if($scope.sessions.length > 0)
@@ -128,10 +147,12 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             }
             else {
                 $scope.sessionInfoListRequested = false;
-                $scope.currentSession = $session;
-                iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
-                    $scope.chartData = resultData[0];
-                    $scope.sessionInfoListRequested = true;
+                iObserveData.doGetSession($session._id).then(function(resultData) {
+                    $scope.currentSession = resultData[0];
+                    iObserveData.doGetEvents($scope.currentSession._id).then(function(resultData) {
+                        $scope.chartData = resultData[0];
+                        $scope.sessionInfoListRequested = true;
+                    });
                 });
             }
          //   $(angular.element(e.target)).parent().siblings().toggleClass('selected');
@@ -148,14 +169,14 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
         $(e.target).closest('button').toggleClass("btn-info").toggleClass("btn-success");
     };
 
-    /*$scope.countSessionsForRoom = function(room) {
+    $scope.countSessionsForRoom = function(room) {
         var count = 0;
-        for(var i=0;i<$scope.currentStudy.room_ids.length;i++) {
-            if($scope.currentStudy.room_ids[i] == room._id)
+        for(var i=0;i<$scope.currentStudy.sessionobs.length;i++) {
+            if($scope.currentStudy.sessionobs[i].room_id == room._id)
                 count++;
         }
         return count;
-    };     */
+    };
 
     $scope.displayChart = function($chart, e) {
         //ngProgress.start();
@@ -177,6 +198,7 @@ iObserveApp.controller('StatisticsCtrl', function($scope, $http, $modal, iObserv
             templateUrl: 'ImageDetailModal.html',
             controller: 'ImageDetailModalCtrl',
             windowClass: 'imageDetailModal',
+            size: 'lg',
             resolve: {
                 currentSession: function () {
                     return $scope.currentSession;
