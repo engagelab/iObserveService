@@ -171,6 +171,28 @@ class Iobserve < Sinatra::Application
 
 
   ### update session's properties
+  put '/sessionparser' do
+    if authorized?
+      request.body.rewind  # in case someone already read it
+      content_type :json;
+      data = JSON.parse request.body.read
+
+      unless data.nil? then
+
+        status 200
+        puts data
+
+      else
+        status 404
+        return {"message" => "Provide label"}.to_json
+      end
+    else
+      status 401
+    end
+  end
+
+
+  ### update session's properties
   put '/session/:session_id/:map_id/close' do
     if authorized?
       content_type :json
